@@ -3,11 +3,10 @@ require 'open-uri'
 require 'json'
 
 MIN_FEEDBACK_SCORE = 99
-MIN_TRADE_COUNT = 1000
+MIN_TRADE_COUNT = 100
 MIN_BTC_VOLUME = 0.1
 
 get '/' do
-  response.headers['Content-Type'] = 'application/json'
 
   buy_list_raw = JSON.parse open('https://localbitcoins.com/buy-bitcoins-online/vef/.json').read
   buy_list = buy_list_raw['data']['ad_list'].reject do |tx|
@@ -44,10 +43,12 @@ get '/' do
   vef_usd_buy_price = vef_btc_buy_price / usd_btc_avg_price
   vef_usd_sell_price = vef_btc_sell_price / usd_btc_avg_price
 
-  JSON.unparse({
-                  "VEF/USD" => { buy: vef_usd_buy_price, avg: vef_usd_avg_price, sell: vef_usd_sell_price },
-                  "VEF/BTC" => { buy: vef_btc_buy_price, avg: vef_btc_avg_price, sell: vef_btc_sell_price },
-                  "USD/BTC" => { BitcoinAverage: usd_btc_avg_price },
-              })
+  data = {
+    "VEF/USD" => { buy: vef_usd_buy_price, avg: vef_usd_avg_price, sell: vef_usd_sell_price },
+    "VEF/BTC" => { buy: vef_btc_buy_price, avg: vef_btc_avg_price, sell: vef_btc_sell_price },
+    "USD/BTC" => { avg: usd_btc_avg_price },
+  }
+
+  erb :index, :locals => {:data => data}
 
 end

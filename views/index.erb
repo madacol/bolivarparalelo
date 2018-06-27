@@ -1,0 +1,26 @@
+<% data.each do |exchange_unit, rates| %>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 text-center align-self-center">
+          <h1><%= exchange_unit %></h1>
+        </div>
+        <div class="col-md-4 text-center align-self-center">
+          <% rates.each do |tag, rate| %>
+            <% html_tag = tag==:avg ? "h1" : "h3" %>
+            <<%=html_tag%> id="<%="#{exchange_unit}_#{tag}"%>" class="<%=tag%>" ><%= rate.to_i.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1.').reverse %></<%=html_tag%>>
+          <% end %>
+        </div>
+        <div class="col-md-1 text-center align-self-center">
+          <% rates.keys.each do |tag| %>
+            <% html_tag = tag==:avg ? "h1" : "h3" %>
+            <<%=html_tag%>> <%= tag %> </<%=html_tag%>>
+          <% end %>
+        </div>
+        <div class="col-md-2 text-center align-self-center">
+          <h1><%= asd if defined? asd %></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

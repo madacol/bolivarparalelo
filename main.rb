@@ -44,9 +44,21 @@ get '/' do
   vef_usd_sell_price = vef_btc_sell_price / usd_btc_avg_price
 
   data = {
-    "VEF/USD" => { buy: vef_usd_buy_price, avg: vef_usd_avg_price, sell: vef_usd_sell_price },
-    "VEF/BTC" => { buy: vef_btc_buy_price, avg: vef_btc_avg_price, sell: vef_btc_sell_price },
-    "USD/BTC" => { avg: usd_btc_avg_price },
+    "VEFUSD" => {
+      numerator: "VEF",
+      denominator: "USD",
+      rates: { buy: vef_usd_buy_price, avg: vef_usd_avg_price, sell: vef_usd_sell_price },
+    },
+    "VEFBTC" => {
+      numerator: "VEF",
+      denominator: "BTC",
+      rates: { buy: vef_btc_buy_price, avg: vef_btc_avg_price, sell: vef_btc_sell_price },
+    },
+    "USDBTC" => {
+      numerator: "USD",
+      denominator: "BTC",
+      rates: { avg: usd_btc_avg_price },
+    },
   }
 
   erb :index, :locals => {:data => data}

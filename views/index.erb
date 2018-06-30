@@ -1,4 +1,4 @@
-<div class="text-center">Disclaimer: We are not using the conventional currency-pair-quotation, we are using the mathematical syntax. <a href="https://en.wikipedia.org/wiki/Talk:Currency_pair#Format_of_quoting_currencies">See this</a></div>
+<div class="text-center"><b>Disclaimer:</b> VEF/USD means how many VEF buys 1 USD. We are <b>NOT</b> using the conventional currency-pair-quotation used in Forex. <a href="https://en.wikipedia.org/wiki/Talk:Currency_pair#Format_of_quoting_currencies">See this</a></div>
 <% data.each do |currency_pair_key, currency_pair_data| %>
 
   <%
@@ -6,20 +6,23 @@
   html_rates_tags = ""
   html_rates = ""
   currency_pair_data[:rates].each do |tag, rate|
-    html_tag = tag==:avg ? "h1" : "h3"
+    html_tag = (tag==:avg or tag==:avg_1h) ? "h2" : "h7"
     html_rates_tags.concat "<#{html_tag}> #{tag} </#{html_tag}>"
-    html_rates.concat "<#{html_tag} id=\"#{currency_pair_key}_#{tag}\"> #{rate.round().to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1.').reverse} </#{html_tag}>"
+    html_rates.concat "
+    <#{html_tag} id=\"#{currency_pair_key}_#{tag}\">
+      #{rate.round().to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1.').reverse}
+    </#{html_tag}>"
   end
   %>
 
   <div class="py-5">
     <div class="container">
       <div class="row">
-        <div class="col-md-2 text-center align-self-center"><h1><%= asd if defined? asd %></h1></div>
-        <div class="col-md-2 text-center align-self-center"><%=html_rates_tags%></div>
+        <div class="col-md-3 text-center align-self-center"><h1><%=  %></h1></div>
+        <div class="col-md-1 text-center align-self-center"><%=html_rates_tags%></div>
         <div class="col-md-3 text-center align-self-center"><%=html_rates%></div>
-        <div class="col-md-3 text-center align-self-center"><h1><%= currency_pair_units %></h1></div>
-        <div class="col-md-1 text-center align-self-center"><h1><%= asd if defined? asd %></h1></div>
+        <div class="col-md-2 text-center align-self-center"><h2><%= currency_pair_units %></h2></div>
+        <div class="col-md-2 text-center align-self-center"><h1><%=  %></h1></div>
       </div>
     </div>
   </div>

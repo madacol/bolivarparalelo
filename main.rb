@@ -5,7 +5,7 @@ ENV['APP_DIR'] = File.expand_path(File.dirname(__FILE__))
 
 get '/' do
 
-  data = JSON.parse File.read("#{ENV['APP_DIR']}/tmp/prices.json")
+  data = JSON.parse File.read("#{ENV['APP_DIR']}/data/prices.json")
 
   erb :index, :locals => {:data => data}
 

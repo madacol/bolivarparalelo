@@ -76,6 +76,7 @@ data = {
   },
 }
 
-p "Saving prices into: #{ENV['APP_DIR']}/tmp/prices.json"
-File.write("#{ENV['APP_DIR']}/tmp/prices.json", JSON.unparse(data))
+filepath = "#{ENV['APP_DIR']}/data/prices.json"
+p "Saving prices into: #{filepath}"
+File.write(filepath, JSON.unparse(data))
 p "Done!"

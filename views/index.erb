@@ -2,11 +2,11 @@
 <% data.each do |currency_pair_key, currency_pair_data| %>
 
   <%
-    currency_pair_units = "<sup>#{currency_pair_data['numerator']}</sup>&frasl;<sub>#{currency_pair_data['denominator']}</sub>" 
+    currency_pair_units = "<sup>#{currency_pair_data[:numerator]}</sup>&frasl;<sub>#{currency_pair_data[:denominator]}</sub>" 
     html_rates_keys = ""
     html_rates = ""
-    currency_pair_data['rates'].each do |key, rate|
-      html_tag = (key=='avg' or key=='avg_1h') ? "h2" : "h7"
+    currency_pair_data[:rates].each do |key, rate|
+      html_tag = (key==:avg or key==:avg_1h) ? "h2" : "h7"
       html_rates_keys.concat "<#{html_tag}> #{key} </#{html_tag}>"
       html_rates.concat "
       <#{html_tag} id=\"#{currency_pair_key}_#{key}\">

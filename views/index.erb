@@ -18,12 +18,11 @@
   <div class="py-5">
     <div class="container">
       <div class="row">
-        <div class="col-md-3 text-center align-self-center"><h1><%=  %></h1></div>
-        <div class="col-md-1 text-center align-self-center"><%=html_rates_tags%></div>
-        <div class="col-md-3 text-center align-self-center"><%=html_rates%></div>
-        <div class="col-md-2 text-center align-self-center"><h2><%= currency_pair_units %></h2></div>
-        <div class="col-md-2 text-center align-self-center"><h1><%=  %></h1></div>
+        <div class="col-3 offset-md-1 col-md-3 offset-lg-2 col-lg-2 text-center align-self-center"><%=html_rates_keys%></div>
+        <div class="col-6 col-md-4 col-lg-4 text-center align-self-center"><%=html_rates%></div>
+        <div class="col-3 col-md-3 col-lg-2 text-center align-self-center"><h2><%= currency_pair_units %></h2></div>
       </div>
     </div>
   </div>
+
 <% end %>

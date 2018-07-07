@@ -69,7 +69,7 @@ get '/' do
     "VEFUSD" => {
       numerator: "VEF",
       denominator: "USD",
-      rates: { buy: vef_usd_buy_price, avg: vef_usd_avg_price, sell: vef_usd_sell_price, avg_1h: vef_usd_avg_1h_price },
+      rates: { buy: vef_usd_buy_price, avg: vef_usd_avg_price, sell: vef_usd_sell_price, avg1h: vef_usd_avg_1h_price },
     },
     "VEFBTC" => {
       numerator: "VEF",

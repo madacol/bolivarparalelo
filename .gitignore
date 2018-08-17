@@ -1,1 +1,2 @@
 Procfile
+set_config_vars.sh

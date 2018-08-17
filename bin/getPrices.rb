@@ -21,9 +21,9 @@ def getPrice(url, sort_order)
   price = 0
   btc_volume = 0.0
   while url and btc_volume < MIN_BTC_VOLUME_TO_SAMPLE
-    p "Fecthing: #{url}"
+    p "  Fecthing: #{url}"
     list_raw = JSON.parse open(url).read
-    p 'Done!'
+    p '  Done!'
     url = list_raw['pagination']['next']
     list_raw['data']['ad_list'].each do |tx|
       trade_count = tx['data']['profile']['trade_count'].tr(' +','').to_i
@@ -45,10 +45,13 @@ def getPrice(url, sort_order)
     fiat_available = tx['data']['max_amount_available'].to_f
     price = tx['data']['temp_price'].to_f
     btc_volume += fiat_available / price
-    return price unless btc_volume < MIN_BTC_VOLUME_TO_GET_PRICE
+    return price if btc_volume >= MIN_BTC_VOLUME_TO_GET_PRICE
   end
+  p '  Warning: minimum volume not achieved'
+  return price
 end
 
+p 'Getting prices'
 vef_btc_buy_price = getPrice( localbitcoins_buy_list_url('vef'), ASCENDING_ORDER )
 vef_btc_sell_price = getPrice( localbitcoins_sell_list_url('vef'), DESCENDING_ORDER )
 vef_btc_avg_1h_price = JSON.parse( open(localbitcoins_bitcoinaverage_url).read )['VEF']['avg_1h'].to_f
@@ -59,11 +62,14 @@ vef_usd_avg_price = vef_btc_avg_price / usd_btc_avg_price
 vef_usd_avg_1h_price = vef_btc_avg_1h_price / usd_btc_avg_price
 vef_usd_buy_price = vef_btc_buy_price / usd_btc_avg_price
 vef_usd_sell_price = vef_btc_sell_price / usd_btc_avg_price
+p 'Done!'
 
+p 'Saving to Database'
 Rate.create(
   usd_btc_avg:    usd_btc_avg_price,
   vef_btc_buy:    vef_btc_buy_price,
   vef_btc_sell:   vef_btc_sell_price,
   vef_btc_avg_1h: vef_btc_avg_1h_price,
-  date:           Time.now
+  datetime:       Time.now
 )
+p 'Done!'

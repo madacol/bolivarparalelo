@@ -5,7 +5,7 @@ class CreateRates < ActiveRecord::Migration[5.2]
       t.decimal   :vef_btc_buy
       t.decimal   :vef_btc_sell
       t.decimal   :vef_btc_avg_1h
-      t.datetime  :date
+      t.datetime  :datetime
     end
   end
   def self.down

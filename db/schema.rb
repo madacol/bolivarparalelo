@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2018_07_09_212039) do
     t.decimal "vef_btc_buy"
     t.decimal "vef_btc_sell"
     t.decimal "vef_btc_avg_1h"
-    t.datetime "date"
+    t.datetime "datetime"
   end
 
 end

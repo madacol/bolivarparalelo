@@ -1,4 +1,4 @@
-<% data.each do |currency_pair_key, currency_pair_data| %>
+<% data[:rates].each do |currency_pair_key, currency_pair_data| %>
 
   <%
     currency_pair_units = "<sup>#{currency_pair_data[:numerator]}</sup>&frasl;<sub>#{currency_pair_data[:denominator]}</sub>" 

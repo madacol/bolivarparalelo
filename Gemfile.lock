@@ -30,6 +30,9 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.3)
       tilt (~> 2.0)
+    sinatra-activerecord (2.0.13)
+      activerecord (>= 3.2)
+      sinatra (>= 1.0)
     thin (1.7.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -47,6 +50,7 @@ DEPENDENCIES
   pg
   rake
   sinatra
+  sinatra-activerecord
   thin
 
 RUBY VERSION

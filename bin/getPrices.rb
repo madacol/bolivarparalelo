@@ -1,6 +1,6 @@
 require 'open-uri'
 require 'json'
-
+require 'sinatra/activerecord'
 require './models'
 
 MIN_FEEDBACK_SCORE = 99

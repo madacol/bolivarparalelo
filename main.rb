@@ -5,31 +5,32 @@ require './models'
 get '/' do
 
   p "Getting data"
-  last_rates = Rate.last
+  usd_btc_rates = UsdBtc.last
+  ves_btc_rates = VesBtc.last
   p 'Done!'
 
-  vef_btc_buy_price =     last_rates.vef_btc_buy
-  vef_btc_sell_price =    last_rates.vef_btc_sell
-  vef_btc_avg_1h_price =  last_rates.vef_btc_avg_1h
-  usd_btc_avg_price =     last_rates.usd_btc_avg
+  ves_btc_buy_price    =  ves_btc_rates.buy
+  ves_btc_sell_price   =  ves_btc_rates.sell
+  ves_btc_avg_1h_price =  ves_btc_rates.avg_1h
+  usd_btc_avg_price    =  usd_btc_rates.bitcoinaverage
 
-  vef_btc_avg_price =     (vef_btc_buy_price + vef_btc_sell_price) / 2
-  vef_usd_avg_price =     vef_btc_avg_price / usd_btc_avg_price
-  vef_usd_avg_1h_price =  vef_btc_avg_1h_price / usd_btc_avg_price
-  vef_usd_buy_price =     vef_btc_buy_price / usd_btc_avg_price
-  vef_usd_sell_price =    vef_btc_sell_price / usd_btc_avg_price
+  ves_btc_avg_price    =  (ves_btc_buy_price + ves_btc_sell_price) / 2
+  ves_usd_avg_price    =  ves_btc_avg_price / usd_btc_avg_price
+  ves_usd_avg_1h_price =  ves_btc_avg_1h_price / usd_btc_avg_price
+  ves_usd_buy_price    =  ves_btc_buy_price / usd_btc_avg_price
+  ves_usd_sell_price   =  ves_btc_sell_price / usd_btc_avg_price
 
   data = {
     rates: {
-      "VEFUSD" => {
-        numerator: "VEF",
+      "VESUSD" => {
+        numerator: "VES",
         denominator: "USD",
-        rates: { buy: vef_usd_buy_price, avg: vef_usd_avg_price, sell: vef_usd_sell_price, avg1h: vef_usd_avg_1h_price },
+        rates: { buy: ves_usd_buy_price, avg: ves_usd_avg_price, sell: ves_usd_sell_price, avg1h: ves_usd_avg_1h_price },
       },
-      "VEFBTC" => {
-        numerator: "VEF",
+      "VESBTC" => {
+        numerator: "VES",
         denominator: "BTC",
-        rates: { buy: vef_btc_buy_price, avg: vef_btc_avg_price, sell: vef_btc_sell_price },
+        rates: { buy: ves_btc_buy_price, avg: ves_btc_avg_price, sell: ves_btc_sell_price },
       },
       "USDBTC" => {
         numerator: "USD",
@@ -37,7 +38,7 @@ get '/' do
         rates: { avg: usd_btc_avg_price },
       },
     },
-    datetime: last_rates.datetime
+    datetime: usd_btc_rates.datetime
   }
 
   erb :index, :locals => {:data => data}

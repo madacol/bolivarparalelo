@@ -51,25 +51,31 @@ def getPrice(url, sort_order)
   return price
 end
 
+bolivar_ticker = 'ves'
 p 'Getting prices'
-vef_btc_buy_price = getPrice( localbitcoins_buy_list_url('vef'), ASCENDING_ORDER )
-vef_btc_sell_price = getPrice( localbitcoins_sell_list_url('vef'), DESCENDING_ORDER )
-vef_btc_avg_1h_price = JSON.parse( open(localbitcoins_bitcoinaverage_url).read )['VEF']['avg_1h'].to_f
+ves_btc_buy_price = getPrice( localbitcoins_buy_list_url(bolivar_ticker), ASCENDING_ORDER )
+ves_btc_sell_price = getPrice( localbitcoins_sell_list_url(bolivar_ticker), DESCENDING_ORDER )
+ves_btc_avg_1h_price = JSON.parse( open(localbitcoins_bitcoinaverage_url).read )[bolivar_ticker.upcase]['avg_1h'].to_f
 usd_btc_avg_price = 1 / JSON.parse( open(bitcoinaverage_usd_rates_url).read )['rates']['BTC']['rate'].to_f
 
-vef_btc_avg_price = (vef_btc_buy_price + vef_btc_sell_price) / 2
-vef_usd_avg_price = vef_btc_avg_price / usd_btc_avg_price
-vef_usd_avg_1h_price = vef_btc_avg_1h_price / usd_btc_avg_price
-vef_usd_buy_price = vef_btc_buy_price / usd_btc_avg_price
-vef_usd_sell_price = vef_btc_sell_price / usd_btc_avg_price
+ves_btc_avg_price = (ves_btc_buy_price + ves_btc_sell_price) / 2
+ves_usd_avg_price = ves_btc_avg_price / usd_btc_avg_price
+ves_usd_avg_1h_price = ves_btc_avg_1h_price / usd_btc_avg_price
+ves_usd_buy_price = ves_btc_buy_price / usd_btc_avg_price
+ves_usd_sell_price = ves_btc_sell_price / usd_btc_avg_price
 p 'Done!'
 
 p 'Saving to Database'
-Rate.create(
-  usd_btc_avg:    usd_btc_avg_price,
-  vef_btc_buy:    vef_btc_buy_price,
-  vef_btc_sell:   vef_btc_sell_price,
-  vef_btc_avg_1h: vef_btc_avg_1h_price,
-  datetime:       Time.now
+
+UsdBtc.create(
+  bitcoinaverage: usd_btc_avg_price,
+  datetime: Time.now
 )
+VesBtc.create(
+  buy:      ves_btc_buy_price,
+  sell:     ves_btc_sell_price,
+  avg_1h:   ves_btc_avg_1h_price,
+  datetime: Time.now
+)
+
 p 'Done!'

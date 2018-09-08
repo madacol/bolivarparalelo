@@ -1,5 +1,5 @@
 <br>
-<h6 class="text-center">Last update: <%=data[:datetime]%></h5>
+<div class="text-center">Updated: <h5><%=data[:time]%></h5></div>
 
 <% data[:rates].each do |currency_pair_key, currency_pair_data| %>
 
@@ -17,7 +17,7 @@
     end
   %>
 
-  <div class="py-5">
+  <div class="py-4">
     <div class="container">
       <div class="row">
         <div class="col-3 offset-md-1 col-md-3 offset-lg-2 col-lg-2 text-center align-self-center"><%=html_rates_keys%></div>

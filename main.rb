@@ -20,6 +20,21 @@ get '/' do
   ves_usd_buy_price    =  ves_btc_buy_price / usd_btc_avg_price
   ves_usd_sell_price   =  ves_btc_sell_price / usd_btc_avg_price
 
+
+  diff_time_in_minutes = ( (Time.now - usd_btc_rates.datetime) / 60 ).to_i
+  if diff_time_in_minutes > 0
+    hours, minutes = diff_time_in_minutes.divmod 60
+    days, hours    = hours.divmod                24
+
+    time_strings = []
+    time_strings.push "#{days} days"       unless (days    == 0)
+    time_strings.push "#{hours} hours"     unless (hours   == 0)
+    time_strings.push "#{minutes} minutes" unless (minutes == 0)
+    time_string = time_strings.join ", "
+    time_string.concat " ago"
+  else
+    time_string = "Just now"
+  end
   data = {
     rates: {
       "VESUSD" => {
@@ -38,7 +53,7 @@ get '/' do
         rates: { avg: usd_btc_avg_price },
       },
     },
-    datetime: usd_btc_rates.datetime
+    time: time_string
   }
 
   erb :index, :locals => {:data => data}

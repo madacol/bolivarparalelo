@@ -10,9 +10,12 @@
     currency_pair_data[:rates].each do |key, rate|
       html_tag = (key==:avg or key==:avg1h) ? "h3" : "h7"
       html_rates_keys.concat "<#{html_tag}> #{key} </#{html_tag}>"
+      num_digits = rate.round.digits.length
+      if num_digits < 4 then    rate = rate.round(4-num_digits)    else rate = rate.round end
+      rate_str = rate.to_s.reverse.gsub('.', ',').gsub(/(\d{3})(?=\d)/, '\\1.').reverse
       html_rates.concat "
       <#{html_tag} id=\"#{currency_pair_key}_#{key}\">
-        #{rate.round(2).to_s.reverse.gsub('.', ',').gsub(/(\d{3})(?=\d)/, '\\1.').reverse}
+        #{rate_str}
       </#{html_tag}>"
     end
   %>

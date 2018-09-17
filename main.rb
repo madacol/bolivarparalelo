@@ -2,6 +2,25 @@ require 'sinatra'
 require 'sinatra/activerecord'
 require './models'
 
+def getHumanTime(time_in_seconds)
+  diff_time_in_minutes = (time_in_seconds / 60).round
+  if diff_time_in_minutes == 0
+    human_time = "Just now"
+  else
+    hours, minutes = diff_time_in_minutes.divmod 60
+    days, hours    = hours.divmod                24
+
+    time_strings = []
+    time_strings.push "#{days} dias"       unless (days    == 0)
+    time_strings.push "#{hours} horas"     unless (hours   == 0)
+    time_strings.push "#{minutes} minutos" unless (minutes == 0)
+
+    human_time = "Hace "
+    human_time.concat( time_strings.join ", " )
+  end
+  return human_time
+end
+
 get '/' do
 
   p "Getting data"
@@ -21,23 +40,8 @@ get '/' do
   ves_usd_buy_price    =  ves_btc_buy_price    / usd_btc_avg_price
   ves_usd_sell_price   =  ves_btc_sell_price   / usd_btc_avg_price
 
-
-  diff_time_in_minutes = ( (Time.now - usd_btc_rates.datetime) / 60 ).to_i
-  if diff_time_in_minutes == 0
-    time_string = "Just now"
-  else
-    hours, minutes = diff_time_in_minutes.divmod 60
-    days, hours    = hours.divmod                24
-
-    time_strings = []
-    time_strings.push "#{days} days"       unless (days    == 0)
-    time_strings.push "#{hours} hours"     unless (hours   == 0)
-    time_strings.push "#{minutes} minutes" unless (minutes == 0)
-
-    time_string = time_strings.join ", "
-    time_string.concat " ago"
-  end
-
+  time_since_last_update = Time.now - usd_btc_current_rate.datetime
+  time_string = getHumanTime(time_since_last_update)
 
   data = {
     rates: {

@@ -13,6 +13,7 @@ require 'i18n'
 MIN_FEEDBACK_SCORE = 99
 MIN_TRADE_COUNT = 100
 MIN_BTC_VOLUME_TO_GET_PRICE = 0.5
+MIN_ADS_TO_GET_PRICE = 5
 MAX_PAGES_TO_SAMPLE = 3
 ASCENDING_ORDER = false
 DESCENDING_ORDER = true
@@ -127,11 +128,12 @@ end
 def getPriceFromAds(ad_list)
   price = 0
   btc_volume = 0.0
-  ad_list.each do |ad|      # return price when minimum volume is reached
+  ad_list.each.with_index(1) do |ad, index|      # return price when minimum volume and minimum number of ads are reached
+    p "#{ad['data']['bank_name']}  = #{ad['data']['keywords']}"
     fiat_available = ad['data']['max_amount_available'].to_f
     price = ad['data']['temp_price'].to_f
     btc_volume += fiat_available / price
-    return price if btc_volume >= MIN_BTC_VOLUME_TO_GET_PRICE
+    return price if btc_volume >= MIN_BTC_VOLUME_TO_GET_PRICE and index >= MIN_ADS_TO_GET_PRICE
   end
   p '  Warning: minimum volume-price not achieved'
   return price

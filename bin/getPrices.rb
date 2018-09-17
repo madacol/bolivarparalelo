@@ -4,6 +4,12 @@ require 'sinatra/activerecord'
 require './models'
 require 'i18n'
 
+
+###############################################################
+#######################   CONFIGURATION   #####################
+###############################################################
+
+
 MIN_FEEDBACK_SCORE = 99
 MIN_TRADE_COUNT = 100
 MIN_BTC_VOLUME_TO_GET_PRICE = 0.5
@@ -12,7 +18,7 @@ ASCENDING_ORDER = false
 DESCENDING_ORDER = true
 BITCOINAVERAGE_USD_RATES_URL = "https://apiv2.bitcoinaverage.com/constants/exchangerates/global"
 LOCALBITCOINS_BITCOINAVERAGE_URL = "https://localbitcoins.com/bitcoinaverage/ticker-all-currencies/"
-def localbitcoins_ad_list_url(ticker, buyOrSell) "https://localbitcoins.com/#{buyOrSell}-bitcoins-online/#{ticker}/.json" end
+def localbitcoins_ad_list_url(ticker, buy_or_sell_str) "https://localbitcoins.com/#{buy_or_sell_str}-bitcoins-online/#{ticker}/.json" end
 
 KEYWORDS_TRANSLATIONS =
 {
@@ -46,6 +52,50 @@ KEYWORDS_WHITELIST =
 }
 
 
+###############################################################
+#########################   FUNCTIONS   #######################
+###############################################################
+
+
+##########################   LEVEL 0   ########################
+
+def getListFromUrl(url)
+  p "    Fecthing: #{url}"
+  json_raw = open(url).read
+  p '    Done!'
+  return JSON.parse json_raw
+end
+
+##########################   LEVEL 1   ########################
+
+def getAdsFromList(list)
+  return list['data']['ad_list']
+end
+
+def getNextUrlFromList(list)
+  return list['pagination'].nil? ? nil : list['pagination']['next']
+end
+
+##########################   LEVEL 2   ########################
+
+def removeUnneededParams(ad_list)
+  return ad_list.collect do |ad|
+    {
+      "data" =>
+      {
+        "bank_name"            => ad['data']['bank_name'],
+        "temp_price"           => ad['data']['temp_price'],
+        "max_amount_available" => ad['data']['max_amount_available'],
+        "profile" =>
+        {
+          "trade_count"    => ad['data']['profile']['trade_count'],
+          "feedback_score" => ad['data']['profile']['feedback_score']
+        }
+      }
+    }
+  end
+end
+
 def getHighReputationAds(ad_list)
   ad_list.reject! do |ad|
     trade_count = ad['data']['profile']['trade_count'].tr(' +','').to_i
@@ -55,7 +105,7 @@ def getHighReputationAds(ad_list)
   return ad_list
 end
 
-def addKeywords(ad_list, ticker)
+def addKeywordsToAds(ad_list, ticker)
   return ad_list.collect do |ad|
     payment_method = ad['data']['bank_name']
     payment_method_normalized = I18n.transliterate payment_method.downcase
@@ -74,59 +124,7 @@ def addKeywords(ad_list, ticker)
   end
 end
 
-def getWhitelistedAds(ad_list, ticker)
-  if KEYWORDS_WHITELIST.has_key? ticker
-    return ad_list.reject do |ad|
-      not ad['data']['keywords'].any? do |keyword|
-        KEYWORDS_WHITELIST[ticker].include? keyword
-      end
-    end
-  else return ad_list
-  end
-end
-
-def getNeededParams(ad_list)
-  return ad_list.collect do |ad|
-    {
-      "data" =>
-      {
-        "bank_name"            => ad['data']['bank_name'],
-        "temp_price"           => ad['data']['temp_price'],
-        "max_amount_available" => ad['data']['max_amount_available'],
-        "profile" =>
-        {
-          "trade_count"    => ad['data']['profile']['trade_count'],
-          "feedback_score" => ad['data']['profile']['feedback_score']
-        }
-      }
-    }
-  end
-end
-
-def getAdsFromUrl(url)
-  ad_list = []
-  for i in 1..MAX_PAGES_TO_SAMPLE
-    p "    Fecthing: #{url}"
-    list = JSON.parse open(url).read
-    p '    Done!'
-    url = list['pagination'].nil? ? nil : list['pagination']['next']
-    ad_list_raw = list['data']['ad_list']
-    ad_list_sanitized = getHighReputationAds( getNeededParams(ad_list_raw) )
-    ad_list.concat ad_list_sanitized
-    break if url.nil?
-  end
-  return ad_list
-end
-
-def getLobitPrice(ticker, buyOrSell)
-  url = localbitcoins_ad_list_url(ticker, buyOrSell)
-  p '  Loading sources'
-  ad_list = getAdsFromUrl(url)
-  p '  Done!'
-  ad_list.sort_by! {|ad| ad['data']['temp_price'].to_f}
-  ad_list.reverse! if buyOrSell == 'sell'
-  ad_list = addKeywords(ad_list, ticker)
-  ad_list = getWhitelistedAds( ad_list, ticker )
+def getPriceFromAds(ad_list)
   price = 0
   btc_volume = 0.0
   ad_list.each do |ad|      # return price when minimum volume is reached
@@ -139,6 +137,47 @@ def getLobitPrice(ticker, buyOrSell)
   return price
 end
 
+##########################   LEVEL 3   ########################
+
+def getSanitizedAdsFromAllUrls(url)
+  ad_list = []
+  for i in 1..MAX_PAGES_TO_SAMPLE
+    list = getListFromUrl(url)
+    url = getNextUrlFromList(list)
+    ad_list_raw = getAdsFromList(list)
+    ad_list_sanitized = getHighReputationAds( removeUnneededParams( ad_list_raw ) )
+    ad_list.concat ad_list_sanitized
+    break if url.nil?
+  end
+  return ad_list
+end
+
+def getAdsWithWhitelistedKeywords(ad_list_with_keywords, ticker)
+  if KEYWORDS_WHITELIST.has_key? ticker
+    return ad_list_with_keywords.reject do |ad|
+      not ad['data']['keywords'].any? do |keyword|
+        KEYWORDS_WHITELIST[ticker].include? keyword
+      end
+    end
+  else return ad_list_with_keywords
+  end
+end
+
+##########################   LEVEL 4   ########################
+
+def getLobitPrice(ticker, buy_or_sell_str)
+  url = localbitcoins_ad_list_url(ticker, buy_or_sell_str)
+  p '  Loading sources'
+  ad_list = getSanitizedAdsFromAllUrls(url)
+  p '  Done!'
+  ad_list.sort_by! {|ad| ad['data']['temp_price'].to_f}
+  ad_list.reverse! if buy_or_sell_str == 'sell'
+  ad_list = addKeywordsToAds(ad_list, ticker)
+  ad_list = getAdsWithWhitelistedKeywords( ad_list, ticker )
+  return getPriceFromAds(ad_list)
+end
+
+##########################   LEVEL 5   ########################
 
 def getLobitPrices(ticker)
   p 'Getting buy price'
@@ -151,7 +190,13 @@ def getLobitPrices(ticker)
   return { buy:  buy, sell: sell, avg_1h: avg_1h }
 end
 
-if __FILE__ == $0
+
+###############################################################
+#########################   EXECUTION   #######################
+###############################################################
+
+
+if __FILE__ == $0     # Code inside this "if" will not be executed when used as a library (required from another script or irb)
   bolivar_ticker = 'ves'
   ves_btc_prices = getLobitPrices bolivar_ticker
   usd_btc_avg_price = 1 / JSON.parse( open(BITCOINAVERAGE_USD_RATES_URL).read )['rates']['BTC']['rate'].to_f

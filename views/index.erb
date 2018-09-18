@@ -42,6 +42,7 @@
   <a class="navbar-brand">Bitcoin: <%=data[:rates][:bitcoin][:rates][:avg]%> $</a>
 </nav>
 
+<script src="js/moment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
 <script>
   var ctx = document.getElementById('myChart').getContext('2d');
@@ -64,8 +65,17 @@
       legend: {display: false},
       maintainAspectRatio: false,
       tooltips: {
-      mode: 'nearest',
-      intersect: false
+        mode: 'nearest',
+        intersect: false
+      },
+      scales: {
+        xAxes: [{
+          type: 'time',
+          time: {
+            unit: 'hour',
+            parser: function(str) {return moment.unix(str);},
+          }
+        }]
       }
     }
   });

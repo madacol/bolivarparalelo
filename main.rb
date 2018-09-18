@@ -54,7 +54,7 @@ get '/' do
     ves_btc_avg = (rate.buy + rate.sell) / 2
     ves_usd_avg = ves_btc_avg / usd_btc_avg_price
     chart_rates.push( ves_usd_avg.round(2) )
-    chart_labels.push rate.datetime.hour
+    chart_labels.push rate.datetime.localtime("-04:00").strftime("%H:%M")
   end
 
   data = {

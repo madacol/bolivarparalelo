@@ -1,35 +1,72 @@
-<br>
-<div class="text-center">Updated: <h5><%=data[:time]%></h5></div>
-
-<% data[:rates].each do |currency_pair_key, currency_pair_data| %>
-
-  <%
-    currency_pair_units = "<sup>#{currency_pair_data[:numerator]}</sup>&frasl;<sub>#{currency_pair_data[:denominator]}</sub>" 
-    html_rates_keys = ""
-    html_rates = ""
-    currency_pair_data[:rates].each do |key, rate|
-      html_tag = (key==:avg or key==:avg1h) ? "h3" : "h7"
-      html_rates_keys.concat "<#{html_tag}> #{key} </#{html_tag}>"
-      num_digits = rate.round.digits.length
-      if num_digits < 4 then    rate = rate.round(4-num_digits)    else rate = rate.round end
-      rate_str = rate.to_s.reverse.gsub('.', ',').gsub(/(\d{3})(?=\d)/, '\\1.').reverse
-      html_rates.concat "
-      <#{html_tag} id=\"#{currency_pair_key}_#{key}\">
-        #{rate_str}
-      </#{html_tag}>"
-    end
-  %>
-
-  <div class="py-4">
-    <div class="container">
-      <div class="row">
-        <div class="col-3 offset-md-1 col-md-3 offset-lg-2 col-lg-2 text-center align-self-center"><%=html_rates_keys%></div>
-        <div class="col-6 col-md-4 col-lg-4 text-center align-self-center"><%=html_rates%></div>
-        <div class="col-3 col-md-3 col-lg-2 text-center align-self-center"><h2><%= currency_pair_units %></h2></div>
-      </div>
+<div class="pos-f-t">
+  <div class="collapse" id="navbarToggleExternalContent">
+    <div class="content-nav-hide bg-gradient p-4">
+      <h5 class="text-white h4">Más contenido</h5>
+      <span class="text-muted">Próximamente...</span>
     </div>
   </div>
+  <nav class="navbar navbar-dark">
+    <a class="navbar-brand">Bolívar Paralelo</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+</div>
 
-<% end %>
 
-<div class="text-center"><b>Disclaimer:</b> VES/USD means how many VES buys 1 USD. We are <b>NOT</b> using the conventional currency-pair-quotation used in Forex. <a href="https://en.wikipedia.org/wiki/Talk:Currency_pair#Format_of_quoting_currencies">See this</a></div>
+<div class="px-2">
+  <div class="text-center update-time py-1">Actualizado: <%= data[:time] %></div>
+
+  <div id="content" class="d-flex justify-content-center">
+
+    <div class="d-flex justify-content-center flex-wrap flex-row">
+      <div class="align-self-center"><div class="monto-label">        <%= data[:rates][:primary][:denominator] %>:</div></div>
+      <div class="align-self-center"><div class="monto px-2 px-md-4"> <%= data[:rates][:primary][:rates][:avg] %></div></div>
+      <div class="align-self-center"><div class="monto-label">        <%= data[:rates][:primary][:numerator] %></div></div>
+    </div>
+
+    <div class="chart-container" style="position: relative; width: 100%">
+      <canvas id="myChart" height="150"></canvas>
+    </div>
+
+    <div class="d-flex justify-content-center flex-wrap flex-row">
+      <div class="align-self-center"><div class="monto-label">        <%= data[:rates][:secondary][:denominator] %>:</div></div>
+      <div class="align-self-center"><div class="monto px-2 px-md-4"> <%= data[:rates][:secondary][:rates][:avg] %></div></div>
+      <div class="align-self-center"><div class="monto-label">        <%= data[:rates][:secondary][:numerator] %></div></div>
+    </div>
+
+  </div>
+</div>
+
+<nav class="navbar d-flex justify-content-center fixed-bottom">
+  <a class="navbar-brand">Bitcoin: <%=data[:rates][:bitcoin][:rates][:avg]%> $</a>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+<script>
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var data = {
+    labels: <%= data[:chart][:labels] %>,
+    datasets: [{
+      borderColor: '#003b68',
+      data: <%= data[:chart][:rates] %>,
+    }]
+  }
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: data,
+
+    // Configuration options go here
+    options: {
+      legend: {display: false},
+      maintainAspectRatio: false,
+      tooltips: {
+      mode: 'nearest',
+      intersect: false
+      }
+    }
+  });
+</script>

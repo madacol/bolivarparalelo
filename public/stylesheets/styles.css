@@ -1,0 +1,36 @@
+nav{
+  background-color: #003b68;
+}
+.content-nav-hide{
+  background-color: #003b68;
+}
+body{
+  background-color: #000000;
+  color: #fff;
+  font-family: Courier New;
+  font-size: medium;
+}
+#content {
+  flex-direction: column;
+  min-height: 70vh;
+}
+.monto {
+  font-size: calc(30px + 6vw);
+  line-height: 1.15;
+  padding-top: calc(10px + 1vh);
+  padding-bottom: calc(10px + 1vh);
+}
+.monto-label {
+  font-size: calc(10px + 2vw);
+  line-height: 1.15;
+}
+.update-time {
+  font-size: 20px;
+  line-height: 1.15;
+}
+.card-footer{
+  background-color: #003b68;
+  color: #fff;
+  font-family: Courier New;
+  font-size: medium;
+}

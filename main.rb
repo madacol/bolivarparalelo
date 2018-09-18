@@ -2,10 +2,12 @@ require 'sinatra'
 require 'sinatra/activerecord'
 require './models'
 
-def getHumanTime(time_in_seconds)
-  diff_time_in_minutes = (time_in_seconds / 60).round
+POINTS_TO_SHOW_IN_GRAPH = 48
+
+def getHumanTime(seconds)
+  diff_time_in_minutes = (seconds / 60).round
   if diff_time_in_minutes == 0
-    human_time = "Just now"
+    human_time = "Hace pocos segundos"
   else
     hours, minutes = diff_time_in_minutes.divmod 60
     days, hours    = hours.divmod                24
@@ -21,47 +23,61 @@ def getHumanTime(time_in_seconds)
   return human_time
 end
 
+def getHumanRate(rate)
+  num_digits = rate.round.digits.length
+  if num_digits < 4 then    rate = rate.round(4-num_digits)    else rate = rate.round end
+  rate_str = rate.to_s.reverse.gsub('.', ',').gsub(/(\d{3})(?=\d)/, '\\1.').reverse
+  return rate_str
+end
+
 get '/' do
 
   p "Getting data"
-  usd_btc_rates = UsdBtc.last
-  ves_btc_rates = VesBtc.last
+  ves_btc_rates        = VesBtc.last POINTS_TO_SHOW_IN_GRAPH
+  usd_btc_current_rate = UsdBtc.last
   p 'Done!'
 
-  ves_btc_buy_price    =  ves_btc_rates.buy
-  ves_btc_sell_price   =  ves_btc_rates.sell
-  ves_btc_avg_1h_price =  ves_btc_rates.avg_1h
-  usd_btc_avg_price    =  usd_btc_rates.bitcoinaverage
+  ves_btc_current_rate =  ves_btc_rates.last
+  ves_btc_buy_price    =  ves_btc_current_rate.buy
+  ves_btc_sell_price   =  ves_btc_current_rate.sell
+  usd_btc_avg_price    =  usd_btc_current_rate.bitcoinaverage
 
   ves_btc_avg_price    =  (ves_btc_buy_price + ves_btc_sell_price) / 2
-
-  ves_usd_avg_price    =  ves_btc_avg_price    / usd_btc_avg_price
-  ves_usd_avg_1h_price =  ves_btc_avg_1h_price / usd_btc_avg_price
-  ves_usd_buy_price    =  ves_btc_buy_price    / usd_btc_avg_price
-  ves_usd_sell_price   =  ves_btc_sell_price   / usd_btc_avg_price
+  ves_usd_avg_price    =  ves_btc_avg_price / usd_btc_avg_price
 
   time_since_last_update = Time.now - usd_btc_current_rate.datetime
   time_string = getHumanTime(time_since_last_update)
 
+  chart_rates = []
+  chart_labels = []
+  ves_btc_rates.each do |rate|
+    ves_btc_avg = (rate.buy + rate.sell) / 2
+    ves_usd_avg = ves_btc_avg / usd_btc_avg_price
+    chart_rates.push( ves_usd_avg.round(2) )
+    chart_labels.push rate.datetime.hour
+  end
+
   data = {
     rates: {
-      "VESUSD" => {
-        numerator: "VES",
-        denominator: "USD",
-        rates: { buy: ves_usd_buy_price, avg: ves_usd_avg_price, sell: ves_usd_sell_price, avg1h: ves_usd_avg_1h_price },
+      primary: {
+        numerator: "Bs",
+        denominator: "Dólar",
+        rates: { avg: getHumanRate( ves_usd_avg_price ) },
       },
-      "VESBTC" => {
-        numerator: "VES",
+      secondary: {
+        numerator: "Bs",
         denominator: "BTC",
-        rates: { buy: ves_btc_buy_price, avg: ves_btc_avg_price, sell: ves_btc_sell_price },
+        rates: { avg: getHumanRate( ves_btc_avg_price ) },
       },
-      "USDBTC" => {
-        numerator: "USD",
-        denominator: "BTC",
-        rates: { avg: usd_btc_avg_price },
+      bitcoin: {
+        rates: { avg: getHumanRate( usd_btc_avg_price ) },
       },
     },
-    time: time_string
+    time: time_string,
+    chart: {
+      labels: chart_labels,
+      rates: chart_rates,
+    }
   }
 
   erb :index, :locals => {:data => data}

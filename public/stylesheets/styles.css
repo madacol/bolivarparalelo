@@ -10,6 +10,9 @@ body{
   font-family: Courier New;
   font-size: medium;
 }
+#body {
+  padding-bottom: 50px
+}
 #content {
   flex-direction: column;
   min-height: 70vh;

@@ -2,7 +2,7 @@ require 'sinatra'
 require 'sinatra/activerecord'
 require './models'
 
-POINTS_TO_SHOW_IN_GRAPH = 48
+POINTS_TO_SHOW_IN_GRAPH = 24*7
 
 def getHumanTime(seconds)
   diff_time_in_minutes = (seconds / 60).round

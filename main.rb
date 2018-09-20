@@ -48,13 +48,13 @@ get '/' do
   time_since_last_update = Time.now - usd_btc_current_rate.datetime
   time_string = getHumanTime(time_since_last_update)
 
-  chart_rates = []
-  chart_labels = []
-  ves_btc_rates.each do |rate|
+  chart_data = ves_btc_rates.collect do |rate|
     ves_btc_avg = (rate.buy + rate.sell) / 2
     ves_usd_avg = ves_btc_avg / usd_btc_avg_price
-    chart_rates.push( ves_usd_avg.round(2) )
-    chart_labels.push rate.datetime.to_i
+    {
+      x: rate.datetime.to_datetime.strftime('%Q').to_i,
+      y: ves_usd_avg.round(2),
+    }
   end
 
   data = {
@@ -74,10 +74,7 @@ get '/' do
       },
     },
     time: time_string,
-    chart: {
-      labels: chart_labels,
-      rates: chart_rates,
-    }
+    chart: {data: chart_data},
   }
 
   erb :index, :locals => {:data => data}

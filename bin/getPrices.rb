@@ -53,6 +53,15 @@ KEYWORDS_TRANSLATIONS =
 ###############################################################
 
 
+PAYMENT_METHODS_WHITELIST =
+[
+  "NATIONAL_BANK",
+  "SPECIFIC_BANK",
+  "CASH_DEPOSIT",
+  "CASH_AT_ATM",
+  "SEPA",
+]
+
 KEYWORDS_WHITELIST =
 {
   "ves" =>
@@ -114,6 +123,7 @@ def removeUnneededParams(ad_list)
         "bank_name"            => ad['data']['bank_name'],
         "temp_price"           => ad['data']['temp_price'],
         "max_amount_available" => ad['data']['max_amount_available'],
+        "online_provider"      => ad['data']['online_provider'],
         "profile" =>
         {
           "trade_count"    => ad['data']['profile']['trade_count'],
@@ -131,6 +141,13 @@ def getHighReputationAds(ad_list)
     (trade_count < MIN_TRADE_COUNT or feedback_score < MIN_FEEDBACK_SCORE)
   end
   return ad_list
+end
+
+def getAdsWithWhitelistedPaymentMethods(ad_list)
+  return ad_list.keep_if do |ad|
+    payment_method = ad['data']['online_provider']
+    PAYMENT_METHODS_WHITELIST.include? payment_method
+  end
 end
 
 def addKeywordsToAds(ad_list, ticker)
@@ -204,6 +221,7 @@ def getLobitPrice(ticker, buy_or_sell_str)
   ad_list = getSanitizedAdsFromAllUrls(url)
   return nil if ad_list.nil?
   p '  Done!'
+  ad_list = getAdsWithWhitelistedPaymentMethods ad_list
   ad_list.sort_by! {|ad| ad['data']['temp_price'].to_f}
   ad_list.reverse! if buy_or_sell_str == 'sell'
   ad_list = addKeywordsToAds(ad_list, ticker)

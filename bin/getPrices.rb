@@ -135,19 +135,19 @@ end
 
 def addKeywordsToAds(ad_list, ticker)
   return ad_list.collect do |ad|
-    payment_method = ad['data']['bank_name']
-    payment_method_normalized = I18n.transliterate payment_method.downcase
+    bank_name = ad['data']['bank_name']
+    bank_name_normalized = I18n.transliterate bank_name.downcase
     regex1 = /[^a-zA-Z0-9.,]+/     # matches all characters that are not: a-zA-Z0-9_.,   | "a-z" translates to abcdefghij...
     regex2 = /(?<=\D)[.,]/         # matches any , or . that is preceded by a non-digit
     regex  = /#{regex1}|#{regex2}/ # matches regex1 or regex2
-    payment_method_keywords_raw = payment_method_normalized.split(regex)
+    bank_name_keywords_raw = bank_name_normalized.split(regex)
     if KEYWORDS_TRANSLATIONS.has_key? ticker
-      payment_method_keywords_raw.collect! do |keyword|
+      bank_name_keywords_raw.collect! do |keyword|
         KEYWORDS_TRANSLATIONS[ticker].has_key?( keyword )  ?  KEYWORDS_TRANSLATIONS[ticker][keyword]  :  keyword
       end
     end
-    payment_method_keywords = payment_method_keywords_raw.reject(&:empty?).uniq
-    ad['data']['keywords'] = payment_method_keywords
+    bank_name_keywords = bank_name_keywords_raw.reject(&:empty?).uniq
+    ad['data']['keywords'] = bank_name_keywords
     ad
   end
 end

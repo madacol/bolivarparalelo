@@ -6,7 +6,7 @@ require 'i18n'
 
 
 ###############################################################
-#######################   CONFIGURATION   #####################
+#######################   CONFIGURATIONS   ####################
 ###############################################################
 
 
@@ -15,11 +15,22 @@ MIN_TRADE_COUNT = 100
 MIN_BTC_VOLUME_TO_GET_PRICE = 0.5
 MIN_ADS_TO_GET_PRICE = 5
 MAX_PAGES_TO_SAMPLE = 3
-ASCENDING_ORDER = false
-DESCENDING_ORDER = true
+
+
+###############################################################
+############################   URLS   #########################
+###############################################################
+
+
 BITCOINAVERAGE_USD_RATES_URL = "https://apiv2.bitcoinaverage.com/constants/exchangerates/global"
 LOCALBITCOINS_BITCOINAVERAGE_URL = "https://localbitcoins.com/bitcoinaverage/ticker-all-currencies/"
 def localbitcoins_ad_list_url(ticker, buy_or_sell_str) "https://localbitcoins.com/#{buy_or_sell_str}-bitcoins-online/#{ticker}/.json" end
+
+
+###############################################################
+########################   TRANSLATIONS   #####################
+###############################################################
+
 
 KEYWORDS_TRANSLATIONS =
 {
@@ -34,6 +45,12 @@ KEYWORDS_TRANSLATIONS =
     "occidental"      => "bod"
   }
 }
+
+
+###############################################################
+#########################   WHITELISTS   ######################
+###############################################################
+
 
 KEYWORDS_WHITELIST =
 {
@@ -110,8 +127,8 @@ def addKeywordsToAds(ad_list, ticker)
   return ad_list.collect do |ad|
     payment_method = ad['data']['bank_name']
     payment_method_normalized = I18n.transliterate payment_method.downcase
-    regex1 = "[^a-zA-Z0-9_.,]+"    # matches all characters that are not: a-zA-Z0-9_.,   | "a-z" translates to abcdefghij...
-    regex2 = "(?<=\\D)[.,]"        # matches any , or . that is preceded by a non-digit
+    regex1 = /[^a-zA-Z0-9.,]+/     # matches all characters that are not: a-zA-Z0-9_.,   | "a-z" translates to abcdefghij...
+    regex2 = /(?<=\D)[.,]/         # matches any , or . that is preceded by a non-digit
     regex  = /#{regex1}|#{regex2}/ # matches regex1 or regex2
     payment_method_keywords_raw = payment_method_normalized.split(regex)
     if KEYWORDS_TRANSLATIONS.has_key? ticker

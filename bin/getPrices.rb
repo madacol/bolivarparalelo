@@ -153,7 +153,7 @@ def addKeywordsToAds(ad_list, ticker)
 end
 
 def getPriceFromAds(ad_list)
-  price = 0
+  price = nil
   btc_volume = 0.0
   ad_list.each.with_index(1) do |ad, index|      # return price when minimum volume and minimum number of ads are reached
     p "#{ad['data']['bank_name']}  = #{ad['data']['keywords']}"
@@ -162,7 +162,9 @@ def getPriceFromAds(ad_list)
     btc_volume += fiat_available / price
     return price if btc_volume >= MIN_BTC_VOLUME_TO_GET_PRICE and index >= MIN_ADS_TO_GET_PRICE
   end
-  p '  Warning: minimum volume-price not achieved'
+  if price.nil? then  p "  Couldn't get a price"
+  else                p "  Warning: minimum volume-price or ad-counts not achieved"
+  end
   return price
 end
 

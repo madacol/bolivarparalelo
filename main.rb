@@ -51,7 +51,7 @@ get '/' do
   chart_data = ves_btc_rates.collect do |rate|
     ves_btc_avg = (rate.buy + rate.sell) / 2
     ves_usd_avg = ves_btc_avg / usd_btc_avg_price
-    {
+    return {
       x: rate.datetime.to_datetime.strftime('%Q').to_i,
       y: ves_usd_avg.round(2),
     }

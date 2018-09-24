@@ -15,6 +15,7 @@ MIN_TRADE_COUNT = 100
 MIN_BTC_VOLUME_TO_GET_PRICE = 0.5
 MIN_ADS_TO_GET_PRICE = 5
 MAX_PAGES_TO_SAMPLE = 3
+MAX_RETRIES = 5
 
 
 ###############################################################
@@ -78,10 +79,19 @@ KEYWORDS_WHITELIST =
 ##########################   LEVEL 0   ########################
 
 def getListFromUrl(url)
-  p "    Fecthing: #{url}"
-  json_raw = open(url).read
-  p '    Done!'
-  return JSON.parse json_raw
+  retries = 0
+  begin
+    p "    Fecthing: #{url}"
+    json_raw = open(url).read
+    p '    Parsing JSON'
+    list = JSON.parse json_raw
+    p '    Done!'
+    return list
+  rescue Exception => e
+    retries = retries + 1
+    retry if retries < MAX_RETRIES
+    return nil
+  end
 end
 
 ##########################   LEVEL 1   ########################
@@ -162,12 +172,14 @@ def getSanitizedAdsFromAllUrls(url)
   ad_list = []
   for i in 1..MAX_PAGES_TO_SAMPLE
     list = getListFromUrl(url)
+    break if list.nil?
     url = getNextUrlFromList(list)
     ad_list_raw = getAdsFromList(list)
     ad_list_sanitized = getHighReputationAds( removeUnneededParams( ad_list_raw ) )
     ad_list.concat ad_list_sanitized
     break if url.nil?
   end
+  return nil if ad_list.empty?
   return ad_list
 end
 
@@ -188,6 +200,7 @@ def getLobitPrice(ticker, buy_or_sell_str)
   url = localbitcoins_ad_list_url(ticker, buy_or_sell_str)
   p '  Loading sources'
   ad_list = getSanitizedAdsFromAllUrls(url)
+  return nil if ad_list.nil?
   p '  Done!'
   ad_list.sort_by! {|ad| ad['data']['temp_price'].to_f}
   ad_list.reverse! if buy_or_sell_str == 'sell'
@@ -203,8 +216,10 @@ def getLobitPrices(ticker)
   buy = getLobitPrice(ticker, 'buy')
   p 'Getting sell price'
   sell = getLobitPrice(ticker, 'sell')
+  return nil if buy.nil? or sell.nil?
   p 'Getting avg_1h price'
-  avg_1h = JSON.parse( open(LOCALBITCOINS_BITCOINAVERAGE_URL).read )[ticker.upcase]['avg_1h'].to_f
+  list = getListFromUrl(LOCALBITCOINS_BITCOINAVERAGE_URL)
+  avg_1h = list.nil? ? nil : list[ticker.upcase]['avg_1h'].to_f
   p 'Done!'
   return { buy:  buy, sell: sell, avg_1h: avg_1h }
 end
@@ -218,6 +233,7 @@ end
 if __FILE__ == $0     # Code inside this "if" will not be executed when used as a library (required from another script or irb)
   bolivar_ticker = 'ves'
   ves_btc_prices = getLobitPrices bolivar_ticker
+  raise "Couldn't get a price" if ves_btc_prices.nil?
   usd_btc_avg_price = 1 / JSON.parse( open(BITCOINAVERAGE_USD_RATES_URL).read )['rates']['BTC']['rate'].to_f
 
   p ''

@@ -13,7 +13,7 @@ require 'i18n'
 MIN_FEEDBACK_SCORE = 99
 MIN_TRADE_COUNT = 100
 MIN_BTC_VOLUME_TO_GET_PRICE = 0.5
-MIN_ADS_TO_GET_PRICE = 5
+MIN_ADS_COUNT_TO_GET_PRICE = 5
 MAX_PAGES_TO_SAMPLE = 3
 MAX_RETRIES = 5
 
@@ -25,7 +25,7 @@ MAX_RETRIES = 5
 
 BITCOINAVERAGE_USD_RATES_URL = "https://apiv2.bitcoinaverage.com/constants/exchangerates/global"
 LOCALBITCOINS_BITCOINAVERAGE_URL = "https://localbitcoins.com/bitcoinaverage/ticker-all-currencies/"
-def localbitcoins_ad_list_url(ticker, buy_or_sell_str) "https://localbitcoins.com/#{buy_or_sell_str}-bitcoins-online/#{ticker}/.json" end
+def localbitcoins_ad_list_url(currency_code, buy_or_sell_str) "https://localbitcoins.com/#{buy_or_sell_str}-bitcoins-online/#{currency_code}/.json" end
 
 
 ###############################################################
@@ -150,7 +150,7 @@ def getAdsWithWhitelistedPaymentMethods(ad_list)
   end
 end
 
-def addKeywordsToAds(ad_list, ticker)
+def addKeywordsToAds(ad_list, currency_code)
   return ad_list.collect do |ad|
     bank_name = ad['data']['bank_name']
     bank_name_normalized = I18n.transliterate bank_name.downcase
@@ -158,9 +158,9 @@ def addKeywordsToAds(ad_list, ticker)
     regex2 = /(?<=\D)[.,]/         # matches any , or . that is preceded by a non-digit
     regex  = /#{regex1}|#{regex2}/ # matches regex1 or regex2
     bank_name_keywords_raw = bank_name_normalized.split(regex)
-    if KEYWORDS_TRANSLATIONS.has_key? ticker
+    if KEYWORDS_TRANSLATIONS.has_key? currency_code
       bank_name_keywords_raw.collect! do |keyword|
-        KEYWORDS_TRANSLATIONS[ticker].has_key?( keyword )  ?  KEYWORDS_TRANSLATIONS[ticker][keyword]  :  keyword
+        KEYWORDS_TRANSLATIONS[currency_code].has_key?( keyword )  ?  KEYWORDS_TRANSLATIONS[currency_code][keyword]  :  keyword
       end
     end
     bank_name_keywords = bank_name_keywords_raw.reject(&:empty?).uniq
@@ -177,7 +177,7 @@ def getPriceFromAds(ad_list)
     fiat_available = ad['data']['max_amount_available'].to_f
     price = ad['data']['temp_price'].to_f
     btc_volume += fiat_available / price
-    return price if btc_volume >= MIN_BTC_VOLUME_TO_GET_PRICE and index >= MIN_ADS_TO_GET_PRICE
+    return price if btc_volume >= MIN_BTC_VOLUME_TO_GET_PRICE and index >= MIN_ADS_COUNT_TO_GET_PRICE
   end
   if price.nil? then  p "  Couldn't get a price"
   else                p "  Warning: minimum volume-price or ad-counts not achieved"
@@ -202,11 +202,11 @@ def getSanitizedAdsFromAllUrls(url)
   return ad_list
 end
 
-def getAdsWithWhitelistedKeywords(ad_list_with_keywords, ticker)
-  if KEYWORDS_WHITELIST.has_key? ticker
+def getAdsWithWhitelistedKeywords(ad_list_with_keywords, currency_code)
+  if KEYWORDS_WHITELIST.has_key? currency_code
     return ad_list_with_keywords.reject do |ad|
       not ad['data']['keywords'].any? do |keyword|
-        KEYWORDS_WHITELIST[ticker].include? keyword
+        KEYWORDS_WHITELIST[currency_code].include? keyword
       end
     end
   else return ad_list_with_keywords
@@ -215,8 +215,8 @@ end
 
 ##########################   LEVEL 4   ########################
 
-def getLobitPrice(ticker, buy_or_sell_str)
-  url = localbitcoins_ad_list_url(ticker, buy_or_sell_str)
+def getLobitPrice(currency_code, buy_or_sell_str)
+  url = localbitcoins_ad_list_url(currency_code, buy_or_sell_str)
   p '  Loading sources'
   ad_list = getSanitizedAdsFromAllUrls(url)
   return nil if ad_list.nil?
@@ -224,22 +224,22 @@ def getLobitPrice(ticker, buy_or_sell_str)
   ad_list = getAdsWithWhitelistedPaymentMethods ad_list
   ad_list.sort_by! {|ad| ad['data']['temp_price'].to_f}
   ad_list.reverse! if buy_or_sell_str == 'sell'
-  ad_list = addKeywordsToAds(ad_list, ticker)
-  ad_list = getAdsWithWhitelistedKeywords( ad_list, ticker )
+  ad_list = addKeywordsToAds(ad_list, currency_code)
+  ad_list = getAdsWithWhitelistedKeywords( ad_list, currency_code )
   return getPriceFromAds(ad_list)
 end
 
 ##########################   LEVEL 5   ########################
 
-def getLobitPrices(ticker)
+def getLobitPrices(currency_code)
   p 'Getting buy price'
-  buy = getLobitPrice(ticker, 'buy')
+  buy = getLobitPrice(currency_code, 'buy')
   p 'Getting sell price'
-  sell = getLobitPrice(ticker, 'sell')
+  sell = getLobitPrice(currency_code, 'sell')
   return nil if buy.nil? or sell.nil?
   p 'Getting avg_1h price'
   list = getListFromUrl(LOCALBITCOINS_BITCOINAVERAGE_URL)
-  avg_1h = list.nil? ? nil : list[ticker.upcase]['avg_1h'].to_f
+  avg_1h = list.nil? ? nil : list[currency_code.upcase]['avg_1h'].to_f
   p 'Done!'
   return { buy:  buy, sell: sell, avg_1h: avg_1h }
 end

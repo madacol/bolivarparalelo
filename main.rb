@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require './models'
+require 'countries/global'
 
 POINTS_TO_SHOW_IN_GRAPH = 24*7
 
@@ -30,20 +31,39 @@ def getHumanRate(rate)
   return rate_str
 end
 
+def getBrowserLocale(request)
+  return request.env['HTTP_ACCEPT_LANGUAGE'].scan(/([a-z]{2})-([A-Z]{2})/).first
+end
+
 get '/' do
 
+  lang, country_code = getBrowserLocale(request)
+  country = Country[country_code]
+  currency_code = country.nil? ? 'btc' : country.currency.iso_code
+
   p "Getting data"
-  ves_btc_rates        = Currency.find_by(code:'ves').LobitPrices.last POINTS_TO_SHOW_IN_GRAPH
-  usd_btc_current_rate = UsdBtc.last
+    ves_btc_rates        = Currency.find_by(code:'ves').LobitPrices.last POINTS_TO_SHOW_IN_GRAPH
+    ves_btc_current_rate = ves_btc_rates.last
+    secondary_currency   = Currency.find_by(code: currency_code.downcase)
+    usd_btc_current_rate = UsdBtc.last
+    if secondary_currency.nil?
+      secondary_code          = 'btc'
+      secondary_btc_avg_price = 1
+    else
+      secondary_code          = secondary_currency.code
+      secondary_btc_rate      = secondary_currency.LobitPrices.last
+      secondary_btc_avg_price = ( secondary_btc_rate.buy + secondary_btc_rate.sell ) / 2
+    end
   p 'Done!'
 
-  ves_btc_current_rate =  ves_btc_rates.last
-  ves_btc_buy_price    =  ves_btc_current_rate.buy
-  ves_btc_sell_price   =  ves_btc_current_rate.sell
-  usd_btc_avg_price    =  usd_btc_current_rate.bitcoinaverage
 
-  ves_btc_avg_price    =  (ves_btc_buy_price + ves_btc_sell_price) / 2
-  ves_usd_avg_price    =  ves_btc_avg_price / usd_btc_avg_price
+  ves_btc_buy_price       = ves_btc_current_rate.buy
+  ves_btc_sell_price      = ves_btc_current_rate.sell
+  usd_btc_avg_price       = usd_btc_current_rate.bitcoinaverage
+
+  ves_btc_avg_price       = (ves_btc_buy_price + ves_btc_sell_price) / 2
+  ves_secondary_avg_price = ves_btc_avg_price / secondary_btc_avg_price
+  ves_usd_avg_price       = ves_btc_avg_price / usd_btc_avg_price
 
   time_since_last_update = Time.now - ves_btc_current_rate.created_at
   time_string = getHumanTime(time_since_last_update)
@@ -66,8 +86,8 @@ get '/' do
       },
       secondary: {
         numerator: "Bs",
-        denominator: "BTC",
-        rates: { avg: getHumanRate( ves_btc_avg_price ) },
+        denominator: secondary_code.upcase,
+        rates: { avg: getHumanRate( ves_secondary_avg_price ) },
       },
       bitcoin: {
         rates: { avg: getHumanRate( usd_btc_avg_price ) },
@@ -75,6 +95,9 @@ get '/' do
     },
     time: time_string,
     chart: {data: chart_data},
+    lang: lang,
+    country_code: country_code,
+    currency_code: currency_code,
   }
 
   erb :index, :locals => {:data => data}

@@ -237,11 +237,7 @@ def getLobitPrices(currency_code)
   p 'Getting sell price'
   sell = getLobitPrice(currency_code, 'sell')
   return nil if buy.nil? or sell.nil?
-  p 'Getting avg_1h price'
-  list = getListFromUrl(LOCALBITCOINS_BITCOINAVERAGE_URL)
-  avg_1h = list.nil? ? nil : list[currency_code.upcase]['avg_1h'].to_f
-  p 'Done!'
-  return { buy:  buy, sell: sell, avg_1h: avg_1h }
+  return { buy:  buy, sell: sell }
 end
 
 
@@ -251,8 +247,12 @@ end
 
 
 if __FILE__ == $0     # Code inside this "if" will not be executed when used as a library (required from another script or irb)
+  p 'Getting avg_1h list'
+  avg_1h_list = getListFromUrl(LOCALBITCOINS_BITCOINAVERAGE_URL)
+  p 'Done!'
   Currency.all.each do |currency|
     btc_prices = getLobitPrices currency.code
+    btc_prices[:avg_1h] = avg_1h_list.nil? ? nil : avg_1h_list[currency.code.upcase]['avg_1h'].to_f
     raise "Couldn't get a price" if btc_prices.nil?
     usd_btc_avg_price = 1 / JSON.parse( open(BITCOINAVERAGE_USD_RATES_URL).read )['rates']['BTC']['rate'].to_f
     p ''

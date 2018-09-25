@@ -15,7 +15,7 @@ MIN_TRADE_COUNT = 100
 MIN_BTC_VOLUME_TO_GET_PRICE = 0.5
 MIN_ADS_COUNT_TO_GET_PRICE = 5
 MAX_PAGES_TO_SAMPLE = 3
-MAX_RETRIES = 5
+MAX_RETRIES = 3
 
 
 ###############################################################
@@ -96,7 +96,8 @@ def getListFromUrl(url)
     list = JSON.parse json_raw
     p '    Done!'
     return list
-  rescue Exception => e
+  rescue OpenURI::HTTPError, JSON::ParserError => e
+    sleep 5
     retries = retries + 1
     retry if retries < MAX_RETRIES
     return nil

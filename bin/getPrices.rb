@@ -251,22 +251,22 @@ end
 
 
 if __FILE__ == $0     # Code inside this "if" will not be executed when used as a library (required from another script or irb)
-  bolivar_ticker = 'ves'
-  ves_btc_prices = getLobitPrices bolivar_ticker
-  raise "Couldn't get a price" if ves_btc_prices.nil?
-  usd_btc_avg_price = 1 / JSON.parse( open(BITCOINAVERAGE_USD_RATES_URL).read )['rates']['BTC']['rate'].to_f
-
-  p ''
-  p 'Saving to Database'
-  UsdBtc.create(
-    bitcoinaverage: usd_btc_avg_price,
-    datetime:       Time.now
-  )
-  VesBtc.create(
-    buy:      ves_btc_prices[:buy],
-    sell:     ves_btc_prices[:sell],
-    avg_1h:   ves_btc_prices[:avg_1h],
-    datetime: Time.now
-  )
-  p 'Done!'
+  Currency.all.each do |currency|
+    btc_prices = getLobitPrices currency.code
+    raise "Couldn't get a price" if btc_prices.nil?
+    usd_btc_avg_price = 1 / JSON.parse( open(BITCOINAVERAGE_USD_RATES_URL).read )['rates']['BTC']['rate'].to_f
+    p ''
+    p 'Saving to Database'
+      UsdBtc.create(
+        bitcoinaverage: usd_btc_avg_price,
+        datetime:       Time.now
+      )
+      LobitPrice.create(
+        currency: currency,
+        buy:      btc_prices[:buy],
+        sell:     btc_prices[:sell],
+        avg_1h:   btc_prices[:avg_1h],
+      )
+    p 'Done!'
+  end
 end

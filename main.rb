@@ -33,7 +33,7 @@ end
 get '/' do
 
   p "Getting data"
-  ves_btc_rates        = VesBtc.last POINTS_TO_SHOW_IN_GRAPH
+  ves_btc_rates        = Currency.find_by(code:'ves').LobitPrices.last POINTS_TO_SHOW_IN_GRAPH
   usd_btc_current_rate = UsdBtc.last
   p 'Done!'
 
@@ -45,14 +45,14 @@ get '/' do
   ves_btc_avg_price    =  (ves_btc_buy_price + ves_btc_sell_price) / 2
   ves_usd_avg_price    =  ves_btc_avg_price / usd_btc_avg_price
 
-  time_since_last_update = Time.now - usd_btc_current_rate.datetime
+  time_since_last_update = Time.now - ves_btc_current_rate.created_at
   time_string = getHumanTime(time_since_last_update)
 
   chart_data = ves_btc_rates.collect do |rate|
     ves_btc_avg = (rate.buy + rate.sell) / 2
     ves_usd_avg = ves_btc_avg / usd_btc_avg_price
     {
-      x: rate.datetime.to_datetime.strftime('%Q').to_i,
+      x: rate.created_at.to_datetime.strftime('%Q').to_i,
       y: ves_usd_avg.round(2),
     }
   end

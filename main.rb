@@ -4,6 +4,7 @@ require './models'
 require 'countries/global'
 
 POINTS_TO_SHOW_IN_GRAPH = 24*7
+DEFAULT_LOCALE = ['es','VE']
 
 def getHumanTime(seconds)
   diff_time_in_minutes = (seconds / 60).round
@@ -32,13 +33,14 @@ def getHumanRate(rate)
 end
 
 def getBrowserLocale(request)
-  return request.env['HTTP_ACCEPT_LANGUAGE'].scan(/([a-z]{2})-([A-Z]{2})/).first
+  accept_language_header = request.env['HTTP_ACCEPT_LANGUAGE']
+  return accept_language_header.nil? ? DEFAULT_LOCALE : accept_language_header.scan(/([a-z]{2})-([A-Z]{2})/).first
 end
 
 get '/' do
 
   lang, country_code = getBrowserLocale(request)
-  country = Country[country_code]
+  country = (country_code=='VE') ? nil : Country[country_code]
   currency_code = country.nil? ? 'btc' : country.currency.iso_code
 
   p "Getting data"

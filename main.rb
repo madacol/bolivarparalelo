@@ -2,9 +2,10 @@ require 'sinatra'
 require 'sinatra/activerecord'
 require './models'
 require 'countries/global'
+require 'geocoder'
 
 POINTS_TO_SHOW_IN_GRAPH = 24*7
-DEFAULT_LOCALE = ['es','VE']
+DEFAULT_COUNTRY = 'VE'
 
 def getHumanTime(seconds)
   diff_time_in_minutes = (seconds / 60).round
@@ -32,14 +33,12 @@ def getHumanRate(rate)
   return rate_str
 end
 
-def getBrowserLocale(request)
-  accept_language_header = request.env['HTTP_ACCEPT_LANGUAGE']
-  return accept_language_header.nil? ? DEFAULT_LOCALE : accept_language_header.scan(/([a-z]{2})-([A-Z]{2})/).first
-end
-
 get '/' do
 
-  lang, country_code = getBrowserLocale(request)
+  ip = request.ip
+  country_code = Geocoder.search(ip).first.country
+  country_code ||= DEFAULT_COUNTRY
+  lang = Country[country_code].data['languages_spoken'].first
   country = (country_code=='VE') ? nil : Country[country_code]
   currency_code = country.nil? ? 'btc' : country.currency.iso_code
 

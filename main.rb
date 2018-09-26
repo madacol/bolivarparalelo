@@ -83,15 +83,15 @@ get '/' do
       primary: {
         numerator: "Bs",
         denominator: "Dólar",
-        rates: { avg: getHumanRate( ves_usd_avg_price ) },
+        rates: { avg: ves_usd_avg_price },
       },
       secondary: {
         numerator: "Bs",
         denominator: secondary_code.upcase,
-        rates: { avg: getHumanRate( ves_secondary_avg_price ) },
+        rates: { avg: ves_secondary_avg_price },
       },
       bitcoin: {
-        rates: { avg: getHumanRate( usd_btc_avg_price ) },
+        rates: { avg: usd_btc_avg_price },
       },
     },
     time: time_string,
@@ -100,6 +100,15 @@ get '/' do
     country_code: country_code,
     currency_code: currency_code,
   }
+
+  # Invert any rate that is below 1 and convert to human-rate
+  data[:rates].each do |key, rate|
+    if rate[:rates][:avg] < 1
+      rate[:rates][:avg] = 1 / rate[:rates][:avg]
+      rate[:numerator], rate[:denominator] = rate[:denominator], rate[:numerator]     # swap vars
+    end
+    rate[:rates][:avg] = getHumanRate rate[:rates][:avg]
+  end
 
   erb :index, :locals => {:data => data}
 

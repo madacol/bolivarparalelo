@@ -9,6 +9,8 @@ end
 
 class Currency < ActiveRecord::Base
   has_many :LobitPrices
+
+  validates :code, uniqueness: true
 end
 
 class LobitPrice < ActiveRecord::Base

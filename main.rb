@@ -45,9 +45,8 @@ get '/' do
 
   p "Getting data"
     ves_btc_rates        = Currency.find_by(code:'ves').LobitPrices.last POINTS_TO_SHOW_IN_GRAPH
-    ves_btc_current_rate = ves_btc_rates.last
+    usd_btc_rates        = UsdBtc.where( "datetime > ?", ves_btc_rates.first.created_at )
     secondary_currency   = Currency.find_by(code: currency_code.downcase)
-    usd_btc_current_rate = UsdBtc.last
     if secondary_currency.nil?
       secondary_code          = 'btc'
       secondary_btc_avg_price = 1
@@ -58,26 +57,33 @@ get '/' do
     end
   p 'Done!'
 
+  ves_btc_current_rate    = ves_btc_rates.last
+  ves_btc_avg_price       = (ves_btc_current_rate.buy + ves_btc_current_rate.sell) / 2
 
-  ves_btc_buy_price       = ves_btc_current_rate.buy
-  ves_btc_sell_price      = ves_btc_current_rate.sell
+  usd_btc_current_rate    = usd_btc_rates.last
   usd_btc_avg_price       = usd_btc_current_rate.bitcoinaverage
 
-  ves_btc_avg_price       = (ves_btc_buy_price + ves_btc_sell_price) / 2
   ves_secondary_avg_price = ves_btc_avg_price / secondary_btc_avg_price
   ves_usd_avg_price       = ves_btc_avg_price / usd_btc_avg_price
 
   time_since_last_update = Time.now - ves_btc_current_rate.created_at
   time_string = getHumanTime(time_since_last_update)
 
+  usd_btc_rates_hourstamped = {}
+  usd_btc_rates.collect do |rate|
+    usd_btc_rates_hourstamped[ rate.datetime.strftime("%D %H") ] = rate.bitcoinaverage
+  end
+
   chart_data = ves_btc_rates.collect do |rate|
     ves_btc_avg = (rate.buy + rate.sell) / 2
-    ves_usd_avg = ves_btc_avg / usd_btc_avg_price
+    usd_btc_rate = usd_btc_rates_hourstamped[ rate.created_at.strftime("%D %H") ]
+    next if usd_btc_rate.nil?
+    ves_usd_avg = ves_btc_avg / usd_btc_rate
     {
       x: rate.created_at.to_datetime.strftime('%Q').to_i,
       y: ves_usd_avg.round(2),
     }
-  end
+  end.compact
 
   data = {
     rates: {

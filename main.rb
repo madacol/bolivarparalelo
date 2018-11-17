@@ -36,7 +36,8 @@ end
 get '/' do
 
   ip = request.ip
-  country_code = Geocoder.search(ip).first.country
+  location = Geocoder.search(ip).first
+  country_code = location.country unless location.nil?  # if Geocoder succeeds
   country_code ||= DEFAULT_COUNTRY
   lang = Country[country_code].data['languages_spoken'].first
   country = (country_code=='VE') ? nil : Country[country_code]

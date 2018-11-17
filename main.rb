@@ -16,9 +16,9 @@ def getHumanTime(seconds)
     days, hours    = hours.divmod                24
 
     time_strings = []
-    time_strings.push "#{days} dias"       unless (days    == 0)
-    time_strings.push "#{hours} horas"     unless (hours   == 0)
-    time_strings.push "#{minutes} minutos" unless (minutes == 0)
+    time_strings.push "#{days} dia#{      's' if days    > 1}"  unless days    == 0
+    time_strings.push "#{hours} hora#{    's' if hours   > 1}"  unless hours   == 0
+    time_strings.push "#{minutes} minuto#{'s' if minutes > 1}"  unless minutes == 0
 
     human_time = "Hace "
     human_time.concat( time_strings.join ", " )

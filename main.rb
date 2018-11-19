@@ -1,5 +1,7 @@
 require 'sinatra'
 require 'sinatra/activerecord'
+require "sinatra/namespace"
+require 'sinatra/json'
 require './models'
 require 'countries/global'
 require 'geocoder'
@@ -33,6 +35,16 @@ def getHumanRate(rate)
   return rate_str
 end
 
+def getBuySellAvg(rates)
+  return ( rates.buy + rates.sell ) / 2
+end
+
+def getCurrencyOrHalt(currency_code)
+  currency = Currency.find_by(code: currency_code)
+  halt 404, "Currency \"#{currency_code}\" not found!" if currency.nil?
+  return currency
+end
+
 get '/' do
 
   ip = request.ip
@@ -53,12 +65,12 @@ get '/' do
     else
       secondary_code          = secondary_currency.code
       secondary_btc_rate      = secondary_currency.LobitPrices.last
-      secondary_btc_avg_price = ( secondary_btc_rate.buy + secondary_btc_rate.sell ) / 2
+      secondary_btc_avg_price = getBuySellAvg secondary_btc_rate
     end
   p 'Done!'
 
   ves_btc_current_rate    = ves_btc_rates.last
-  ves_btc_avg_price       = (ves_btc_current_rate.buy + ves_btc_current_rate.sell) / 2
+  ves_btc_avg_price       = getBuySellAvg ves_btc_current_rate
 
   usd_btc_current_rate    = usd_btc_rates.last
   usd_btc_avg_price       = usd_btc_current_rate.bitcoinaverage
@@ -75,7 +87,7 @@ get '/' do
   end
 
   chart_data = ves_btc_rates.collect do |rate|
-    ves_btc_avg = (rate.buy + rate.sell) / 2
+    ves_btc_avg = getBuySellAvg rate
     usd_btc_rate = usd_btc_rates_hourstamped[ rate.created_at.strftime("%D %H") ]
     next if usd_btc_rate.nil?
     ves_usd_avg = ves_btc_avg / usd_btc_rate
@@ -119,4 +131,63 @@ get '/' do
 
   erb :index, :locals => {:data => data}
 
+end
+
+namespace '/api' do
+  namespace '/rate/:counter_currency(/:base_currency)?' do
+    get '/?' do
+      counter_currency = getCurrencyOrHalt params[:counter_currency]
+      counter_btc_avg = getBuySellAvg counter_currency.LobitPrices.last
+      params[:base_currency] ||= 'btc'
+      if params[:base_currency] == 'btc'
+        rate = counter_btc_avg
+      else
+        base_currency = getCurrencyOrHalt params[:base_currency]
+        base_btc_avg = getBuySellAvg base_currency.LobitPrices.last
+        rate = ( counter_btc_avg / base_btc_avg )
+      end
+      json ({
+        :counter_currency => counter_currency.code.upcase,
+        :base_currency => base_currency.nil? ? 'BTC' : base_currency.code.upcase,
+        :rate => rate
+      })
+    end
+    namespace '/time' do
+      get '/:start(/:end)?/?' do
+        start_time = DateTime.parse params[:start]
+        if params[:end]
+          end_time = DateTime.parse params[:end]
+        else
+          end_time = start_time + 1.hour
+        end
+        counter_currency = getCurrencyOrHalt params[:counter_currency]
+        counter_btc_rates = counter_currency.LobitPrices.where("created_at > ? AND created_at < ?", start_time, end_time)
+        counter_rates_hourstamped = {}
+        counter_btc_rates.each do |rate|
+          hourstamp = rate.created_at.strftime("%D %H")
+          counter_rates_hourstamped[ hourstamp ] = getBuySellAvg rate
+        end
+        if params[:base_currency].nil?
+          json_response = counter_rates_hourstamped
+        else
+          base_currency = getCurrencyOrHalt params[:base_currency]
+          base_btc_rates = base_currency.LobitPrices.where("created_at > ? AND created_at < ?", start_time, end_time)
+          rates_hourstamped = {}
+          base_btc_rates.each do |rate|
+            hourstamp = rate.created_at.strftime("%D %H")
+            counter_btc_avg = counter_rates_hourstamped[ hourstamp ]
+            next if counter_btc_avg.nil?
+            base_btc_avg = getBuySellAvg rate
+            rates_hourstamped[ hourstamp ] = counter_btc_avg / base_btc_avg
+          end
+          json_response = rates_hourstamped
+        end
+        json ({
+          :counter_currency => counter_currency.code.upcase,
+          :base_currency => base_currency.nil? ? 'BTC' : base_currency.code.upcase,
+          :rates => json_response
+        })
+      end
+    end
+  end
 end

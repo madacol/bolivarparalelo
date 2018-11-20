@@ -83,16 +83,18 @@ get '/' do
 
   usd_btc_rates_hourstamped = {}
   usd_btc_rates.collect do |rate|
-    usd_btc_rates_hourstamped[ rate.datetime.strftime("%D %H") ] = rate.bitcoinaverage
+    hourstamp = rate.datetime.strftime("%D %H")
+    usd_btc_rates_hourstamped[ hourstamp ] = rate.bitcoinaverage
   end
 
   chart_data = ves_btc_rates.collect do |rate|
     ves_btc_avg = getBuySellAvg rate
-    usd_btc_rate = usd_btc_rates_hourstamped[ rate.created_at.strftime("%D %H") ]
+    hourstamp = rate.created_at.strftime("%D %H")
+    usd_btc_rate = usd_btc_rates_hourstamped[ hourstamp ]
     next if usd_btc_rate.nil?
     ves_usd_avg = ves_btc_avg / usd_btc_rate
     {
-      x: rate.created_at.to_datetime.strftime('%Q').to_i,
+      x: rate.created_at.to_i*1000,   # unix miliseconds
       y: ves_usd_avg.round(2),
     }
   end.compact

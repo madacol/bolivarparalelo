@@ -10,9 +10,9 @@ POINTS_TO_SHOW_IN_GRAPH = 24*7
 DEFAULT_COUNTRY = 'VE'
 
 def getHumanTime(seconds)
-  diff_time_in_minutes = (seconds / 60).round
+  diff_time_in_minutes = (seconds / 60).floor
   if diff_time_in_minutes == 0
-    human_time = "Hace pocos segundos"
+    return "#{seconds.floor} segundos"
   else
     hours, minutes = diff_time_in_minutes.divmod 60
     days, hours    = hours.divmod                24
@@ -22,10 +22,8 @@ def getHumanTime(seconds)
     time_strings.push "#{hours} hora#{    's' if hours   > 1}"  unless hours   == 0
     time_strings.push "#{minutes} minuto#{'s' if minutes > 1}"  unless minutes == 0
 
-    human_time = "Hace "
-    human_time.concat( time_strings.join ", " )
+    return time_strings.join ", "
   end
-  return human_time
 end
 
 def getHumanRate(rate)

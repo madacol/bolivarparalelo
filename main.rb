@@ -142,18 +142,22 @@ namespace '/api' do
       params[:base_currency] ||= 'btc'
       if params[:base_currency] == 'btc'
         rate = counter_btc_avg
+        buy_rate = counter_currency_lastest_rates.buy
+        sell_rate = counter_currency_lastest_rates.sell
       else
         base_currency = getCurrencyOrHalt params[:base_currency]
         base_currency_latest_rates = base_currency.LobitPrices.last
         base_btc_avg = getBuySellAvg base_currency_latest_rates
         rate = ( counter_btc_avg / base_btc_avg )
+        buy_rate = counter_currency_lastest_rates.buy / base_currency_latest_rates.sell
+        sell_rate = counter_currency_lastest_rates.sell / base_currency_latest_rates.buy
       end
       json ({
         :counter_currency => counter_currency.code.upcase,
         :base_currency => base_currency.nil? ? 'BTC' : base_currency.code.upcase,
         :avg => rate,
-        :buy  => counter_currency_lastest_rates.buy / base_currency_latest_rates.sell,
-        :sell => counter_currency_lastest_rates.sell / base_currency_latest_rates.buy,
+        :buy  => buy_rate,
+        :sell => sell_rate,
         :unix_time_ms => counter_currency_lastest_rates.created_at.to_i * 1000,
       })
     end

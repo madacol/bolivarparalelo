@@ -1,14 +1,14 @@
 nav{
   background-color: #003b68;
 }
-.content-nav-hide{
-  background-color: #003b68;
-}
 body{
   background-color: #000000;
   color: #fff;
   font-family: Courier New;
   font-size: medium;
+}
+label {
+  margin: 0;
 }
 #body {
   padding-bottom: 50px
@@ -17,17 +17,29 @@ body{
   flex-direction: column;
   min-height: 70vh;
 }
+#get_date_history {
+  position: absolute;
+  visibility: hidden;
+  z-index: -1;
+}
 .monto {
   font-size: calc(30px + 6vw);
   line-height: 1.15;
-  padding-top: calc(10px + 1vh);
-  padding-bottom: calc(10px + 1vh);
+  /*padding-top: calc(5px + 1vh);
+  padding-bottom: calc(5px + 1vh);*/
 }
 .monto-label {
   font-size: calc(10px + 2vw);
   line-height: 1.15;
 }
 .update-time {
-  font-size: 20px;
+  font-size: calc(10px + 1vw);
   line-height: 1.15;
+}
+.btn-outline-dark {
+  border-color: white;
+  color: white;
+}
+.btn-outline-dark:hover {
+  background-color: black;
 }

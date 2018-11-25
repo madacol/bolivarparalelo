@@ -137,26 +137,31 @@ namespace '/api' do
   namespace '/rate/:counter_currency(/:base_currency)?' do
     get '/?' do
       counter_currency = getCurrencyOrHalt params[:counter_currency]
-      counter_btc_avg = getBuySellAvg counter_currency.LobitPrices.last
+      counter_currency_lastest_rates = counter_currency.LobitPrices.last
+      counter_btc_avg = getBuySellAvg counter_currency_lastest_rates
       params[:base_currency] ||= 'btc'
       if params[:base_currency] == 'btc'
         rate = counter_btc_avg
       else
         base_currency = getCurrencyOrHalt params[:base_currency]
-        base_btc_avg = getBuySellAvg base_currency.LobitPrices.last
+        base_currency_latest_rates = base_currency.LobitPrices.last
+        base_btc_avg = getBuySellAvg base_currency_latest_rates
         rate = ( counter_btc_avg / base_btc_avg )
       end
       json ({
         :counter_currency => counter_currency.code.upcase,
         :base_currency => base_currency.nil? ? 'BTC' : base_currency.code.upcase,
-        :rate => rate
+        :avg => rate,
+        :buy  => counter_currency_lastest_rates.buy / base_currency_latest_rates.sell,
+        :sell => counter_currency_lastest_rates.sell / base_currency_latest_rates.buy,
+        :unix_time_ms => counter_currency_lastest_rates.created_at.to_i * 1000,
       })
     end
     namespace '/time' do
       get '/:start(/:end)?/?' do
-        start_time = DateTime.parse params[:start]
+        start_time = Time.at params[:start].to_i/1000
         if params[:end]
-          end_time = DateTime.parse params[:end]
+          end_time = Time.at params[:end].to_i/1000
         else
           end_time = start_time + 1.hour
         end
@@ -165,27 +170,37 @@ namespace '/api' do
         counter_rates_hourstamped = {}
         counter_btc_rates.each do |rate|
           hourstamp = rate.created_at.strftime("%D %H")
-          counter_rates_hourstamped[ hourstamp ] = getBuySellAvg rate
+          counter_rates_hourstamped[ hourstamp ]={}
+          counter_rates_hourstamped[ hourstamp ][:avg] = getBuySellAvg rate
+          counter_rates_hourstamped[ hourstamp ][:buy] =  rate.buy
+          counter_rates_hourstamped[ hourstamp ][:sell] = rate.sell
+          counter_rates_hourstamped[ hourstamp ][:unix_time_ms] = rate.created_at.to_i * 1000
         end
         if params[:base_currency].nil?
-          json_response = counter_rates_hourstamped
+          json_rates = counter_rates_hourstamped
         else
           base_currency = getCurrencyOrHalt params[:base_currency]
           base_btc_rates = base_currency.LobitPrices.where("created_at > ? AND created_at < ?", start_time, end_time)
           rates_hourstamped = {}
           base_btc_rates.each do |rate|
             hourstamp = rate.created_at.strftime("%D %H")
-            counter_btc_avg = counter_rates_hourstamped[ hourstamp ]
+            counter_btc_avg = counter_rates_hourstamped[ hourstamp ][:avg]
+            counter_btc_buy = counter_rates_hourstamped[ hourstamp ][:buy]
+            counter_btc_sell = counter_rates_hourstamped[ hourstamp ][:sell]
             next if counter_btc_avg.nil?
             base_btc_avg = getBuySellAvg rate
-            rates_hourstamped[ hourstamp ] = counter_btc_avg / base_btc_avg
+            rates_hourstamped[ hourstamp ]={}
+            rates_hourstamped[ hourstamp ][:avg] = counter_btc_avg / base_btc_avg
+            rates_hourstamped[ hourstamp ][:buy] =   counter_btc_buy / rate.sell
+            rates_hourstamped[ hourstamp ][:sell] =  counter_btc_sell / rate.buy
+            rates_hourstamped[ hourstamp ][:unix_time_ms] = counter_rates_hourstamped[ hourstamp ][:unix_time_ms]
           end
-          json_response = rates_hourstamped
+          json_rates = rates_hourstamped
         end
         json ({
           :counter_currency => counter_currency.code.upcase,
           :base_currency => base_currency.nil? ? 'BTC' : base_currency.code.upcase,
-          :rates => json_response
+          :rates => json_rates
         })
       end
     end

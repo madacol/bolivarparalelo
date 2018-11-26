@@ -17,16 +17,12 @@ label {
   flex-direction: column;
   min-height: 70vh;
 }
-#get_date_history {
-  position: absolute;
-  visibility: hidden;
-  z-index: -1;
+#navbarSupportedContent ul li {
+  position: relative;
 }
 .monto {
   font-size: calc(30px + 6vw);
   line-height: 1.15;
-  /*padding-top: calc(5px + 1vh);
-  padding-bottom: calc(5px + 1vh);*/
 }
 .monto-label {
   font-size: calc(10px + 2vw);
@@ -40,6 +36,17 @@ label {
   border-color: white;
   color: white;
 }
-.btn-outline-dark:hover {
+#get_date_history {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+#get_date_history::-webkit-calendar-picker-indicator {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+#get_date_history:hover + label {
   background-color: black;
 }

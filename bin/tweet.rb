@@ -37,9 +37,9 @@ def generateTweet(primary_currency_code)
   return nil if primary_rates.empty?
   primary_rates.each { |rate| rates.delete rate }
   primary_btc_avg = getBuySellAvg primary_rates.last
-  timestamp = rates.last.created_at.to_time.strftime("%Y_%m_%d")
+  timeHashTags = rates.last.created_at.to_time.strftime("#%Y_%m_%d")
   message_arr = []
-  #message_arr = ["Actualizado el #{timestamp}\nPrecios en Bs.S"]
+  #message_arr = ["Actualizado el #{timeHashTags}\nPrecios en Bs.S"]
   message_arr.append "Precios en Bs.S"
   CURRENCY_FLAGS.collect do |currency_code, flag|
     secondary_rates = rates.select {|rate| rate.currency_id == currency_code_to_id[currency_code] }
@@ -47,9 +47,9 @@ def generateTweet(primary_currency_code)
     secondary_rates.each { |rate| rates.delete rate }
     secondary_btc_avg = getBuySellAvg secondary_rates.last
     primary_secondary_rate = getHumanRate( primary_btc_avg / secondary_btc_avg )
-    message_arr.append "#{flag} #{currency_code.upcase}: #{primary_secondary_rate}"
+    message_arr.append "#{flag} ##{currency_code.upcase} #{primary_secondary_rate}"
   end
-  message_arr.append "#BolivarParalelo_#{timestamp}"
+  message_arr.append "#BolivarParalelo #{timeHashTags}"
   return message_arr.join("\n")
 end
 

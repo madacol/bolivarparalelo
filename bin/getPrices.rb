@@ -43,8 +43,18 @@ KEYWORDS_TRANSLATIONS =
     "provical"        => "provincial",
     "mercantin"       => "mercantil",
     "bdv"             => "venezuela",
-    "occidental"      => "bod"
-  }
+    "occidental"      => "bod",
+  },
+  "cop" =>
+  {
+    "citibank"        => "colpatria",
+    "bcobogota"       => "bancobogota",
+    "avillas"         => "avvillas",
+    "avvilla"         => "avvillas",
+    "villas"          => "avvillas",
+    "villa"           => "avvillas",
+    "bancombia"       => "bancolombia",
+  },
 }
 
 
@@ -75,8 +85,19 @@ KEYWORDS_WHITELIST =
     "bancaribe",
     "banplus",
     "bfc",
-    "bnc"
-  ]
+    "bnc",
+  ],
+  "cop" =>
+  [
+    "bancolombia",
+    "nequi",
+    "davivienda",
+    "daviplata",
+    "avvillas",
+    "bbva",
+    "colpatria",
+    "bancobogota",
+  ],
 }
 
 

@@ -117,7 +117,7 @@ def getListFromUrl(url)
     list = JSON.parse json_raw
     p '    Done!'
     return list
-  rescue OpenURI::HTTPError, JSON::ParserError => e
+  rescue OpenURI::HTTPError, JSON::ParserError, Net::ReadTimeout => e
     sleep 5
     retries = retries + 1
     retry if retries < MAX_RETRIES

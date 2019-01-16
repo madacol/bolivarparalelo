@@ -2,6 +2,7 @@
 
 * https://bolivartoday.herokuapp.com/
 * http://bolivarparalelo.com **(sin HTTPS por ahora)**
+* https://twitter.com/bolivarparalel0
 
 ## Método para la obtencion del precio
 Se obtiene el precio de compra y el precio de venta y se saca el promedio

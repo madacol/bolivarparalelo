@@ -13,7 +13,7 @@ Supongamos que vamos a calcular el precio de compra de 1 bitcoin en bolivares:
 * Se obtienen las primeras 3 paginas de ofertas en: https://localbitcoins.com/buy-bitcoins-online/ves/
 * Se eliminan las ofertas de usuarios con menos de 100 transacciones, y con un feedback menor a 99
 * Se filtran los siguientes metodos de pago:
-```
+```ruby
 [
   "NATIONAL_BANK",
   "SPECIFIC_BANK",
@@ -37,3 +37,13 @@ No uso el estándar financiero en el cuál EUR/USD significa cuántos dólares e
 * http://www.bolivarparalelo.com/api/rate/{counter_currency}/{base_currency}
 
 Por ejemplo el precio del **dólar** en **bolívares**, sería **ves/usd**, oséa http://www.bolivarparalelo.com/api/rate/ves/usd
+```json
+{
+  "counter_currency": "VES",
+  "base_currency": "USD",
+  "avg": "5782.688954173468910683633872456",
+  "buy": "5774.320876448784292435066362588",
+  "sell": "5791.027716925421468711305838651",
+  "unix_time_ms": 1556306484000
+}
+```

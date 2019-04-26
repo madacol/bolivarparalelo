@@ -30,7 +30,10 @@ Supongamos que vamos a calcular el precio de compra de 1 bitcoin en bolivares:
 ### Nota
 Los parametros especificos de filtrado pueden cambiar sin previo aviso, para corroborar los parametros exactos pueden revisar en la seccion de **CONFIGURATIONS** en el archivo https://github.com/madacol/bolivarparalelo/blob/master/bin/getPrices.rb
 
-## \<rant\>
-No uso el estándar financiero en el cuál EUR/USD significa cuántos dólares equivalen a 1 euro, NOOO, mi punto de vista es matemático, por lo tanto EUR/USD para mí significa cuántos euros equivalen a 1 dólar y el código está hecho con eso en mente.
-Math rules! \m/
-## \<\\rant\>
+## Advertencia
+No uso el estándar financiero en el cuál EUR/USD significa cuántos dólares equivalen a 1 euro, uso un punto de vista matemático y el código está hecho con eso en mente, por lo tanto EUR/USD representa cuántos euros equivalen a 1 dólar.
+
+# Api
+* http://www.bolivarparalelo.com/api/rate/{counter_currency}/{base_currency}
+
+Por ejemplo el precio del **dólar** en **bolívares**, sería **ves/usd**, oséa http://www.bolivarparalelo.com/api/rate/ves/usd

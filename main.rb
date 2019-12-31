@@ -44,8 +44,7 @@ def getCurrencyOrHalt(currency_code)
   return currency
 end
 
-get '/' do
-
+def getMainData(request)
   ip = request.ip
   location = Geocoder.search(ip).first
   country_code = location.country unless location.nil?  # if Geocoder succeeds
@@ -129,8 +128,11 @@ get '/' do
     end
     rate[:rates][:avg] = getHumanRate rate[:rates][:avg]
   end
+  return data
+end
 
-  erb :index, :locals => {:data => data}
+get '/' do
+  erb :index, :locals => {:data => getMainData(request)}
 end
 
 get '/beta' do
@@ -138,6 +140,9 @@ get '/beta' do
 end
 
 namespace '/api' do
+  get '/?' do
+    json getMainData(request)
+  end
   namespace '/rate/:counter_currency(/:base_currency)?' do
     get '/?' do
       counter_currency = getCurrencyOrHalt params[:counter_currency]

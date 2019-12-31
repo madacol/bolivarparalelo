@@ -130,7 +130,10 @@ get '/' do
   end
 
   erb :index, :locals => {:data => data}
+end
 
+get '/beta' do
+  send_file 'public/index.html'
 end
 
 namespace '/api' do

@@ -51,7 +51,7 @@ def getMainData(request)
   country_code ||= DEFAULT_COUNTRY
   lang = Country[country_code].data['languages_spoken'].first
   country = (country_code=='VE') ? nil : Country[country_code]
-  currency_code = country.nil? ? 'btc' : country.currency.iso_code
+  currency_code = country.nil? ? 'btc' : country.currency_code
 
   p "Getting data"
     ves_btc_rates        = Currency.find_by(code:'ves').LobitPrices.last POINTS_TO_SHOW_IN_GRAPH

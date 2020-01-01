@@ -1,3 +1,5 @@
-Procfile
 set_config_vars.sh
 /public/build/
+/node_modules/
+
+.DS_Store

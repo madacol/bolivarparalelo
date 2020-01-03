@@ -189,7 +189,8 @@ namespace '/api' do
           counter_rates_hourstamped[ hourstamp ][:sell] = rate.sell
           counter_rates_hourstamped[ hourstamp ][:unix_time_ms] = rate.created_at.to_i * 1000
         end
-        if params[:base_currency].nil?
+        params[:base_currency] ||= 'btc'
+        if params[:base_currency] == 'btc'
           json_rates = counter_rates_hourstamped
         else
           base_currency = getCurrencyOrHalt params[:base_currency]

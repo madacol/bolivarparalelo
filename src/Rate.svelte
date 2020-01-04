@@ -162,7 +162,7 @@
 	rateContainer {
 		align-self: center;
 		text-align: center;
-		border-bottom: #ffffff0a 4px solid;
+		border-bottom: #ffffff1c 2px solid;
 		padding: 10px;
 	}
 	canvas {

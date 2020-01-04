@@ -1,8 +1,5 @@
 <script>
 
-	import { onMount } from 'svelte';
-	import { RANGE } from './Constants.js'
-
 	// Props
 	export let _counter_currency;
 	export let _base_currency;

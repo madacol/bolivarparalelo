@@ -1,5 +1,4 @@
 <script>
-	import { onMount } from 'svelte';
 	import Rate from './Rate.svelte';
 
 	moment.locale(navigator.language)

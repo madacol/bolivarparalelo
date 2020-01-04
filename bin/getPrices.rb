@@ -98,6 +98,16 @@ KEYWORDS_WHITELIST =
     "colpatria",
     "bancobogota",
   ],
+  "usd" =>
+  [
+    "zelle",
+    "boa",
+    "bofa",
+    "chase",
+    "wf",
+    "fargo",
+    "wells",
+  ],
 }
 
 

@@ -49,12 +49,15 @@
 		</div>
 	</div>
 	<nav class="navbar navbar-expand-lg navbar-dark">
-		<a href="/" class="navbar-brand">Bolívar Paralelo</a>
+		<a href="/beta" class="navbar-brand">Bolívar Paralelo (beta)</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav">
+			<li>
+				<a href="/" class="navbar-brand">Ir a clásico</a>
+			</li>
 			<!-- <li class="nav-item">
 				<input type="date" id="get_date_history" on:change={handleSearchDate}>
 				<label class="btn btn-outline-dark" for="get_date_history">

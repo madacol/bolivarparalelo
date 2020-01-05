@@ -6,7 +6,6 @@
 	//const _24Hms = _1Hms*24;
 	
 	let rates;
-	$: console.log(rates)
 
 	const getRatesFromHash = () => {
 		rates =	window.location.hash.slice(1).split(';').map( rate => {

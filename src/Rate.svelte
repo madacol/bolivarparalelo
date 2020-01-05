@@ -1,26 +1,22 @@
 <script>
 
 	// Props
-	export let _counter_currency;
-	export let _base_currency;
+	export let _counter_currency_code;
+	export let _base_currency_code;
 	export let _date_time;
 	export let _end_date_time;
-	export let _showRate;
-	export let _showGraph;
 
 	// States
-	let counter_currency     = _counter_currency;
-	let base_currency   = _base_currency;
+	let counter_currency = { code: _counter_currency_code };
+	let base_currency    = { code: _base_currency_code };
 	let date_time     = _date_time;
 	let end_date_time = _end_date_time;
-	let showRate = _showRate;
-	let showGraph = _showGraph;
 	let history = [];
-	$: fetching_data = fetchData(counter_currency, base_currency, date_time, end_date_time);
+	$: fetching_data = fetchData(_counter_currency_code, _base_currency_code, date_time, end_date_time);
 	let updated_time = "";
 
-	const getQueryUrl = (counter_currency, base_currency, date_time, end_date_time) => {
-		let url = `/api/rate/${counter_currency.toLowerCase()}/${base_currency.toLowerCase()}`
+	const getQueryUrl = (counter_code, base_code, date_time, end_date_time) => {
+		let url = `/api/rate/${counter_code.toLowerCase()}/${base_code.toLowerCase()}`
 		if (!date_time)    return url
 
 		url += `/time/${date_time}`;
@@ -42,10 +38,12 @@
 		return human_rate.toLocaleString()
 	}
 
-	const fetchData = async (counter_currency, base_currency, date_time, end_date_time) => {
-		const url = getQueryUrl(counter_currency, base_currency, date_time, end_date_time);
+	const fetchData = async (counter_code, base_code, date_time, end_date_time) => {
+		const url = getQueryUrl(counter_code, base_code, date_time, end_date_time);
 		const response = await fetch(url);
 		const json = await response.json();
+		counter_currency = json.counter_currency;
+		base_currency = json.base_currency;
 		if (!date_time) {
 			return getHumanRate(parseFloat(json.avg));
 		}
@@ -145,16 +143,22 @@
 
 		<div class="content d-flex justify-content-center flex-wrap">
 
-			{#if showRate !== "0"}
+			{#if !date_time}
 				<div class="d-flex justify-content-center flex-wrap flex-row">
-					<div class="align-self-center"><div class="monto-label">        {base_currency}:</div></div>
-					<div class="align-self-center"><div class="monto px-2 px-md-4" id="top-monto"> {rate}</div></div>
-					<div class="align-self-center"><div class="monto-label">        {counter_currency}</div></div>
+					<div class="align-self-center monto-label">1 {@html base_currency.name.replace(' ','<br>')} =</div>
+					<div class="align-self-center monto px-2 px-md-4">{rate}</div>
+					<div class="align-self-center monto-label">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
 				</div>
-			{/if}
-			{#if showGraph !== "0" && history.length > 2}
-				<div class="chart-container" style="position: relative; width: 100%">
-					<canvas use:canvasMounted={history} height="150"></canvas>
+			{:else}
+				<div class="d-flex">
+					<div class="chart-container" style="position: relative; width: 100%">
+						<canvas use:canvasMounted={history} height="150"></canvas>
+					</div>
+					<div class="align-self-center">
+						<div class="chart-average"><strong>{rate}</strong></div>
+						<div class="chart-average">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
+						<div class="chart-average" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>
+					</div>
 				</div>
 			{/if}
 		</div>
@@ -165,19 +169,22 @@
 	rateContainer {
 		align-self: center;
 		text-align: center;
-		border-bottom: #ffffff1c 2px solid;
+		/* border-bottom: #ffffff1c 2px solid; */
 		padding: 10px;
 	}
 	canvas {
 		height: 150px;
 	}
 	.monto {
-		font-size: calc(30px + 6vw);
+		font-size: calc(30px + 5vw);
 		line-height: 1.15;
 	}
 	.monto-label {
-		font-size: calc(10px + 2vw);
+		font-size: calc(10px + 1vw);
 		line-height: 1.15;
+	}
+	.chart-average {
+		font-size: calc(10px + 0.5vw);
 	}
 	.update-time {
 		font-size: calc(10px + 1vw);
@@ -200,9 +207,6 @@
 	}
 	#get_date_history:hover + label {
 		background-color: black;
-	}
-	label {
-		margin: 0;
 	}
 	.content {
 		flex-direction: column;

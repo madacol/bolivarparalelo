@@ -9,6 +9,12 @@ require 'geocoder'
 
 POINTS_TO_SHOW_IN_GRAPH = 24*7
 DEFAULT_COUNTRY = 'VE'
+BITCOIN = {
+  code: 'btc',
+  symbol: '₿',
+  name: 'Bitcoin',
+  namePlural: 'Bitcoins'
+}
 
 def getHumanTime(seconds)
   diff_time_in_minutes = (seconds / 60).floor
@@ -162,8 +168,18 @@ namespace '/api' do
         sell_rate = counter_currency_lastest_rates.sell / base_currency_latest_rates.buy
       end
       json ({
-        :counter_currency => counter_currency.code.upcase,
-        :base_currency => base_currency.nil? ? 'BTC' : base_currency.code.upcase,
+        :counter_currency => {
+          code: counter_currency.code,
+          symbol: counter_currency.symbol,
+          name: counter_currency.name,
+          namePlural: counter_currency.namePlural,
+        },
+        :base_currency => base_currency.nil? ? BITCOIN : {
+          code: base_currency.code,
+          symbol: base_currency.symbol,
+          name: base_currency.name,
+          namePlural: base_currency.namePlural,
+        },
         :avg => rate,
         :buy  => buy_rate,
         :sell => sell_rate,
@@ -212,8 +228,18 @@ namespace '/api' do
           json_rates = rates_hourstamped
         end
         json ({
-          :counter_currency => counter_currency.code.upcase,
-          :base_currency => base_currency.nil? ? 'BTC' : base_currency.code.upcase,
+          :counter_currency => {
+            code: counter_currency.code,
+            symbol: counter_currency.symbol,
+            name: counter_currency.name,
+            namePlural: counter_currency.namePlural,
+          },
+          :base_currency => base_currency.nil? ? BITCOIN : {
+            code: base_currency.code,
+            symbol: base_currency.symbol,
+            name: base_currency.name,
+            namePlural: base_currency.namePlural,
+          },
           :rates => json_rates
         })
       end

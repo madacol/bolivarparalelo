@@ -38,7 +38,7 @@
 
 </script>
 
-<div class="pos-f-t">
+<div>
 	<div class="collapse" id="navbarToggleExternalContent">
 		<div class="content-nav-hide bg-gradient p-4">
 			<h5 class="text-white h4">Más contenido</h5>
@@ -91,11 +91,14 @@
 <style>
 	nav{
 		background-color: #003b68;
+		height: 60px
 	}
 	#body {
 		display: flex;
 		flex-direction: column;
 		padding-bottom: 50px;
+		height: calc(100vh - 120px);
+		overflow: auto;
 	}
 	#navbarSupportedContent ul li {
 		position: relative;

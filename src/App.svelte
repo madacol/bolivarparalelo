@@ -69,7 +69,7 @@
 </div>
 
 
-<div id="body" class="px-2">
+<div class="body">
 	{#each rates as rateOptions (JSON.stringify(rateOptions))}
 		<Rate {...rateOptions} />
 	{/each}
@@ -93,10 +93,9 @@
 		background-color: #003b68;
 		min-height: 60px;
 	}
-	#body {
+	.body {
 		display: flex;
 		flex-direction: column;
-		padding-bottom: 50px;
 		height: calc(100vh - 120px);
 		overflow: auto;
 	}

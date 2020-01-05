@@ -26,6 +26,26 @@
 		return url;
 	}
 
+	function getHumanTime(miliseconds) {
+		const seconds = Math.floor(miliseconds / 1000);
+		const minutesLeft = Math.floor(seconds / 60)
+		if (minutesLeft == 0) {
+			return `${seconds} segundos`;
+		} else {
+			const minutes = (minutesLeft % 60);
+			const hoursLeft = ((minutesLeft-minutes) / 60);
+			const hours = (hoursLeft % 24);
+			const daysLeft = ((hoursLeft-hours) / 24);
+
+			const time_strings = []
+			if (daysLeft > 0) time_strings.push(`${daysLeft} dia${   (daysLeft > 1) ? 's' : ''}`);
+			if (hours    > 0) time_strings.push(`${hours   } hora${  (hours    > 1) ? 's' : ''}`);
+			if (minutes  > 0) time_strings.push(`${minutes } minuto${(minutes  > 1) ? 's' : ''}`);
+
+			return time_strings.join(", ");
+		}
+	}
+
 	function getHumanRate(rate) {
 		const num_digits = Math.log(Math.round(rate)) * Math.LOG10E + 1 | 0;  // https://stackoverflow.com/questions/14879691/get-number-of-digits-with-javascript
 		let human_rate;
@@ -45,6 +65,7 @@
 		counter_currency = json.counter_currency;
 		base_currency = json.base_currency;
 		if (!date_time) {
+			updated_time = getHumanTime(Date.now() - json.unix_time_ms)
 			return getHumanRate(parseFloat(json.avg));
 		}
 		const rates = Object.values(json.rates)
@@ -129,39 +150,46 @@
 
 </script>
 
-<rateContainer class="container">
+<rateContainer>
 	{#await fetching_data}
 		<!-- promise is pending -->
 		<p>Cargando...</p>
 	{:then rate}
 		<!-- promise was fulfilled -->
-		{#if updated_time}
-			<div class="d-flex justify-content-center update-time py-1">
-				<div class="px-2">Actualizado hace {updated_time}</div>
-			</div>
-		{/if}
-
-		<div class="content d-flex justify-content-center flex-wrap">
-
-			{#if !date_time}
-				<div class="d-flex justify-content-center flex-wrap flex-row">
-					<div class="align-self-center monto-label">1 {@html base_currency.name.replace(' ','<br>')} =</div>
-					<div class="align-self-center monto px-2 px-md-4">{rate}</div>
-					<div class="align-self-center monto-label">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
+		<div class="d-flex justify-content-between align-items-center">
+			{#if !date_time || history.length <= 1}
+				<div class="w-100">
+					<div class="d-flex justify-content-center align-items-center flex-wrap">
+						<div class="monto-label">
+							1 {@html base_currency.name.replace(' ','<br>')}
+						</div>
+						<div class="monto-label ml-2">=</div>
+						<div class="monto d-flex justify-content-center flex-wrap mx-2 px-md-4">
+							{rate}
+							<div class="align-self-center monto-label mx-2"> {@html counter_currency.namePlural.replace(' ','<br>')}</div>
+						</div>
+					</div>
+					<div class="update-time">Hace {@html updated_time}</div>
 				</div>
 			{:else}
-				<div class="d-flex">
-					<div class="chart-container" style="position: relative; width: 100%">
+				<div class="d-flex justify-content-between align-items-center flex-grow" >
+					<div class="flex-grow">
 						<canvas use:canvasMounted={history} height="150"></canvas>
 					</div>
-					<div class="align-self-center">
+					<div>
 						<div class="chart-average"><strong>{rate}</strong></div>
 						<div class="chart-average">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
 						<div class="chart-average" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>
 					</div>
 				</div>
 			{/if}
+			<div class="ml-3">
+				<i class="fas fa-search"/>
+				<br>
+				<i class="fas fa-cog mt-3"/>
+			</div>
 		</div>
+
 	{/await}
 </rateContainer>
 
@@ -170,13 +198,15 @@
 		align-self: center;
 		text-align: center;
 		/* border-bottom: #ffffff1c 2px solid; */
-		padding: 10px;
+		padding: 15px;
+		width: 100vw;
+		max-width: 1100px
 	}
 	canvas {
 		height: 150px;
 	}
 	.monto {
-		font-size: calc(30px + 5vw);
+		font-size: calc(20px + 5vw);
 		line-height: 1.15;
 	}
 	.monto-label {
@@ -187,7 +217,7 @@
 		font-size: calc(10px + 0.5vw);
 	}
 	.update-time {
-		font-size: calc(10px + 1vw);
+		font-size: calc(10px + 0.5vw);
 		line-height: 1.15;
 	}
 	.btn-outline-dark {

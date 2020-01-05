@@ -46,7 +46,10 @@
 		const url = getQueryUrl(counter_currency, base_currency, date_time, end_date_time);
 		const response = await fetch(url);
 		const json = await response.json();
-		const rates = Object.values(  (date_time) ? json.rates : [json]  )
+		if (!date_time) {
+			return getHumanRate(parseFloat(json.avg));
+		}
+		const rates = Object.values(json.rates)
 		let sum = 0;
 		const chart_data = [];
 		rates.forEach(rate => {

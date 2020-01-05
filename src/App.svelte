@@ -52,7 +52,7 @@
 		</button>
 		<div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav">
-			<li>
+			<li class="nav-item">
 				<a href="/" class="navbar-brand">Ir a clásico</a>
 			</li>
 			<!-- <li class="nav-item">
@@ -75,7 +75,7 @@
 	{/each}
 </div>
 
-<nav class="navbar d-flex justify-content-between fixed-bottom">
+<nav class="navbar d-flex justify-content-between">
 	<div></div>
 	<!-- <a class="navbar-brand">Bitcoin: {bitcoin_rate.rates.avg} $</a> -->
 	<div>
@@ -91,7 +91,7 @@
 <style>
 	nav{
 		background-color: #003b68;
-		height: 60px
+		min-height: 60px;
 	}
 	#body {
 		display: flex;

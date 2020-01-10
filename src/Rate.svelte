@@ -176,10 +176,13 @@
 					<div class="flex-grow">
 						<canvas use:canvasMounted={history} height="150"></canvas>
 					</div>
-					<div>
+					<div class="d-flex justify-content-center align-items-center flex-column">
+						<div class="chart-labels" style="margin-bottom: 1em">Promedio</div>
 						<div class="chart-average"><strong>{rate}</strong></div>
-						<div class="chart-average">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
-						<div class="chart-average" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>
+						<div>
+							<div class="chart-labels">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
+							<div class="chart-labels" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>
+						</div>
 					</div>
 				</div>
 			{/if}
@@ -214,7 +217,10 @@
 		line-height: 1.15;
 	}
 	.chart-average {
-		font-size: calc(10px + 0.5vw);
+		font-size: calc(12px + 0.5vw);
+	}
+	.chart-labels {
+		font-size: calc(7px + 0.3vw);
 	}
 	.update-time {
 		font-size: calc(10px + 0.5vw);

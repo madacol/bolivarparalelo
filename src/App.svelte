@@ -5,36 +5,13 @@
 	const _1Hms = 1000*3600;
 	//const _24Hms = _1Hms*24;
 	
-	let rates;
+	let rateHashes;
 
-	const getRatesFromHash = () => {
-		rates =	window.location.hash.slice(1).split(';').map( rate => {
-					const [_counter_currency_code, _base_currency_code, range] = rate.split(',')
-					const _end_date_time = range && Date.now();
-					const _date_time = range && (_end_date_time - Number(range)*_1Hms);
-					return {_counter_currency_code, _base_currency_code, _date_time, _end_date_time}
-				})
-	}
+	const getRatesFromHash = () => rateHashes =	window.location.hash.slice(1).split(';')
 
-	window.location.hash = window.location.hash || `#ves,usd;ves,usd,${24*7};ves,eur`;
+	window.location.hash = window.location.hash || `#ves,usd;ves,usd,0,${24*7};ves,eur`;
 	getRatesFromHash();
 	window.addEventListener('hashchange', getRatesFromHash);
-
-	const ratesToHash = rates => rates.map( rate => {
-		const {_counter_currency_code, _base_currency_code, _date_time, _end_date_time} = rate;
-		const rateHash = [];
-		_counter_currency_code && rateHash.push(_counter_currency_code);
-		_base_currency_code && rateHash.push(_base_currency_code);
-		_date_time && _end_date_time && rateHash.push(Math.round(_date_time - _end_date_time)/_1Hms);
-		//console.log(rateHash);
-		return rateHash.join(',');
-	})	
-	const setRates = newRates => {
-		rates = newRates;
-		window.removeEventListener('hashchange', getRatesFromHash);
-		window.location.hash = ratesToHash(rates);
-		window.addEventListener('hashchange', getRatesFromHash);
-	}
 
 </script>
 
@@ -70,8 +47,8 @@
 
 
 <div class="body">
-	{#each rates as rateOptions (JSON.stringify(rateOptions))}
-		<Rate {...rateOptions} />
+	{#each rateHashes as rateHash}
+		<Rate {rateHash} />
 	{/each}
 </div>
 

@@ -1,18 +1,23 @@
 <script>
+	const _1Hms = 1000*3600;
 
 	// Props
-	export let _counter_currency_code;
-	export let _base_currency_code;
-	export let _date_time;
-	export let _end_date_time;
+	export let rateHash;
+
+	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, _showGraph] = rateHash.split(',');
+	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
+	const hourRange = hourRange_str && Number(hourRange_str);
+	const showGraph = (_showGraph !== "0")
 
 	// States
-	let counter_currency = { code: _counter_currency_code };
-	let base_currency    = { code: _base_currency_code };
-	let date_time     = _date_time;
-	let end_date_time = _end_date_time;
+	let counter_currency = {};
+	let base_currency = {};
+	$: counter_currency = {...counter_currency, code: counter_currency_code };
+	$: base_currency    = {...base_currency, code: base_currency_code };
+	let end_date_time = hourRange && (Date.now() - start_hourRange*_1Hms);
+	let date_time     = hourRange && (end_date_time - hourRange*_1Hms);
 	let history = [];
-	$: fetching_data = fetchData(_counter_currency_code, _base_currency_code, date_time, end_date_time);
+	$: fetching_data = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
 	let updated_time = "";
 
 	const getQueryUrl = (counter_code, base_code, date_time, end_date_time) => {
@@ -157,7 +162,7 @@
 	{:then rate}
 		<!-- promise was fulfilled -->
 		<div class="d-flex justify-content-between align-items-center">
-			{#if !date_time || history.length <= 1}
+			{#if !showGraph || !date_time || history.length <= 1}
 				<div class="w-100">
 					<div class="d-flex justify-content-center align-items-center flex-wrap">
 						<div class="monto-label">

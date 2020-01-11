@@ -1,5 +1,8 @@
 <script>
 	import Chart from './Chart.svelte';
+	import Form from './Form.svelte';
+	import Modal from './Modal.svelte';
+
 	const _1Hms = 1000*3600;
 
 	// Props
@@ -11,15 +14,16 @@
 	const showGraph = (_showGraph !== "0")
 
 	// States
+	let end_date_time = hourRange && (Date.now() - start_hourRange*_1Hms);
+	let date_time     = hourRange && (end_date_time - hourRange*_1Hms);
 	let counter_currency = {};
 	let base_currency = {};
 	$: counter_currency = {...counter_currency, code: counter_currency_code };
 	$: base_currency    = {...base_currency, code: base_currency_code };
-	let end_date_time = hourRange && (Date.now() - start_hourRange*_1Hms);
-	let date_time     = hourRange && (end_date_time - hourRange*_1Hms);
 	$: fetching_data = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
 	let chartData = [];
 	let updated_time = "";
+	let showModal = false;
 
 	const getQueryUrl = (counter_code, base_code, date_time, end_date_time) => {
 		let url = `/api/rate/${counter_code.toLowerCase()}/${base_code.toLowerCase()}`
@@ -94,7 +98,6 @@
 		return rate
 	}
 
-
 	}
 
 </script>
@@ -138,11 +141,17 @@
 			<div class="ml-3">
 				<i class="fas fa-search"/>
 				<br>
-				<i class="fas fa-cog mt-3"/>
+				<i on:click={()=>showModal=true} class="fas fa-cog mt-3"/>
 			</div>
 		</div>
 
 	{/await}
+	{#if showModal}
+		<Modal on:close={()=>showModal=false}>
+			<h1 slot="header">asdasdasd</h1>
+			<Form bind:counter_currency_code bind:base_currency_code bind:end_date_time bind:date_time />
+		</Modal>
+	{/if}
 </rateContainer>
 
 <style>

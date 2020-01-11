@@ -4,6 +4,7 @@
 	import Modal from './Modal.svelte';
 
 	const _1Hms = 1000*3600;
+	const SIGNIFICANT_DIGITS_TO_SHOW = 4;
 
 	// Props
 	export let rateHash;
@@ -56,17 +57,7 @@
 		}
 	}
 
-	function getHumanRate(rate) {
-		const num_digits = Math.log(Math.round(rate)) * Math.LOG10E + 1 | 0;  // https://stackoverflow.com/questions/14879691/get-number-of-digits-with-javascript
-		let human_rate;
-		if (num_digits < 4) {
-			const temp_scaling_factor = 10**(4-num_digits)
-			human_rate = Math.round( rate*temp_scaling_factor ) / temp_scaling_factor;
-		} else {
-			human_rate = Math.round(rate);
-		}
-		return human_rate.toLocaleString()
-	}
+	Number.prototype.humanRate = function() { return this.toLocaleString(navigator.language, {maximumSignificantDigits: SIGNIFICANT_DIGITS_TO_SHOW}) }
 
 	const fetchData = async (counter_code, base_code, date_time, end_date_time) => {
 		const url = getQueryUrl(counter_code, base_code, date_time, end_date_time);
@@ -76,7 +67,7 @@
 		base_currency = json.base_currency;
 		if (!date_time) {
 			updated_time = getHumanTime(Date.now() - json.unix_time_ms)
-			return getHumanRate(parseFloat(json.avg));
+			return parseFloat(json.avg).humanRate();
 		}
 		const rates = Object.values(json.rates)
 		let sum = 0;
@@ -91,7 +82,7 @@
 			});
 		})
 		const avg = sum / rates.length;
-		const rate = getHumanRate(avg);
+		const rate = avg.humanRate();
 		// const last_timestamp = rates[rates.length-1].unix_time_ms
 		// search_text = e.target.value;
 		chartData = chart_data;

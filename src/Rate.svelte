@@ -181,8 +181,4 @@
 		font-size: calc(10px + 0.5vw);
 		line-height: 1.15;
 	}
-	.content {
-		flex-direction: column;
-		/* min-height: 70vh; */
-	}
 </style>

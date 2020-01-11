@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_04_211959) do
+ActiveRecord::Schema.define(version: 2020_01_11_165502) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2020_01_04_211959) do
     t.string "symbol"
     t.string "name"
     t.string "namePlural"
+    t.string "flag"
   end
 
   create_table "lobit_prices", force: :cascade do |t|

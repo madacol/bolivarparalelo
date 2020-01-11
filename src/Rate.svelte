@@ -174,6 +174,9 @@
 	.chart-average {
 		font-size: calc(12px + 0.5vw);
 	}
+	.fas {
+		font-size: calc(15px + 0.5vw);
+	}
 	.chart-labels {
 		font-size: calc(7px + 0.3vw);
 	}

@@ -1,4 +1,5 @@
 <script>
+	import Chart from './Chart.svelte';
 	const _1Hms = 1000*3600;
 
 	// Props
@@ -16,8 +17,8 @@
 	$: base_currency    = {...base_currency, code: base_currency_code };
 	let end_date_time = hourRange && (Date.now() - start_hourRange*_1Hms);
 	let date_time     = hourRange && (end_date_time - hourRange*_1Hms);
-	let history = [];
 	$: fetching_data = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
+	let chartData = [];
 	let updated_time = "";
 
 	const getQueryUrl = (counter_code, base_code, date_time, end_date_time) => {
@@ -89,67 +90,10 @@
 		const rate = getHumanRate(avg);
 		// const last_timestamp = rates[rates.length-1].unix_time_ms
 		// search_text = e.target.value;
-		history = chart_data;
+		chartData = chart_data;
 		return rate
 	}
 
-	const canvasMounted = (canvas, history) => {
-		let ctx = canvas.getContext('2d');
-
-		const height = canvas.height;
-
-		let chart = new Chart(ctx, {
-			// The type of chart we want to create
-			type: 'line',
-
-			// The data for our dataset
-			data: {
-				datasets: [{
-					borderColor: '#003b68',
-					data: history,
-				}],
-			},
-
-			// Configuration options go here
-			options: {
-				legend: {display: false},
-				maintainAspectRatio: false,
-				tooltips: {
-					mode: 'nearest',
-					intersect: false
-				},
-				scales: {
-					xAxes: [{
-						type: 'time',
-						time: {
-							displayFormats: {
-								hour: 'ddd hA',
-							},
-							tooltipFormat: 'MMM DD HH:mm',
-						},
-					}]
-				},
-				pan: {
-					enabled: true,
-					mode: 'x'
-				},
-				zoom: {
-					enabled: true,
-					mode: 'x',
-				},
-			}
-		});
-
-		// hack to keep height. For some reason after initialiazing chart, it forgets it.  --_(=/)_--
-		canvas.height=height;
-		canvas.style.height=`${height}px`;
-
-		return {
-			update(history) {
-				chart.data.datasets[0].data = history;
-				chart.resetZoom();
-			}
-		}
 
 	}
 
@@ -162,7 +106,7 @@
 	{:then rate}
 		<!-- promise was fulfilled -->
 		<div class="d-flex justify-content-between align-items-center">
-			{#if !showGraph || !date_time || history.length <= 1}
+			{#if !showGraph || !date_time || chartData.length <= 1}
 				<div class="w-100">
 					<div class="d-flex justify-content-center align-items-center flex-wrap">
 						<div class="monto-label">
@@ -179,7 +123,7 @@
 			{:else}
 				<div class="d-flex justify-content-between align-items-center flex-grow" >
 					<div class="flex-grow">
-						<canvas use:canvasMounted={history} height="150"></canvas>
+						<Chart {chartData}/>
 					</div>
 					<div class="d-flex justify-content-center align-items-center flex-column">
 						<div class="chart-labels" style="margin-bottom: 1em">Promedio</div>
@@ -209,9 +153,6 @@
 		padding: 15px;
 		width: 100vw;
 		max-width: 1100px
-	}
-	canvas {
-		height: 150px;
 	}
 	.monto {
 		font-size: calc(20px + 5vw);

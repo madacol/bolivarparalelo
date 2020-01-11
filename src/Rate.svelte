@@ -20,7 +20,7 @@
 	let base_currency = {};
 	$: counter_currency = {...counter_currency, code: counter_currency_code };
 	$: base_currency    = {...base_currency, code: base_currency_code };
-	$: fetching_data = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
+	$: rate_avg_Promise = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
 	let chartData = [];
 	let updated_time = "";
 	let showModal = false;
@@ -103,10 +103,10 @@
 </script>
 
 <rateContainer>
-	{#await fetching_data}
+	{#await rate_avg_Promise}
 		<!-- promise is pending -->
 		<p>Cargando...</p>
-	{:then rate}
+	{:then rate_avg}
 		<!-- promise was fulfilled -->
 		<div class="d-flex justify-content-between align-items-center">
 			{#if !showGraph || !date_time || chartData.length <= 1}
@@ -117,7 +117,7 @@
 						</div>
 						<div class="monto-label ml-2">=</div>
 						<div class="monto d-flex justify-content-center flex-wrap mx-2 px-md-4">
-							{rate}
+							{rate_avg}
 							<div class="align-self-center monto-label mx-2"> {@html counter_currency.namePlural.replace(' ','<br>')}</div>
 						</div>
 					</div>
@@ -130,7 +130,7 @@
 					</div>
 					<div class="d-flex justify-content-center align-items-center flex-column">
 						<div class="chart-labels" style="margin-bottom: 1em">Promedio</div>
-						<div class="chart-average"><strong>{rate}</strong></div>
+						<div class="chart-average"><strong>{rate_avg}</strong></div>
 						<div>
 							<div class="chart-labels">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
 							<div class="chart-labels" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>

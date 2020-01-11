@@ -172,24 +172,6 @@
 		font-size: calc(10px + 0.5vw);
 		line-height: 1.15;
 	}
-	.btn-outline-dark {
-		border-color: white;
-		color: white;
-	}
-	#get_date_history {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		opacity: 0;
-	}
-	#get_date_history::-webkit-calendar-picker-indicator {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-	}
-	#get_date_history:hover + label {
-		background-color: black;
-	}
 	.content {
 		flex-direction: column;
 		/* min-height: 70vh; */

@@ -149,6 +149,9 @@ namespace '/api' do
   get '/?' do
     json getMainData(request)
   end
+  get '/currencies/?' do
+    json Currency.all
+  end
   namespace '/rate/:counter_currency(/:base_currency)?' do
     get '/?' do
       counter_currency = getCurrencyOrHalt params[:counter_currency]

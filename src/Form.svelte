@@ -14,16 +14,16 @@
 		<div class="d-flex flex-column">
 			{#each currencies as currency}
 				<label class="flag">
-					{currency.flag}
 					<input type="radio" bind:group={base_currency_code} value={currency.code}>
+					<div>{currency.flag}</div>
 				</label>
 			{/each}
 		</div>
 		<div class="d-flex flex-column">
 			{#each currencies as currency}
 				<label class="flag">
-					{currency.flag}
 					<input type="radio" bind:group={counter_currency_code} value={currency.code}>
+					<div>{currency.flag}</div>
 				</label>
 			{/each}
 		</div>
@@ -38,5 +38,11 @@
 		font-size: 35px;
 		margin: 0;
 		line-height: 0.9;
+	}
+	.flag > input {
+		display: none
+	}
+	.flag > input:checked ~ div{
+		font-size: 60px;
 	}
 </style>

@@ -3,12 +3,12 @@
 	import Form from './Form.svelte';
 	import Modal from './Modal.svelte';
 
-	const _1Hms = 1000*3600;
-	const SIGNIFICANT_DIGITS_TO_SHOW = 4;
-
 	// Props
 	export let rateHash;
+	export let currencies;
 
+	const _1Hms = 1000*3600;
+	const SIGNIFICANT_DIGITS_TO_SHOW = 4;
 	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, _showGraph] = rateHash.split(',');
 	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
 	const hourRange = hourRange_str && Number(hourRange_str);
@@ -89,8 +89,6 @@
 		return rate
 	}
 
-	}
-
 </script>
 
 <rateContainer>
@@ -130,17 +128,15 @@
 				</div>
 			{/if}
 			<div class="ml-3">
-				<i class="fas fa-search"/>
-				<br>
-				<i on:click={()=>showModal=true} class="fas fa-cog mt-3"/>
+				<div on:click={()=>showModal=true} class="p-2 mt-3"><i class="fas fa-cog"/></div>
 			</div>
 		</div>
 
 	{/await}
 	{#if showModal}
 		<Modal on:close={()=>showModal=false}>
-			<h1 slot="header">asdasdasd</h1>
-			<Form bind:counter_currency_code bind:base_currency_code bind:end_date_time bind:date_time />
+			<!-- <h1 slot="header">Configuracion</h1> -->
+			<Form {currencies} bind:counter_currency_code bind:base_currency_code bind:end_date_time bind:date_time />
 		</Modal>
 	{/if}
 </rateContainer>

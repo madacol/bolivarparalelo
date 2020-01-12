@@ -1,17 +1,23 @@
 <script>
 	import Rate from './Rate.svelte';
+	import { onMount } from 'svelte';
 
 	moment.locale(navigator.language)
 	const _1Hms = 1000*3600;
 	//const _24Hms = _1Hms*24;
 	
-	let rateHashes;
+	let rateHashes = [];
+	let currencies = [];
 
 	const getRatesFromHash = () => rateHashes =	window.location.hash.slice(1).split(';')
 
 	window.location.hash = window.location.hash || `#ves,usd;ves,usd,0,${24*7};ves,eur`;
 	getRatesFromHash();
 	window.addEventListener('hashchange', getRatesFromHash);
+	onMount(async () => {
+		const response = await fetch('/api/currencies');
+		currencies = await response.json()
+	})
 
 </script>
 
@@ -48,7 +54,7 @@
 
 <div class="body">
 	{#each rateHashes as rateHash}
-		<Rate {rateHash} />
+		<Rate bind:rateHash {currencies} />
 	{/each}
 </div>
 

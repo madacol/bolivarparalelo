@@ -15,7 +15,7 @@
 		name: "Bitcoin",
 		namePlural: "Bitcoins",
 	}
-	let bitcoin_rate = [];
+	let bitcoin_rate;
 
 	const getRatesFromHash = () => rateHashes =	window.location.hash.slice(1).split(';')
 
@@ -72,7 +72,9 @@
 
 <nav class="navbar d-flex justify-content-between">
 	<div></div>
-	<div class="navbar-brand">Bitcoin: {bitcoin_rate.avg} $</div>
+	{#if bitcoin_rate}
+		<div class="navbar-brand">Bitcoin: {bitcoin_rate.avg} $</div>
+	{/if}
 	<div>
 		<a href="https://twitter.com/bolivarparalel0">
 			<img alt="twitter icon" src="/icons/Twitter_Social_Icon_Circle_White.png" width="40" height="40">

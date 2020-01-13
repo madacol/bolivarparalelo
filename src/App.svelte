@@ -8,6 +8,13 @@
 	
 	let rateHashes = [];
 	let currencies = [];
+	const bitcoin_currency = {
+		id: 0,
+		code: "btc",
+		symbol: "₿",
+		name: "Bitcoin",
+		namePlural: "Bitcoins",
+	}
 
 	const getRatesFromHash = () => rateHashes =	window.location.hash.slice(1).split(';')
 
@@ -16,7 +23,7 @@
 	window.addEventListener('hashchange', getRatesFromHash);
 	onMount(async () => {
 		const response = await fetch('/api/currencies');
-		currencies = await response.json()
+		currencies = [...(await response.json()), bitcoin_currency]
 	})
 
 </script>

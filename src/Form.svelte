@@ -15,16 +15,18 @@
 			{#each currencies as currency}
 				<label class="flag">
 					<input type="radio" bind:group={base_currency_code} value={currency.code}>
-					<div>{currency.flag}</div>
+					<div>{@html currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}</div>
 				</label>
 			{/each}
 		</div>
 		<div class="d-flex flex-column">
 			{#each currencies as currency}
-				<label class="flag">
-					<input type="radio" bind:group={counter_currency_code} value={currency.code}>
-					<div>{currency.flag}</div>
-				</label>
+				{#if currency.code !== "btc"}
+					<label class="flag">
+						<input type="radio" bind:group={counter_currency_code} value={currency.code}>
+						<div>{@html currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}</div>
+					</label>
+				{/if}
 			{/each}
 		</div>
 	</div>
@@ -42,7 +44,7 @@
 	.flag > input {
 		display: none
 	}
-	.flag > input:checked ~ div{
+	.flag > input:checked + div{
 		font-size: 60px;
 	}
 </style>

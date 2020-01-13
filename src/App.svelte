@@ -15,6 +15,7 @@
 		name: "Bitcoin",
 		namePlural: "Bitcoins",
 	}
+	let bitcoin_rate = [];
 
 	const getRatesFromHash = () => rateHashes =	window.location.hash.slice(1).split(';')
 
@@ -24,6 +25,10 @@
 	onMount(async () => {
 		const response = await fetch('/api/currencies');
 		currencies = [...(await response.json()), bitcoin_currency]
+	})
+	onMount(async () => {
+		const response = await fetch('/api/rate/usd/btc');
+		bitcoin_rate = await response.json();
 	})
 
 </script>
@@ -67,7 +72,7 @@
 
 <nav class="navbar d-flex justify-content-between">
 	<div></div>
-	<!-- <a class="navbar-brand">Bitcoin: {bitcoin_rate.rates.avg} $</a> -->
+	<div class="navbar-brand">Bitcoin: {bitcoin_rate.avg} $</div>
 	<div>
 		<a href="https://twitter.com/bolivarparalel0">
 			<img alt="twitter icon" src="/icons/Twitter_Social_Icon_Circle_White.png" width="40" height="40">

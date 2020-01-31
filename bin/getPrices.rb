@@ -23,7 +23,6 @@ MAX_RETRIES = 3
 ###############################################################
 
 
-BITCOINAVERAGE_USD_RATES_URL = "https://apiv2.bitcoinaverage.com/constants/exchangerates/global"
 LOCALBITCOINS_BITCOINAVERAGE_URL = "https://localbitcoins.com/bitcoinaverage/ticker-all-currencies/"
 def localbitcoins_ad_list_url(currency_code, buy_or_sell_str) "https://localbitcoins.com/#{buy_or_sell_str}-bitcoins-online/#{currency_code}/.json" end
 
@@ -281,16 +280,6 @@ end
 if __FILE__ == $0     # Code inside this "if" will not be executed when used as a library (required from another script or irb)
   p 'Getting avg_1h list'
   avg_1h_list = getListFromUrl(LOCALBITCOINS_BITCOINAVERAGE_URL)
-  p 'Done!'
-  p "Getting BitcoinAverage's USD/BTC rate"
-    usd_btc_avg_price = 1 / JSON.parse( open(BITCOINAVERAGE_USD_RATES_URL).read )['rates']['BTC']['rate'].to_f
-  p 'Done!'
-  p ''
-  p "Saving BitcoinAverage's USD/BTC to Database"
-    UsdBtc.create(
-      bitcoinaverage: usd_btc_avg_price,
-      datetime:       Time.now
-    )
   p 'Done!'
   Currency.all.each do |currency|
     btc_prices = getLobitPrices currency.code

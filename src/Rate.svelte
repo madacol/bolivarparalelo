@@ -2,6 +2,7 @@
 	import Chart from './Chart.svelte';
 	import Form from './Form.svelte';
 	import Modal from './Modal.svelte';
+	import RateCalculator from './RateCalculator.svelte';
 
 	// Props
 	export let rateHash;
@@ -9,6 +10,7 @@
 
 	const _1Hms = 1000*3600;
 	const SIGNIFICANT_DIGITS_TO_SHOW = 4;
+
 	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, _showGraph] = rateHash.split(',');
 	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
 	const hourRange = hourRange_str && Number(hourRange_str);
@@ -25,6 +27,7 @@
 	let chartData = [];
 	let updated_time = "";
 	let showModal = false;
+	let rate = 1
 
 	const getQueryUrl = (counter_code, base_code, date_time, end_date_time) => {
 		let url = `/api/rate/${counter_code.toLowerCase()}/${base_code.toLowerCase()}`
@@ -67,7 +70,8 @@
 		base_currency = json.base_currency;
 		if (!date_time) {
 			updated_time = getHumanTime(Date.now() - json.unix_time_ms)
-			return parseFloat(json.avg).humanRate();
+			rate = parseFloat(json.avg);
+			return rate.humanRate();
 		}
 		const rates = Object.values(json.rates)
 		let sum = 0;
@@ -82,12 +86,13 @@
 			});
 		})
 		const avg = sum / rates.length;
-		const rate = avg.humanRate();
 		// const last_timestamp = rates[rates.length-1].unix_time_ms
 		// search_text = e.target.value;
 		chartData = chart_data;
-		return rate
+		rate = avg;
+		return rate.humanRate();
 	}
+
 
 </script>
 
@@ -100,16 +105,7 @@
 		<div class="d-flex justify-content-between align-items-center">
 			{#if !showGraph || !date_time || chartData.length <= 1}
 				<div class="w-100">
-					<div class="d-flex justify-content-center align-items-center flex-wrap">
-						<div class="monto-label">
-							1 {@html base_currency.name.replace(' ','<br>')}
-						</div>
-						<div class="monto-label ml-2">=</div>
-						<div class="monto d-flex justify-content-center flex-wrap mx-2 px-md-4">
-							{rate_avg}
-							<div class="align-self-center monto-label mx-2"> {@html counter_currency.namePlural.replace(' ','<br>')}</div>
-						</div>
-					</div>
+					<RateCalculator {rate} {base_currency} {counter_currency} />
 					<div class="update-time">Hace {@html updated_time}</div>
 				</div>
 			{:else}
@@ -150,14 +146,6 @@
 		width: 100vw;
 		max-width: 1100px
 	}
-	.monto {
-		font-size: calc(20px + 5vw);
-		line-height: 1.15;
-	}
-	.monto-label {
-		font-size: calc(10px + 1vw);
-		line-height: 1.15;
-	}
 	.chart-average {
 		font-size: calc(12px + 0.5vw);
 	}
@@ -168,6 +156,7 @@
 		font-size: calc(7px + 0.3vw);
 	}
 	.update-time {
+		margin-top: 1rem;
 		font-size: calc(10px + 0.5vw);
 		line-height: 1.15;
 	}

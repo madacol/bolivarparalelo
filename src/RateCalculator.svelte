@@ -18,9 +18,11 @@
 
     // States
     let base_amount = 1;
+    $: base_text = base_amount.humanRate();
+    $: base_name = (base_amount === 1) ? "name" : "namePlural"
     let counter_amount = base_amount * rate;
     $: counter_text = counter_amount.humanRate();
-    $: base_text = base_amount.humanRate();
+    $: counter_name = (counter_amount === 1) ? "name" : "namePlural"
 
     const parseNumberString = text => {
         if (!text) return 0
@@ -51,13 +53,13 @@
     <div class="d-flex justify-content-center align-items-center flex-wrap">
         <div class="monto-label">
             <input class="monto" type="text" on:keyup={handleInputWidth} on:change={handleBaseAmount} value={base_text} size={base_text.length} />
-            {@html base_currency.name.replace(' ','<br>')}
+            {@html base_currency[base_name].replace(' ','<br>')}
         </div>
         <div class="monto-label ml-2">=</div>
         <div class="d-flex justify-content-center flex-wrap mx-2 mx-md-4">
-            <input class="monto" type="text" on:keyup={handleInputWidth} on:change={handleCounterAmount} value={counter_text} size={counter_text.length} />
+            <input class="monto" type="text" on:click={e=>e.target.focus()} on:keyup={handleInputWidth} on:change={handleCounterAmount} value={counter_text} size={counter_text.length} />
             <!-- <input type="text" on:keyup={e=>counter_amount=e.target.value} value={counter_amount} size={counter_amount.length || 1} /> -->
-            <div class="align-self-center monto-label mx-2"> {@html counter_currency.namePlural.replace(' ','<br>')}</div>
+            <div class="align-self-center monto-label mx-2"> {@html counter_currency[counter_name].replace(' ','<br>')}</div>
         </div>
     </div>
 

@@ -3,13 +3,12 @@
 	import Form from './Form.svelte';
 	import Modal from './Modal.svelte';
 	import RateCalculator from './RateCalculator.svelte';
+	import getHumanRate from './helpers/getHumanRate.js'
 	import { _1Hms } from './CONSTANTS.js'
 
 	// Props
 	export let rateHash;
 	export let currencies;
-
-	const SIGNIFICANT_DIGITS_TO_SHOW = 4;
 
 	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, _showGraph] = rateHash.split(',');
 	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
@@ -23,11 +22,10 @@
 	let base_currency = {};
 	$: counter_currency = {...counter_currency, code: counter_currency_code };
 	$: base_currency    = {...base_currency, code: base_currency_code };
-	$: rate_avg_Promise = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
+	$: rate_Promise = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
 	let chartData = [];
 	let updated_time = "";
 	let showModal = false;
-	let rate = 1
 
 	const getQueryUrl = (counter_code, base_code, date_time, end_date_time) => {
 		let url = `/api/rate/${counter_code.toLowerCase()}/${base_code.toLowerCase()}`
@@ -60,8 +58,6 @@
 		}
 	}
 
-	Number.prototype.humanRate = function() { return this.toLocaleString(navigator.language, {maximumSignificantDigits: SIGNIFICANT_DIGITS_TO_SHOW}) }
-
 	const fetchData = async (counter_code, base_code, date_time, end_date_time) => {
 		const url = getQueryUrl(counter_code, base_code, date_time, end_date_time);
 		const response = await fetch(url);
@@ -70,8 +66,7 @@
 		base_currency = json.base_currency;
 		if (!date_time) {
 			updated_time = getHumanTime(Date.now() - json.unix_time_ms)
-			rate = parseFloat(json.avg);
-			return rate.humanRate();
+			return parseFloat(json.avg);
 		}
 		const rates = Object.values(json.rates)
 		let sum = 0;
@@ -85,28 +80,26 @@
 				"y": avg.toFixed(2),
 			});
 		})
-		const avg = sum / rates.length;
+		chartData = chart_data;
 		// const last_timestamp = rates[rates.length-1].unix_time_ms
 		// search_text = e.target.value;
-		chartData = chart_data;
-		rate = avg;
-		return rate.humanRate();
+		return sum / rates.length;
 	}
 
 
 </script>
 
 <div class="rateContainer">
-	{#await rate_avg_Promise}
+	{#await rate_Promise}
 		<!-- promise is pending -->
 		<p>Cargando...</p>
-	{:then rate_avg}
+	{:then rate}
 		<!-- promise was fulfilled -->
 		<div class="d-flex justify-content-between align-items-center">
 			{#if !showGraph || !date_time || chartData.length <= 1}
 				<div class="w-100">
 					<RateCalculator {rate} {base_currency} {counter_currency} />
-					<div class="update-time">Hace {@html updated_time}</div>
+					<div class="update-time">Hace {updated_time}</div>
 				</div>
 			{:else}
 				<div class="d-flex justify-content-between align-items-center flex-grow" >
@@ -115,7 +108,7 @@
 					</div>
 					<div class="d-flex justify-content-center align-items-center flex-column">
 						<div class="chart-labels" style="margin-bottom: 1em">Promedio</div>
-						<div class="chart-average"><strong>{rate_avg}</strong></div>
+						<div class="chart-average"><strong>{getHumanRate(rate)}</strong></div>
 						<div>
 							<div class="chart-labels">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
 							<div class="chart-labels" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>

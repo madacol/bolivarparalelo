@@ -3,12 +3,12 @@
 	import Form from './Form.svelte';
 	import Modal from './Modal.svelte';
 	import RateCalculator from './RateCalculator.svelte';
+	import { _1Hms } from './CONSTANTS.js'
 
 	// Props
 	export let rateHash;
 	export let currencies;
 
-	const _1Hms = 1000*3600;
 	const SIGNIFICANT_DIGITS_TO_SHOW = 4;
 
 	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, _showGraph] = rateHash.split(',');

@@ -3,8 +3,6 @@
 	import { onMount } from 'svelte';
 
 	moment.locale(navigator.language)
-	const _1Hms = 1000*3600;
-	//const _24Hms = _1Hms*24;
 	
 	let rateHashes = [];
 	let currencies = [];

@@ -9,7 +9,6 @@
     export let counter_currency;
 
     // Constants
-    const _1Hms = 1000*3600;
     const SIGNIFICANT_DIGITS_TO_SHOW = 4;
     const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
     const thousandSeparator = (10000).toLocaleString().substring(2, 3);

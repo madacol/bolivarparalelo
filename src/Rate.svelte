@@ -96,7 +96,7 @@
 
 </script>
 
-<rateContainer>
+<div class="rateContainer">
 	{#await rate_avg_Promise}
 		<!-- promise is pending -->
 		<p>Cargando...</p>
@@ -135,10 +135,10 @@
 			<Form {currencies} bind:counter_currency_code bind:base_currency_code bind:end_date_time bind:date_time />
 		</Modal>
 	{/if}
-</rateContainer>
+</div	>
 
 <style>
-	rateContainer {
+	.rateContainer {
 		align-self: center;
 		text-align: center;
 		/* border-bottom: #ffffff1c 2px solid; */

@@ -93,6 +93,8 @@
 		flex-direction: column;
 		height: calc(100vh - 120px);
 		overflow: auto;
+		font-size: calc(5px + 1.5vw);
+		line-height: 1.15;
 	}
 	#navbarSupportedContent ul li {
 		position: relative;

@@ -45,10 +45,6 @@
 </div>
 
 <style>
-    .rateCalculator {
-        font-size: calc(5px + 1.5vw);
-        line-height: 1.15;
-    }
     .equal {
         margin: 0 1em;
     }

@@ -39,7 +39,7 @@
 
 <style>
     div > input {
-        font-size: calc(10px + 3vw);
+        font-size: 2em;
         line-height: 1.15;
         background-color: transparent;
         color: white;

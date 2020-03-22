@@ -2,78 +2,54 @@
     import Chart from './Chart.svelte';
     import Form from './Form.svelte';
     import Modal from './Modal.svelte';
+    import CurrencyAmount from './CurrencyAmount.svelte';
+    import getHumanRate from './helpers/getHumanRate.js'
 
     // Props
     export let rate;
     export let base_currency;
     export let counter_currency;
 
-    // Constants
-    const SIGNIFICANT_DIGITS_TO_SHOW = 4;
-    const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
-    const thousandSeparator = (10000).toLocaleString().substring(2, 3);
-
-    Number.prototype.humanRate = function() { return this.toLocaleString(navigator.language, {maximumSignificantDigits: SIGNIFICANT_DIGITS_TO_SHOW}) }
-
     // States
     let base_amount = 1;
-    $: base_text = base_amount.humanRate();
-    $: base_name = (base_amount === 1) ? "name" : "namePlural"
     let counter_amount = base_amount * rate;
-    $: counter_text = counter_amount.humanRate();
-    $: counter_name = (counter_amount === 1) ? "name" : "namePlural"
 
-    const parseNumberString = text => {
-        if (!text) return 0
-        const textNormalized = text
-                                .split(thousandSeparator).join('')
-                                .split(decimalSeparator).join('.')
-        return parseFloat(textNormalized)
+    const handleCounterAmountChange = newAmount => {
+        counter_amount = newAmount;
+        base_amount = counter_amount / rate;
     }
 
-    const handleCounterAmount = e => {
-        counter_amount = parseNumberString(e.target.value)
-        e.target.size = counter_amount.humanRate().length
-        base_amount = counter_amount / rate
-    }
-
-    const handleBaseAmount = e => {
-        base_amount = parseNumberString(e.target.value)
-        e.target.size = base_amount.humanRate().length
-        counter_amount = base_amount * rate
-    }
-
-    const handleInputWidth = e => {
-        e.target.size=e.target.value.length || 1
+    const handleBaseAmountChange = newAmount => {
+        base_amount = newAmount;
+        counter_amount = base_amount * rate;
     }
 
 </script>
 
-    <div class="d-flex justify-content-center align-items-center flex-wrap">
-        <div class="monto-label">
-            <input class="monto" type="text" on:keyup={handleInputWidth} on:change={handleBaseAmount} value={base_text} size={base_text.length} />
-            {@html base_currency[base_name].replace(' ','<br>')}
-        </div>
-        <div class="monto-label ml-2">=</div>
-        <div class="d-flex justify-content-center flex-wrap mx-2 mx-md-4">
-            <input class="monto" type="text" on:click={e=>e.target.focus()} on:keyup={handleInputWidth} on:change={handleCounterAmount} value={counter_text} size={counter_text.length} />
-            <!-- <input type="text" on:keyup={e=>counter_amount=e.target.value} value={counter_amount} size={counter_amount.length || 1} /> -->
-            <div class="align-self-center monto-label mx-2"> {@html counter_currency[counter_name].replace(' ','<br>')}</div>
-        </div>
-    </div>
+<div class="rateCalculator d-flex justify-content-center align-items-center">
+
+    <CurrencyAmount
+        amount={base_amount}
+        handleAmountChange={handleBaseAmountChange}
+        currency={base_currency}
+    />
+
+    <div class="equal">=</div>
+
+    <CurrencyAmount
+        amount={counter_amount}
+        handleAmountChange={handleCounterAmountChange}
+        currency={counter_currency}
+    />
+
+</div>
 
 <style>
-    .monto {
-        font-size: calc(10px + 3vw);
+    .rateCalculator {
+        font-size: calc(5px + 1.5vw);
         line-height: 1.15;
-        background-color: transparent;
-        color: white;
-        border: 0;
-        border-bottom: 1px solid;
-        min-width:4px;
     }
-    .monto-label {
-        font-size: calc(10px + 1vw);
-        line-height: 1.15;
+    .equal {
+        margin: 0 1em;
     }
 </style>

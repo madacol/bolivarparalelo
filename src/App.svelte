@@ -2,10 +2,11 @@
 	import Rate from './Rate.svelte';
 	import { onMount } from 'svelte';
 
-	moment.locale(navigator.language)
-	
-	let rateHashes = [];
-	let currencies = [];
+
+	/*************
+	 * Constants *
+	 *************/
+	const defaultHashLayout = `#ves,usd;ves,eur;ves,usd,0,${24*7}`
 	const bitcoin_currency = {
 		id: 0,
 		code: "btc",
@@ -13,13 +14,25 @@
 		name: "Bitcoin",
 		namePlural: "Bitcoins",
 	}
+
+
+	/*********
+	 * Setup *
+	 *********/
+	moment.locale(navigator.language)
+	window.location.hash = window.location.hash || defaultHashLayout;
+	let currencies = [];
 	let bitcoin_rate;
-
-	const getRatesFromHash = () => rateHashes =	window.location.hash.slice(1).split(';')
-
-	window.location.hash = window.location.hash || `#ves,usd;ves,usd,0,${24*7};ves,eur`;
+	let rateHashes = [];
+	// Try get rates from hash
+	const getRatesFromHash = () => rateHashes = window.location.hash.slice(1).split(';');
 	getRatesFromHash();
 	window.addEventListener('hashchange', getRatesFromHash);
+
+
+	/**************
+	 * LifeCycles *
+	 **************/
 	onMount(async () => {
 		const response = await fetch('/api/currencies');
 		currencies = [...(await response.json()), bitcoin_currency]

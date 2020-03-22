@@ -95,6 +95,7 @@
 		overflow: auto;
 		font-size: calc(5px + 1.5vw);
 		line-height: 1.15;
+		padding: 1em;
 	}
 	#navbarSupportedContent ul li {
 		position: relative;

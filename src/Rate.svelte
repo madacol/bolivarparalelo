@@ -136,8 +136,11 @@
 		text-align: center;
 		/* border-bottom: #ffffff1c 2px solid; */
 		padding: 15px;
-		width: 100vw;
-		max-width: 1100px
+		width: 100%;
+		max-width: 1100px;
+		border: 1px solid rgb(51, 51, 51);
+		border-radius: 1em;
+		margin-bottom: 1em;
 	}
 	.chart-average {
 		font-size: calc(12px + 0.5vw);

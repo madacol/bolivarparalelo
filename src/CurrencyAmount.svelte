@@ -32,7 +32,7 @@
 
 
 <div class="d-flex align-items-center flex-wrap">
-    <input type="text" on:keyup={handleInputWidth} on:change={handleChange} value={text} size={text.length} />
+    <input type="text" onfocus="this.select();" on:keyup={handleInputWidth} on:change={handleChange} value={text} size={text.length} />
     <span>{@html currency.code.toUpperCase()}</span>
 </div>
 

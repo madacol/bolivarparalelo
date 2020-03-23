@@ -33,7 +33,10 @@
 
 <div class="d-flex align-items-center flex-wrap">
     <input type="text" onfocus="this.select();" on:keyup={handleInputWidth} on:change={handleChange} value={text} size={text.length} />
-    <span>{@html currency.code.toUpperCase()}</span>
+    <div class="currency d-flex flex-column">
+        <span class="flag">{@html `${currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}`}</span>
+        <span class="code">{currency.code.toUpperCase()}</span>
+    </div>
 </div>
 
 
@@ -46,7 +49,10 @@
         border: 0;
         border-bottom: 1px solid;
     }
-    div > span {
+    .currency {
         margin-left: 0.3em;
+    }
+    .code {
+        font-size: 1em;
     }
 </style>

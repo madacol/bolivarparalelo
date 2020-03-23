@@ -138,7 +138,7 @@
 	{/await}
 	{#if showModal}
 		<Modal on:close={()=>showModal=false}>
-			<!-- <h1 slot="header">Configuracion</h1> -->
+			<h3 slot="header">Configuracion</h3>
 			<Form {currencies} bind:counter_currency_code bind:base_currency_code bind:end_date_time bind:date_time />
 		</Modal>
 	{/if}

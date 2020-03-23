@@ -11,6 +11,17 @@
 	export let currencies;
 
 	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, _showGraph] = rateHash.split(',');
+	$: {
+		const rateList = []
+		rateList.push(counter_currency_code);
+		rateList.push(base_currency_code);
+		if (start_hourRange_str !== undefined || hourRange_str !== undefined) {
+			rateList.push(start_hourRange_str);
+			rateList.push(hourRange_str);
+			if (_showGraph) rateList.push(_showGraph);
+		}
+		rateHash = rateList.join(',');
+	}
 	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
 	const hourRange = hourRange_str && Number(hourRange_str);
 	const showGraph = (_showGraph !== "0")

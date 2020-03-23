@@ -95,6 +95,7 @@
 			return parseFloat(json.avg);
 		}
 		const rates = Object.values(json.rates)
+		if (rates.length === 1) updated_time = getHumanTime(Date.now() - rates[0].unix_time_ms);
 		let sum = 0;
 		const chart_data = [];
 		rates.forEach(rate => {
@@ -107,7 +108,6 @@
 			});
 		})
 		chartData = chart_data;
-		// const last_timestamp = rates[rates.length-1].unix_time_ms
 		// search_text = e.target.value;
 		return sum / rates.length;
 	}

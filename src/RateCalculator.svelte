@@ -26,7 +26,7 @@
 
 </script>
 
-<div class="rateCalculator d-flex justify-content-center align-items-center">
+<div class="rateCalculator d-flex justify-content-center align-items-center flex-wrap">
 
     <CurrencyAmount
         amount={base_amount}

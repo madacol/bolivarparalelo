@@ -103,8 +103,8 @@
 			const timestamp = rate.unix_time_ms
 			sum += avg;
 			chart_data.push ({
-				"x": timestamp,
-				"y": avg.toFixed(2),
+				x: timestamp,
+				y: avg.toFixed(2),
 			});
 		})
 		chartData = chart_data;

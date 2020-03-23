@@ -10,11 +10,18 @@
 	export let rateHash;
 	export let currencies;
 
-	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, _showGraph] = rateHash.split(',');
+	// Constants
+	const SHOW_CONFIG = {
+		0: {showGraph: false},
+		1: {showGraph: true, showRateCalcWhenGraph: false}, // Default
+		2: {showGraph: true, showRateCalcWhenGraph: true}
+	}
+
+	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, showConfig] = rateHash.split(',');
 
 	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
 	const hourRange = hourRange_str && Number(hourRange_str);
-	const showGraph = (_showGraph !== "0")
+	const {showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[1]
 
 	// Update `rateHash` whenever a parameter is changed
 	$: {
@@ -24,7 +31,7 @@
 		if (start_hourRange_str !== undefined || hourRange_str !== undefined) {
 			rateList.push(start_hourRange_str);
 			rateList.push(hourRange_str);
-			if (_showGraph) rateList.push(_showGraph);
+			if (showConfig) rateList.push(showConfig);
 		}
 		rateHash = rateList.join(',');
 	}
@@ -40,6 +47,11 @@
 	let chartData = [];
 	let updated_time = "";
 	let showModal = false;
+
+
+	/*************
+	 * Functions *
+	 *************/
 
 	const getQueryUrl = (counter_code, base_code, date_time, end_date_time) => {
 		let url = `/api/rate/${counter_code.toLowerCase()}/${base_code.toLowerCase()}`
@@ -110,26 +122,29 @@
 	{:then rate}
 		<!-- promise was fulfilled -->
 		<div class="d-flex justify-content-between align-items-center">
-			{#if !showGraph || !date_time || chartData.length <= 1}
-				<div class="w-100">
+			<div class="flex-grow">
+				{#if !showGraph || !date_time || chartData.length <= 1}
 					<RateCalculator {rate} {base_currency} {counter_currency} />
 					<div class="update-time">Hace {updated_time}</div>
-				</div>
-			{:else}
-				<div class="d-flex justify-content-between align-items-center flex-grow" >
-					<div class="flex-grow">
-						<Chart {chartData}/>
-					</div>
-					<div class="d-flex justify-content-center align-items-center flex-column">
-						<div class="chart-labels" style="margin-bottom: 1em">Promedio</div>
-						<div class="chart-average"><strong>{getHumanRate(rate)}</strong></div>
-						<div>
-							<div class="chart-labels">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
-							<div class="chart-labels" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>
+				{:else}
+					{#if showRateCalcWhenGraph}
+						<RateCalculator {rate} {base_currency} {counter_currency} />
+					{/if}
+					<div class="d-flex justify-content-between align-items-center mt-2" >
+						<div class="flex-grow">
+							<Chart {chartData}/>
+						</div>
+						<div class="d-flex justify-content-center align-items-center flex-column">
+							<div class="chart-labels" style="margin-bottom: 1em">Promedio</div>
+							<div class="chart-average"><strong>{getHumanRate(rate)}</strong></div>
+							<div>
+								<div class="chart-labels">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
+								<div class="chart-labels" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>
+							</div>
 						</div>
 					</div>
-				</div>
-			{/if}
+				{/if}
+			</div>
 			<div class="ml-3">
 				<div on:click={()=>showModal=true} class="p-2 mt-3"><i class="fas fa-cog"/></div>
 			</div>

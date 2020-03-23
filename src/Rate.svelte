@@ -166,7 +166,6 @@
 		font-size: calc(7px + 0.3vw);
 	}
 	.update-time {
-		margin-top: 1rem;
 		font-size: calc(10px + 0.5vw);
 		line-height: 1.15;
 	}

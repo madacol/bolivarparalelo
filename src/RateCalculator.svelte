@@ -45,6 +45,9 @@
 </div>
 
 <style>
+    .rateCalculator {
+        margin-bottom: 0.5em;
+    }
     .equal {
         margin: 0 1em;
     }

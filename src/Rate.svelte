@@ -164,7 +164,7 @@
 		align-self: center;
 		text-align: center;
 		/* border-bottom: #ffffff1c 2px solid; */
-		padding: 15px;
+		padding: 0.5em;
 		width: 100%;
 		max-width: 1100px;
 		border: 1px solid rgb(51, 51, 51);
@@ -172,16 +172,15 @@
 		margin-bottom: 1em;
 	}
 	.chart-average {
-		font-size: calc(12px + 0.5vw);
+		font-size: 1em;
 	}
 	.fas {
-		font-size: calc(15px + 0.5vw);
+		font-size: 1.2em;
 	}
 	.chart-labels {
-		font-size: calc(7px + 0.3vw);
+		font-size: 0.8em;
 	}
 	.update-time {
-		font-size: calc(10px + 0.5vw);
-		line-height: 1.15;
+		font-size: 0.8em;
 	}
 </style>

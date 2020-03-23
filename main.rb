@@ -137,6 +137,17 @@ def getMainData(request)
   return data
 end
 
+def filterCurrencyAttr(currency)
+  return {
+    code: currency.code,
+    symbol: currency.symbol,
+    name: currency.name,
+    namePlural: currency.namePlural,
+    flag: currency.flag,
+  }
+end
+
+
 get '/' do
   erb :index, :locals => {:data => getMainData(request)}
 end
@@ -171,18 +182,8 @@ namespace '/api' do
         sell_rate = counter_currency_lastest_rates.sell / base_currency_latest_rates.buy
       end
       json ({
-        :counter_currency => {
-          code: counter_currency.code,
-          symbol: counter_currency.symbol,
-          name: counter_currency.name,
-          namePlural: counter_currency.namePlural,
-        },
-        :base_currency => base_currency.nil? ? BITCOIN : {
-          code: base_currency.code,
-          symbol: base_currency.symbol,
-          name: base_currency.name,
-          namePlural: base_currency.namePlural,
-        },
+        :counter_currency => filterCurrencyAttr(counter_currency),
+        :base_currency => base_currency.nil? ? BITCOIN : filterCurrencyAttr(base_currency),
         :avg => rate,
         :buy  => buy_rate,
         :sell => sell_rate,
@@ -231,18 +232,8 @@ namespace '/api' do
           json_rates = rates_hourstamped
         end
         json ({
-          :counter_currency => {
-            code: counter_currency.code,
-            symbol: counter_currency.symbol,
-            name: counter_currency.name,
-            namePlural: counter_currency.namePlural,
-          },
-          :base_currency => base_currency.nil? ? BITCOIN : {
-            code: base_currency.code,
-            symbol: base_currency.symbol,
-            name: base_currency.name,
-            namePlural: base_currency.namePlural,
-          },
+          :counter_currency => filterCurrencyAttr(counter_currency),
+          :base_currency => base_currency.nil? ? BITCOIN : filterCurrencyAttr(base_currency),
           :rates => json_rates
         })
       end

@@ -11,6 +11,12 @@
 	export let currencies;
 
 	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, _showGraph] = rateHash.split(',');
+
+	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
+	const hourRange = hourRange_str && Number(hourRange_str);
+	const showGraph = (_showGraph !== "0")
+
+	// Update `rateHash` whenever a parameter is changed
 	$: {
 		const rateList = []
 		rateList.push(counter_currency_code);
@@ -22,9 +28,6 @@
 		}
 		rateHash = rateList.join(',');
 	}
-	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
-	const hourRange = hourRange_str && Number(hourRange_str);
-	const showGraph = (_showGraph !== "0")
 
 	// States
 	let end_date_time = hourRange && (Date.now() - start_hourRange*_1Hms);

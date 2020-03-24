@@ -73,6 +73,7 @@
 		padding: 1em;
 		border-radius: 0.2em;
 		background: rgb(36, 36, 36);
+		z-index: 1;
 	}
 
 	button {

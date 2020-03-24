@@ -15,7 +15,7 @@
 			{#each currencies as currency}
 				<label class="flag">
 					<input type="radio" bind:group={base_currency_code} value={currency.code}>
-					<div>{@html currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}</div>
+					<div>{currency.flag || currency.code.toUpperCase()}</div>
 				</label>
 			{/each}
 		</div>
@@ -24,7 +24,7 @@
 				{#if currency.code !== "btc"}
 					<label class="flag">
 						<input type="radio" bind:group={counter_currency_code} value={currency.code}>
-						<div>{@html currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}</div>
+						<div>{currency.flag || currency.code.toUpperCase()}</div>
 					</label>
 				{/if}
 			{/each}

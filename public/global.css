@@ -8,3 +8,13 @@ body {
 	flex: 1;
 	min-width: 0;
 }
+
+:root {
+	--gray1: #111;
+	--gray2: #222;
+	--gray3: #333;
+	--gray4: #444;
+	--gray5: #555;
+	--gray6: #666;
+	--gray7: #777;
+}

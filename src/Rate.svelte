@@ -180,7 +180,7 @@
 		padding: 0.5em;
 		width: 100%;
 		max-width: 1100px;
-		border: 1px solid rgb(51, 51, 51);
+		border: 1px solid var(--gray3);
 		border-radius: 1em;
 		margin-bottom: 1em;
 	}

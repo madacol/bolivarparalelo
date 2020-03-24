@@ -89,7 +89,7 @@
 	}
 	button:focus {
 		outline: 0;
-		box-shadow: 0 0 0 .1em rgb(51, 51, 51);
+		box-shadow: 0 0 0 .1em var(--gray3);
 		opacity: 100%;
 	}
 </style>

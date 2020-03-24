@@ -138,7 +138,7 @@
 		padding: 0.5em;
 		width: 100%;
 		max-width: 1100px;
-		border: 1px dashed rgb(51, 51, 51);
+		border: 1px dashed var(--gray3);
 		border-radius: 1em;
 		margin-bottom: 1em;
 		min-height: 5em;
@@ -147,9 +147,9 @@
 	}
 	#newRate > button:focus {
 		outline: 0;
-		box-shadow: 0 0 0 .1em rgb(51, 51, 51);
+		box-shadow: 0 0 0 .1em var(--gray3);
 	}
 	#newRate > button:hover {
-		background-color: #0d0d0d;
+		background-color: var(--gray1);
 	}
 </style>

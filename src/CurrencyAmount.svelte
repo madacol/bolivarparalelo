@@ -6,7 +6,8 @@
     export let handleAmountChange;
     export let amount;
     export let currency;
-    export let className;
+    // Optional Props
+    const {className} = $$props
 
     $: text = getHumanRate(amount)
 

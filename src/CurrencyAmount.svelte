@@ -33,7 +33,7 @@
 </script>
 
 
-<div class={`d-flex flex-column flex-wrap ${className}`}>
+<div class={`currencyAmount d-flex flex-column flex-wrap ${className || ''}`}>
     <div class="currency d-flex">
         <span class="flag">{@html `${currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}`}</span>
         &nbsp;
@@ -49,14 +49,18 @@
         line-height: 1.15;
         background-color: transparent;
         color: white;
-        border: 0;
-        border-bottom: 1px solid;
+        border: 1px solid var(--gray3);
+        border-radius: 0.2em;
+        padding: 0 0.2em;
     }
     .currency {
         margin-left: 0.3em;
     }
-    .reverse {
-        align-items: flex-end;
+    .currencyAmount {
+        align-items: flex-start;
+    }
+    .currencyAmount.reverse {
+        align-items: flex-end !important;
     }
     .reverse > .currency {
         flex-flow: row-reverse;

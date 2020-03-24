@@ -6,6 +6,7 @@
     export let handleAmountChange;
     export let amount;
     export let currency;
+    export let className;
 
     $: text = getHumanRate(amount)
 
@@ -31,12 +32,13 @@
 </script>
 
 
-<div class="d-flex align-items-center flex-wrap">
-    <input type="text" onfocus="this.select();" on:keyup={handleInputWidth} on:change={handleChange} value={text} size={text.length} />
-    <div class="currency d-flex flex-column">
+<div class={`d-flex flex-column flex-wrap ${className}`}>
+    <div class="currency d-flex">
         <span class="flag">{@html `${currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}`}</span>
+        &nbsp;
         <span class="code">{currency.code.toUpperCase()}</span>
     </div>
+    <input type="text" onfocus="this.select();" on:keyup={handleInputWidth} on:change={handleChange} value={text} size={text.length} />
 </div>
 
 
@@ -52,7 +54,16 @@
     .currency {
         margin-left: 0.3em;
     }
+    .reverse {
+        align-items: flex-end;
+    }
+    .reverse > .currency {
+        flex-flow: row-reverse;
+    }
     .code {
         font-size: 1em;
+    }
+    .flag {
+        font-size: 1.2em;
     }
 </style>

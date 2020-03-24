@@ -26,9 +26,10 @@
 
 </script>
 
-<div class="rateCalculator d-flex justify-content-center align-items-center flex-wrap">
+<div class="rateCalculator d-flex justify-content-center align-items-end flex-wrap">
 
     <CurrencyAmount
+        className={"reverse"}
         amount={base_amount}
         handleAmountChange={handleBaseAmountChange}
         currency={base_currency}
@@ -50,5 +51,6 @@
     }
     .equal {
         margin: 0 1em;
+        margin-bottom: 0.5em
     }
 </style>

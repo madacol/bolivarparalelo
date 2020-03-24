@@ -49,7 +49,7 @@
 
 	<div class="d-flex justify-content-center">
 		<!-- svelte-ignore a11y-autofocus -->
-		<button autofocus on:click={close}>Cerrar</button>
+		<button class="closeButton" autofocus on:click={close}>Cerrar</button>
 	</div>
 </modal>
 
@@ -78,18 +78,17 @@
 		z-index: 1;
 	}
 
-	button {
+	.closeButton {
 		display: block;
 		background-color: transparent;
-		border: 1px solid;
+		border: 1px solid var(--gray4);
 		border-radius: 0.5em;
 		padding: 1rem;
 		color: white;
-		opacity: 50%;
+		width: 100%;
 	}
-	button:focus {
+	.closeButton:focus, .closeButton:hover {
 		outline: 0;
-		box-shadow: 0 0 0 .1em var(--gray3);
-		opacity: 100%;
+		background-color: var(--gray4);
 	}
 </style>

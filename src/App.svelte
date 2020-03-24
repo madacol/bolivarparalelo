@@ -25,6 +25,8 @@
 	let bitcoin_rate;
 	// Try get rates from hash or else set default
 	let rateHashes = window.location.hash.slice(1).split(';');
+	// Remove any empty ratehash
+	$: rateHashes = rateHashes.filter(x=>x);
 	// Update hash from rate changes
 	$: { window.location.hash = rateHashes.join(';') }
 
@@ -75,7 +77,7 @@
 
 
 <div class="body">
-	{#each rateHashes as rateHash}
+	{#each rateHashes as rateHash (rateHash)}
 		<Rate bind:rateHash {currencies} />
 	{/each}
 </div>

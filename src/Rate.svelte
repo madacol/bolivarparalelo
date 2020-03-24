@@ -113,6 +113,11 @@
 	}
 
 
+	/***********
+	 * Handlers *
+	 ***********/
+	function removeRate () { rateHash = ''; }
+
 </script>
 
 <div class="rateContainer">
@@ -123,6 +128,9 @@
 		<!-- promise was fulfilled -->
 		<div class="d-flex justify-content-between align-items-center">
 			<div class="flex-grow">
+		<div class="mr-3">
+			<i on:click={removeRate} class="fas fa-times"/>
+		</div>
 				{#if !showGraph || !date_time || chartData.length <= 1}
 					<RateCalculator {rate} {base_currency} {counter_currency} />
 					<div class="update-time">Hace {updated_time}</div>

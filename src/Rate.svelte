@@ -171,13 +171,12 @@
 			<Form {currencies} bind:counter_currency_code bind:base_currency_code bind:end_date_time bind:date_time />
 		</Modal>
 	{/if}
-</div	>
+</div>
 
 <style>
 	.rateContainer {
 		align-self: center;
 		text-align: center;
-		/* border-bottom: #ffffff1c 2px solid; */
 		padding: 0.5em;
 		width: 100%;
 		max-width: 1100px;
@@ -196,6 +195,6 @@
 		font-size: 0.8em;
 	}
 	.update-time {
-		font-size: 0.8em;
+		font-size: 0.7em;
 	}
 </style>

@@ -22,10 +22,11 @@
 	 * Setup *
 	 *********/
 	moment.locale(navigator.language)
+	// Set hash to default if empty
 	window.location.hash = window.location.hash || defaultHashLayout;
 	let currencies = [];
 	let bitcoin_rate;
-	// Try get rates from hash or else set default
+	// Get rates from hash
 	let rateHashes = window.location.hash.slice(1).split(';');
 	// Remove any empty ratehash
 	$: rateHashes = rateHashes.filter(x=>x);
@@ -85,7 +86,7 @@
 </div>
 
 
-<div class="body">
+<div id="body">
 	{#each rateHashes as rateHash (rateHash)}
 		<Rate bind:rateHash {currencies} />
 	{/each}
@@ -116,12 +117,12 @@
 		background-color: #003b68;
 		min-height: 60px;
 	}
-	.body {
+	#body {
 		display: flex;
 		flex-direction: column;
 		height: calc(100vh - 120px);
 		overflow: auto;
-		font-size: calc(5px + 1.5vw);
+		font-size: calc(8px + 0.9vw);
 		line-height: 1.15;
 		padding: 1em;
 	}

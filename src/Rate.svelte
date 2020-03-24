@@ -85,6 +85,10 @@
 	}
 
 	const fetchData = async (counter_code, base_code, date_time, end_date_time) => {
+		if (!counter_code || !base_code) {
+			showModal = true;
+			throw new Error('no currencies selected')
+		}
 		const url = getQueryUrl(counter_code, base_code, date_time, end_date_time);
 		const response = await fetch(url);
 		const json = await response.json();
@@ -121,16 +125,16 @@
 </script>
 
 <div class="rateContainer">
-	{#await rate_Promise}
-		<!-- promise is pending -->
-		<p>Cargando...</p>
-	{:then rate}
-		<!-- promise was fulfilled -->
-		<div class="d-flex justify-content-between align-items-center">
-			<div class="flex-grow">
+	<div class="d-flex justify-content-center align-items-center">
 		<div class="mr-3">
 			<i on:click={removeRate} class="fas fa-times"/>
 		</div>
+		<div class="flex-grow">
+			{#await rate_Promise}
+				<!-- promise is pending -->
+				<p>Cargando...</p>
+			{:then rate}
+				<!-- promise was fulfilled -->
 				{#if !showGraph || !date_time || chartData.length <= 1}
 					<RateCalculator {rate} {base_currency} {counter_currency} />
 					<div class="update-time">Hace {updated_time}</div>
@@ -152,13 +156,15 @@
 						</div>
 					</div>
 				{/if}
-			</div>
-			<div class="ml-3">
-				<div on:click={()=>showModal=true} class="p-2 mt-3"><i class="fas fa-cog"/></div>
-			</div>
+			{/await}
 		</div>
+		<div class="ml-3">
+			<i class="fas fa-search"/>
+			<br>
+			<i on:click={()=>showModal=true} class="fas fa-cog mt-1"/>
+		</div>
+	</div>
 
-	{/await}
 	{#if showModal}
 		<Modal on:close={()=>showModal=false}>
 			<h3 slot="header">Configuracion</h3>
@@ -184,6 +190,7 @@
 	}
 	.fas {
 		font-size: 1.2em;
+		padding: 0.3em
 	}
 	.chart-labels {
 		font-size: 0.8em;

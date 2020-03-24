@@ -1,5 +1,7 @@
 <script>
 	import Rate from './Rate.svelte';
+	import Modal from './Modal.svelte';
+	import Form from './Form.svelte';
 	import { onMount } from 'svelte';
 
 
@@ -43,6 +45,13 @@
 		bitcoin_rate = await response.json();
 	})
 
+	/************
+	 * HANLDERS *
+	 ************/
+	function AddRate(){
+		rateHashes = [...rateHashes, ','];
+	}
+
 </script>
 
 <div>
@@ -80,6 +89,11 @@
 	{#each rateHashes as rateHash (rateHash)}
 		<Rate bind:rateHash {currencies} />
 	{/each}
+	<div id="newRate">
+		<button on:click={AddRate}>
+			Agregar Tasa
+		</button>
+	</div>
 </div>
 
 <nav class="navbar d-flex justify-content-between">
@@ -113,5 +127,28 @@
 	}
 	#navbarSupportedContent ul li {
 		position: relative;
+	}
+	#newRate {
+		align-self: center;
+		width: 100%;
+		max-width: 1100px;
+	}
+	#newRate > button {
+		padding: 0.5em;
+		width: 100%;
+		max-width: 1100px;
+		border: 1px dashed rgb(51, 51, 51);
+		border-radius: 1em;
+		margin-bottom: 1em;
+		min-height: 5em;
+		background-color: transparent;
+		color: white;
+	}
+	#newRate > button:focus {
+		outline: 0;
+		box-shadow: 0 0 0 .1em rgb(51, 51, 51);
+	}
+	#newRate > button:hover {
+		background-color: #0d0d0d;
 	}
 </style>

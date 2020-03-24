@@ -47,8 +47,10 @@
 	<slot></slot>
 	<hr>
 
-	<!-- svelte-ignore a11y-autofocus -->
-	<button autofocus on:click={close}>close modal</button>
+	<div class="d-flex justify-content-center">
+		<!-- svelte-ignore a11y-autofocus -->
+		<button autofocus on:click={close}>cerrar modal</button>
+	</div>
 </modal>
 
 <style>
@@ -78,5 +80,16 @@
 
 	button {
 		display: block;
+		background-color: transparent;
+		border: 1px solid;
+		border-radius: 0.5em;
+		padding: 1rem;
+		color: white;
+		opacity: 50%;
+	}
+	button:focus {
+		outline: 0;
+		box-shadow: 0 0 0 .1em rgb(51, 51, 51);
+		opacity: 100%;
 	}
 </style>

@@ -28,8 +28,8 @@
 	let bitcoin_rate;
 	// Get rates from hash
 	let rateHashes = window.location.hash.slice(1).split(';');
-	// Remove any empty ratehash
-	$: rateHashes = rateHashes.filter(x=>x);
+	// Remove any empty or duplicate ratehash
+	$: rateHashes = [...new Set(rateHashes.filter(x=>x))];
 	// Update hash from rate changes
 	$: { window.location.hash = rateHashes.join(';') }
 

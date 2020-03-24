@@ -63,6 +63,7 @@
     }
     .code {
         font-size: 1em;
+        opacity: 70%;
     }
     .flag {
         font-size: 1.2em;

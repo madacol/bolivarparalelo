@@ -189,12 +189,17 @@
 	}
 	.fas {
 		font-size: 1.2em;
-		padding: 0.3em
+		padding: 0.3em;
+		opacity: 50%;
+	}
+	.fas:hover, .fas:focus {
+		opacity: 100%;
 	}
 	.chart-labels {
 		font-size: 0.8em;
 	}
 	.update-time {
 		font-size: 0.7em;
+		opacity: 50%;
 	}
 </style>

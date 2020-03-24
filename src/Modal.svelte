@@ -49,7 +49,7 @@
 
 	<div class="d-flex justify-content-center">
 		<!-- svelte-ignore a11y-autofocus -->
-		<button autofocus on:click={close}>cerrar modal</button>
+		<button autofocus on:click={close}>Cerrar</button>
 	</div>
 </modal>
 

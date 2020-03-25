@@ -19,6 +19,7 @@
 
 	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, showConfig] = rateHash.split(',');
 
+	$: isRateValid = counter_currency_code && base_currency_code;
 	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
 	const hourRange = hourRange_str && Number(hourRange_str);
 	const {showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[1]
@@ -122,13 +123,14 @@
 	 ***********/
 	function removeRate () { rateHash = ''; }
 	function closeModal () {
-		if (!counter_currency_code || !base_currency_code) removeRate();
+		if (!isRateValid)
+			return removeRate();
 		showModal=false;
 	}
 
 </script>
 
-<div class="rateContainer">
+<div class={`rateContainer ${isRateValid ? '' : 'hide-collapse'}`}>
 	<div class="d-flex justify-content-center align-items-center">
 		<div class="mr-3">
 			<i on:click={removeRate} class="fas fa-times"/>

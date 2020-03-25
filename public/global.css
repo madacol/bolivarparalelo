@@ -4,9 +4,13 @@ body {
 	font-family: 'Courier New', Courier, monospace;
 	font-size: medium;
 }
+
 .flex-grow {
 	flex: 1;
 	min-width: 0;
+}
+.hide-collapse{
+	visibility: collapse;
 }
 
 :root {

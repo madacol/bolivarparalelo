@@ -61,6 +61,8 @@
 		width: 100%;
 		height: 100%;
 		background: rgba(0,0,0,0.3);
+		z-index: 1;
+		visibility: visible;
 	}
 
 	modal {
@@ -75,7 +77,8 @@
 		padding: 1em;
 		border-radius: 0.2em;
 		background: rgb(36, 36, 36);
-		z-index: 1;
+		z-index: 2;
+		visibility: visible;
 	}
 
 	.closeButton {

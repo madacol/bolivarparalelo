@@ -141,7 +141,7 @@
 		border: 1px dashed var(--gray3);
 		border-radius: 1em;
 		margin-bottom: 1em;
-		min-height: 5em;
+		min-height: 6em;
 		background-color: transparent;
 		color: white;
 	}

@@ -5,9 +5,11 @@
     // Props
     export let handleAmountChange;
     export let amount;
-    export let currency;
     // Optional Props
-    const {className} = $$props
+    const {
+        className,
+        currency
+    } = $$props
 
     $: text = getHumanRate(amount)
 
@@ -34,11 +36,13 @@
 
 
 <div class={`currencyAmount d-flex flex-column flex-wrap ${className || ''}`}>
-    <div class="currency d-flex">
-        <span class="flag">{@html `${currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}`}</span>
-        &nbsp;
-        <span class="code">{currency.code.toUpperCase()}</span>
-    </div>
+    {#if currency}
+        <div class="currency d-flex">
+            <span class="flag">{@html `${currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}`}</span>
+            &nbsp;
+            <span class="code">{currency.code.toUpperCase()}</span>
+        </div>
+    {/if}
     <input type="text" onfocus="this.select();" on:keyup={handleInputWidth} on:change={handleChange} value={text} size={text.length} />
 </div>
 
@@ -52,9 +56,6 @@
         border: 1px solid var(--gray3);
         border-radius: 0.2em;
         padding: 0 0.2em;
-    }
-    .currency {
-        margin-left: 0.3em;
     }
     .currencyAmount {
         align-items: flex-start;

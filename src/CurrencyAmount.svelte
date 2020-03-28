@@ -8,7 +8,8 @@
     // Optional Props
     const {
         className,
-        currency
+        currency,
+        title,
     } = $$props
 
     $: text = getHumanRate(amount)
@@ -35,7 +36,7 @@
 </script>
 
 
-<div class={`currencyAmount d-flex flex-column flex-wrap ${className || ''}`}>
+<div class={`currencyAmount d-flex flex-column flex-wrap ${className || ''}`} {title}>
     {#if currency}
         <div class="currency d-flex">
             <span class="flag">{@html `${currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}`}</span>

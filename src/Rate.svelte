@@ -97,16 +97,24 @@
 		base_currency = json.base_currency;
 		if (!date_time) {
 			updated_time = getHumanTime(Date.now() - json.unix_time_ms)
-			return parseFloat(json.avg);
+			return {
+				avg: parseFloat(json.avg),
+				buy: parseFloat(json.buy),
+				sell: parseFloat(json.sell)
+			};
 		}
 		const rates = Object.values(json.rates)
 		if (rates.length === 1) updated_time = getHumanTime(Date.now() - rates[0].unix_time_ms);
-		let sum = 0;
 		const chart_data = [];
+		let sumAvg = 0;
+		let sumBuy = 0;
+		let sumSell = 0;
 		rates.forEach(rate => {
 			const avg = parseFloat( rate.avg )
-			const timestamp = rate.unix_time_ms
-			sum += avg;
+			sumAvg += avg;
+			sumBuy += parseFloat( rate.buy );
+			sumSell += parseFloat( rate.sell );
+			const timestamp = rate.unix_time_ms;
 			chart_data.push ({
 				x: timestamp,
 				y: avg.toFixed(2),
@@ -114,7 +122,11 @@
 		})
 		chartData = chart_data;
 		// search_text = e.target.value;
-		return sum / rates.length;
+		return {
+			avg: sumAvg / rates.length,
+			buy: sumBuy / rates.length,
+			sell: sumSell / rates.length
+		};
 	}
 
 
@@ -154,7 +166,7 @@
 						</div>
 						<div class="d-flex justify-content-center align-items-center flex-column">
 							<div class="chart-labels" style="margin-bottom: 1em">Promedio</div>
-							<div class="chart-average"><strong>{getHumanRate(rate)}</strong></div>
+							<div class="chart-average"><strong>{getHumanRate(rate.avg)}</strong></div>
 							<div>
 								<div class="chart-labels">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
 								<div class="chart-labels" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>

@@ -10,18 +10,30 @@
     export let base_currency;
     export let counter_currency;
 
-    // States
+    /**********
+     * STATES *
+     **********/
     let base_amount = 1;
-    let counter_amount = base_amount * rate;
+    let counter_amount = base_amount * rate.avg;
+    // Reactive States
+    $: counter_buy_amount = getHumanRate(base_amount * rate.buy);
+    $: counter_sell_amount = getHumanRate(base_amount * rate.sell);
+    $: counter_title = `compra: ${counter_buy_amount}\n    venta: ${counter_sell_amount}`
+    $: base_buy_amount = getHumanRate(counter_amount / rate.sell);
+    $: base_sell_amount = getHumanRate(counter_amount / rate.buy);
+    $: base_title = `compra: ${base_buy_amount}\n    venta: ${base_sell_amount}`
 
+    /************
+     * HANDLERS *
+     ************/
     const handleCounterAmountChange = newAmount => {
         counter_amount = newAmount;
-        base_amount = counter_amount / rate;
+        base_amount = counter_amount / rate.avg;
     }
 
     const handleBaseAmountChange = newAmount => {
         base_amount = newAmount;
-        counter_amount = base_amount * rate;
+        counter_amount = base_amount * rate.avg;
     }
 
 </script>
@@ -33,6 +45,7 @@
         amount={base_amount}
         handleAmountChange={handleBaseAmountChange}
         currency={base_currency}
+        title={base_title}
     />
 
     <div class="equal">=</div>
@@ -41,6 +54,7 @@
         amount={counter_amount}
         handleAmountChange={handleCounterAmountChange}
         currency={counter_currency}
+        title={counter_title}
     />
 
 </div>

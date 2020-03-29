@@ -56,4 +56,7 @@
 	.flag > input:checked + div{
 		font-size: 60px;
 	}
+	label {
+		font-size: 1.1em;
+	}
 </style>

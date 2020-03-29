@@ -11,8 +11,8 @@
 .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: 2.4em;
+    height: 1.3em;
 }
 
 /* Hide default HTML checkbox */
@@ -33,16 +33,16 @@
     background-color: var(--gray3);
     -webkit-transition: .4s;
     transition: .4s;
-    border-radius: 34px;
+    border-radius: 1.3em;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    height: 1em;
+    width: 1em;
+    left: 0.15em;
+    bottom: 0.15em;
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
@@ -58,8 +58,8 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(1em);
+    -ms-transform: translateX(1em);
+    transform: translateX(1em);
 }
 </style>

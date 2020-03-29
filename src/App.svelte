@@ -114,7 +114,7 @@
 		flex-direction: column;
 		height: calc(100vh - 120px);
 		overflow: auto;
-		font-size: calc(8px + 0.9vw);
+		font-size: calc(10px + 0.9vw);
 		line-height: 1.15;
 		padding: 1em;
 	}

@@ -68,6 +68,7 @@
 
 <style>
     .rateCalculator {
+        font-size: 0.9em;
         margin-bottom: 0.5em;
     }
     .equal {

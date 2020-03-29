@@ -34,12 +34,12 @@
 			{/each}
 		</div>
 	</div>
+	<hr>
+	<label>
+		Tasas de compra y venta:
+		<CheckboxToggle bind:checked={showBuySell}/>
+	</label>
 </div>
-<hr>
-<label>
-	Tasas de compra y venta:
-	<CheckboxToggle bind:checked={showBuySell}/>
-</label>
 
 <style>
 	.flags {

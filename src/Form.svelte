@@ -37,7 +37,7 @@
 </div>
 <hr>
 <label>
-	Mostrar tasas de compra y venta:
+	Tasas de compra y venta:
 	<CheckboxToggle bind:checked={showBuySell}/>
 </label>
 

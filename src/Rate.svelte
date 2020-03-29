@@ -134,7 +134,7 @@
 	/***********
 	 * Handlers *
 	 ***********/
-	function removeRate () { rateHash = ''; }
+	function removeRate () { rateHash = null; }
 	function closeModal () {
 		if (!isRateValid)
 			return removeRate();

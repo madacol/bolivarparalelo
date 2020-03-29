@@ -28,10 +28,8 @@
 	let bitcoin_rate;
 	// Get rates from hash
 	let rateHashes = window.location.hash.slice(1).split(';');
-	// Remove any empty or duplicate ratehash
-	$: rateHashes = [...new Set(rateHashes.filter(x=>x))];
-	// Update hash from rate changes
-	$: { window.location.hash = rateHashes.join(';') }
+	// Filter removed rates and update hash
+	$: { window.location.hash = rateHashes.filter(x=>x).join(';') }
 
 
 	/**************
@@ -79,8 +77,10 @@
 
 
 <div id="body">
-	{#each rateHashes as rateHash (rateHash)}
-		<Rate bind:rateHash {currencies} />
+	{#each rateHashes as rateHash}
+		{#if rateHash}
+			<Rate bind:rateHash {currencies} />
+		{/if}
 	{/each}
 	<div id="newRate">
 		<button on:click={AddRate}>

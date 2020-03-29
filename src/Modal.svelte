@@ -42,7 +42,9 @@
 <div class="modal-background" on:click={close}></div>
 
 <modal role="dialog" aria-modal="true" bind:this={modal}>
-	<slot name="header"></slot>
+	<div class="header">
+		<slot name="header"></slot>
+	</div>
 	<hr>
 	<slot></slot>
 	<hr>
@@ -79,6 +81,9 @@
 		background: rgb(36, 36, 36);
 		z-index: 2;
 		visibility: visible;
+	}
+	.header {
+		font-size: 2em;
 	}
 
 	.closeButton {

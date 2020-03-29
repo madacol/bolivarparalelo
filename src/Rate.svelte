@@ -186,7 +186,7 @@
 
 	{#if showModal}
 		<Modal on:close={closeModal}>
-			<h3 slot="header">Configuracion</h3>
+			<span slot="header">Configuracion</span>
 			<Form
 				{currencies}
 				bind:showBuySell

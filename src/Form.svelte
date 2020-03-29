@@ -1,7 +1,9 @@
 <script>
 	import CheckboxToggle from './CheckboxToggle.svelte'
 
-	// Props
+	/*********
+	 * Props *
+	 *********/
 	export let counter_currency_code;
 	export let base_currency_code;
 	export let end_date_time;

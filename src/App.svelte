@@ -55,35 +55,27 @@
 
 </script>
 
-<div>
-	<div class="collapse" id="navbarToggleExternalContent">
-		<div class="content-nav-hide bg-gradient p-4">
-			<h5 class="text-white h4">Más contenido</h5>
-			<span class="text-muted">Próximamente...</span>
-		</div>
-	</div>
-	<nav class="navbar navbar-expand-lg navbar-dark">
-		<a href="/beta" class="navbar-brand">Bolívar Paralelo (beta)</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav">
-			<li class="nav-item">
-				<a href="/" class="navbar-brand">Ir a clásico</a>
-			</li>
-			<!-- <li class="nav-item">
-				<input type="date" id="get_date_history" on:change={handleSearchDate}>
-				<label class="btn btn-outline-dark" for="get_date_history">
-					<span id="calendar_text">{calendar_text} </span>
-					<img alt="calendar icon" src="/icons/calendar_icon_white.png" width="25" height="25">
-				</label>
-			</li> -->
-			<li class="nav-item px-2">
-			</li>
-		</ul>
-	</nav>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark">
+	<a href="/beta" class="navbar-brand">Bolívar Paralelo (beta)</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+	<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
+	<ul class="navbar-nav">
+		<li class="nav-item">
+			<a href="/" class="navbar-brand">Ir a clásico</a>
+		</li>
+		<!-- <li class="nav-item">
+			<input type="date" id="get_date_history" on:change={handleSearchDate}>
+			<label class="btn btn-outline-dark" for="get_date_history">
+				<span id="calendar_text">{calendar_text} </span>
+				<img alt="calendar icon" src="/icons/calendar_icon_white.png" width="25" height="25">
+			</label>
+		</li> -->
+		<li class="nav-item px-2">
+		</li>
+	</ul>
+</nav>
 
 
 <div id="body">

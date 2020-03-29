@@ -16,7 +16,7 @@
      **********/
     let base_amount = 1;
     let counter_amount = base_amount * rate.avg;
-    // Reactive States
+    // Reactive Declarations
     $: counter_buy_amount = getHumanRate(base_amount * rate.buy);
     $: counter_sell_amount = getHumanRate(base_amount * rate.sell);
     $: counter_title = `compra: ${counter_buy_amount}\n    venta: ${counter_sell_amount}`

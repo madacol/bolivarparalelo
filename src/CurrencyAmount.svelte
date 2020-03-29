@@ -6,11 +6,12 @@
     export let handleAmountChange;
     export let amount;
     // Optional Props
-    const {
-        className,
-        currency,
-        title,
-    } = $$props
+    export let buyAmount=null;
+    export let sellAmount=null;
+    export let className='';
+    export let currency=null;
+    export let title='';
+    export let showBuySell=false;
 
     $: text = getHumanRate(amount)
 
@@ -36,7 +37,7 @@
 </script>
 
 
-<div class={`currencyAmount d-flex flex-column flex-wrap ${className || ''}`} {title}>
+<div class={`currencyAmount d-flex flex-column flex-wrap ${className}`} {title}>
     {#if currency}
         <div class="currency d-flex">
             <span class="flag">{@html `${currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}`}</span>
@@ -44,7 +45,13 @@
             <span class="code">{currency.code.toUpperCase()}</span>
         </div>
     {/if}
+    {#if showBuySell}
+        <span class="buy-sell">{buyAmount}</span>
+    {/if}
     <input type="text" onfocus="this.select();" on:keyup={handleInputWidth} on:change={handleChange} value={text} size={text.length} />
+    {#if showBuySell}
+        <span class="buy-sell">{sellAmount}</span>
+    {/if}
 </div>
 
 
@@ -73,5 +80,12 @@
     }
     .flag {
         font-size: 1.2em;
+    }
+    .buy-sell {
+        height: 1.1em;
+        font-size: 0.8em;
+        opacity: 60%;
+        width: 100%;
+        text-align: "center";
     }
 </style>

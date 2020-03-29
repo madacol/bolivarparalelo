@@ -9,6 +9,7 @@
     export let rate;
     export let base_currency;
     export let counter_currency;
+    export let showBuySell;
 
     /**********
      * STATES *
@@ -43,18 +44,24 @@
     <CurrencyAmount
         className={"reverse"}
         amount={base_amount}
+        buyAmount={base_buy_amount}
+        sellAmount={base_sell_amount}
         handleAmountChange={handleBaseAmountChange}
         currency={base_currency}
         title={base_title}
+        {showBuySell}
     />
 
-    <div class="equal">=</div>
+    <div class="equal {showBuySell ? 'buy-sell' : ''}">=</div>
 
     <CurrencyAmount
         amount={counter_amount}
+        buyAmount={counter_buy_amount}
+        sellAmount={counter_sell_amount}
         handleAmountChange={handleCounterAmountChange}
         currency={counter_currency}
         title={counter_title}
+        {showBuySell}
     />
 
 </div>
@@ -66,5 +73,8 @@
     .equal {
         margin: 0 1em;
         margin-bottom: 0.5em
+    }
+    .equal.buy-sell {
+        margin-bottom: 1.4em
     }
 </style>

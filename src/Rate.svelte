@@ -17,7 +17,7 @@
 		2: {showGraph: true, showRateCalcWhenGraph: true}
 	}
 
-	let [counter_currency_code, base_currency_code, start_hourRange_str, hourRange_str, showConfig] = rateHash.split(',');
+	let [counter_currency_code, base_currency_code, showBuySell, start_hourRange_str, hourRange_str, showConfig] = rateHash.split(',');
 
 	$: isRateValid = counter_currency_code && base_currency_code;
 	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
@@ -29,6 +29,7 @@
 		const rateList = []
 		rateList.push(counter_currency_code);
 		rateList.push(base_currency_code);
+		rateList.push(showBuySell ? 1 : '');
 		if (start_hourRange_str !== undefined || hourRange_str !== undefined) {
 			rateList.push(start_hourRange_str);
 			rateList.push(hourRange_str);
@@ -154,7 +155,7 @@
 			{:then rate}
 				<!-- promise was fulfilled -->
 				{#if !showGraph || !date_time || chartData.length <= 1}
-					<RateCalculator {rate} {base_currency} {counter_currency} />
+					<RateCalculator {rate} {base_currency} {counter_currency} {showBuySell} />
 					<div class="update-time">Hace {updated_time}</div>
 				{:else}
 					{#if showRateCalcWhenGraph}
@@ -186,7 +187,14 @@
 	{#if showModal}
 		<Modal on:close={closeModal}>
 			<h3 slot="header">Configuracion</h3>
-			<Form {currencies} bind:counter_currency_code bind:base_currency_code bind:end_date_time bind:date_time />
+			<Form
+				{currencies}
+				bind:showBuySell
+				bind:counter_currency_code
+				bind:base_currency_code
+				bind:end_date_time
+				bind:date_time
+			/>
 		</Modal>
 	{/if}
 </div>

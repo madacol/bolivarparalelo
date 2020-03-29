@@ -1,4 +1,5 @@
 <script>
+	import CheckboxToggle from './CheckboxToggle.svelte'
 
 	// Props
 	export let counter_currency_code;
@@ -6,6 +7,7 @@
 	export let end_date_time;
 	export let date_time;
 	export let currencies;
+	export let showBuySell=false;
 
 </script>
 
@@ -31,6 +33,11 @@
 		</div>
 	</div>
 </div>
+<hr>
+<label>
+	Mostrar tasas de compra y venta:
+	<CheckboxToggle bind:checked={showBuySell}/>
+</label>
 
 <style>
 	.flags {

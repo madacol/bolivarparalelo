@@ -4,18 +4,11 @@
 	import Modal from './Modal.svelte';
 	import RateCalculator from './RateCalculator.svelte';
 	import getHumanRate from './helpers/getHumanRate.js'
-	import { _1Hms } from './CONSTANTS.js'
+	import { _1Hms, SHOW_CONFIG } from './CONSTANTS.js'
 
 	// Props
 	export let rateHash;
 	export let currencies;
-
-	// Constants
-	const SHOW_CONFIG = {
-		0: {showGraph: false},
-		1: {showGraph: true, showRateCalcWhenGraph: false}, // Default
-		2: {showGraph: true, showRateCalcWhenGraph: true}
-	}
 
 	let [counter_currency_code, base_currency_code, showBuySell, start_hourRange_str, hourRange_str, showConfig] = rateHash.split(',');
 

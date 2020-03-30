@@ -2,13 +2,13 @@
     export let checked;
 </script>
 
-<label class="switch">
+<label>
     <input type="checkbox" bind:checked>
-    <span class="slider"></span>
+    <span/>
 </label>
 
 <style>
-.switch {
+label {
     position: relative;
     display: inline-block;
     width: 2.4em;
@@ -16,14 +16,14 @@
 }
 
 /* Hide default HTML checkbox */
-.switch input {
+label input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
 /* The slider */
-.slider {
+span {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -36,7 +36,7 @@
     border-radius: 1.3em;
 }
 
-.slider:before {
+span:before {
     position: absolute;
     content: "";
     height: 1em;
@@ -49,15 +49,15 @@
     border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked + span {
     background-color: var(--navBackgroundColor);
 }
 
-input:focus + .slider {
+input:focus + span {
     box-shadow: 0 0 1px var(--navBackgroundColor);
 }
 
-input:checked + .slider:before {
+input:checked + span:before {
     -webkit-transform: translateX(1em);
     -ms-transform: translateX(1em);
     transform: translateX(1em);

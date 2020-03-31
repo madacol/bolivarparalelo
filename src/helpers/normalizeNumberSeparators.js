@@ -4,7 +4,9 @@ const thousandSeparator = (10000).toLocaleString().substring(2, 3); // Extract t
  * Removes thousand separators and normalizes decimal separator to `.`
  * @param {String} numberText 
  */
-const normalizeNumberSeparators = numberText => numberText.split(thousandSeparator).join('')
-                                              .split(decimalSeparator).join('.');
+const normalizeNumberSeparators = numberText => (
+    numberText.split(thousandSeparator).join('')
+              .split(decimalSeparator).join('.')
+);
 
 export default normalizeNumberSeparators;

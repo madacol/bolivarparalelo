@@ -10,25 +10,33 @@
 	export let rateHash;
 	export let currencies;
 
-	let [counter_currency_code, base_currency_code, showBuySell, start_hourRange_str, hourRange_str, showConfig] = rateHash.split(',');
+	const [configs, rangeConfigs] = rateHash.split('_');
+	let [counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
+	let [start_hourRange_str, hourRange_str, showConfig] = (rangeConfigs || '').split(',');
 
 	$: isRateValid = counter_currency_code && base_currency_code;
 	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
 	const hourRange = hourRange_str && Number(hourRange_str);
-	const {showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[1]
+	$: ({showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[0])
 
 	// Update `rateHash` whenever a parameter is changed
 	$: {
-		const rateList = []
-		rateList.push(counter_currency_code);
-		rateList.push(base_currency_code);
-		rateList.push(showBuySell ? 1 : '');
-		if (start_hourRange_str !== undefined || hourRange_str !== undefined) {
-			rateList.push(start_hourRange_str);
-			rateList.push(hourRange_str);
-			if (showConfig) rateList.push(showConfig);
+		const allConfigs = [];
+		{
+			const configs = [];
+			configs.push(counter_currency_code);
+			configs.push(base_currency_code);
+			if (showBuySell) configs.push(1);
+			allConfigs.push(configs.join(','));
 		}
-		rateHash = rateList.join(',');
+		if (start_hourRange_str || hourRange_str) {
+			const rangeConfigs = [];
+			rangeConfigs.push(start_hourRange_str);
+			rangeConfigs.push(hourRange_str);
+			if (showConfig > 0) rangeConfigs.push(showConfig);
+			allConfigs.push(rangeConfigs.join(','));
+		}
+		rateHash = allConfigs.join('_');
 	}
 
 	// States

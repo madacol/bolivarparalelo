@@ -8,7 +8,7 @@
 	/*************
 	 * Constants *
 	 *************/
-	const defaultHashLayout = `#ves,usd;ves,eur;ves,usd,,0,${24*7}`
+	const defaultHashLayout = `#ves,usd;ves,eur;ves,usd,_0,${24*7}`
 	const bitcoin_currency = {
 		id: 0,
 		code: "btc",

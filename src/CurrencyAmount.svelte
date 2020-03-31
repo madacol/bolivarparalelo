@@ -18,20 +18,22 @@
     // $: attr_name = (amount === 1) ? "name" : "namePlural"
 
     //Handlers
-    const handleInputWidth = e => e.target.size = (e.target.value.length || 1)
+    function handleKeyUp(e) {
+        // Return if these keys where pressed
+        if ( ["Tab","Shift","Arrow"].some(key=>e.key.startsWith(key)) ) return;
 
-    const handleChange = e => {
+        // Validate then update amount
         const numberString = normalizeNumberSeparators(e.target.value);
         const parsedNumber = parseFloat(numberString);
-        let newAmount;
         if (parsedNumber) {
-            newAmount = parsedNumber;
+            handleAmountChange(parsedNumber);
             e.target.value = numberString;
         } else {
-            newAmount = 1;
-            e.target.value = 1;
+            e.target.value = '';
         }
-        handleAmountChange(newAmount);
+
+        // Adapt input size to content
+        e.target.size = (e.target.value.length || 1);
     }
 
 </script>
@@ -48,7 +50,7 @@
     {#if showBuySell}
         <span class="buy-sell">{buyAmount}</span>
     {/if}
-    <input type="text" onfocus="this.select();" on:keyup={handleInputWidth} on:change={handleChange} value={text} size={text.length} />
+    <input type="text" onfocus="this.select();" on:keyup={handleKeyUp} value={text} size={text.length} />
     {#if showBuySell}
         <span class="buy-sell">{sellAmount}</span>
     {/if}

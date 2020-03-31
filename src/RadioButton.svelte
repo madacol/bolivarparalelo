@@ -22,6 +22,9 @@
         border-radius: 0.5em;
         border: 1px solid var(--gray3);
     }
+    input:not(:checked) + span:hover {
+        background-color: var(--gray3);
+    }
     input:checked + span {
         background-color: var(--navBackgroundColor);
         border-color: var(--navBackgroundColor);

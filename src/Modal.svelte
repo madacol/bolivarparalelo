@@ -105,6 +105,6 @@
 	}
 	.closeButton:focus, .closeButton:hover {
 		outline: 0;
-		background-color: var(--gray4);
+		background-color: var(--gray3);
 	}
 </style>

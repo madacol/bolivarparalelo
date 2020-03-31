@@ -35,10 +35,10 @@
 		</div>
 	</div>
 	<hr>
-	<label>
-		Tasas de compra y venta:
-		<CheckboxToggle bind:checked={showBuySell}/>
-	</label>
+	<CheckboxToggle
+		label="Tasas de compra y venta:"
+		bind:checked={showBuySell}
+	/>
 </div>
 
 <style>

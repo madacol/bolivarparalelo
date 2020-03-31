@@ -1,14 +1,18 @@
 <script>
     export let checked;
+    export let label;
 </script>
 
 <label>
-    <input type="checkbox" bind:checked>
-    <span/>
+    {label}
+    <div>
+        <input type="checkbox" bind:checked>
+        <span/>
+    </div>
 </label>
 
 <style>
-label {
+div {
     position: relative;
     display: inline-block;
     width: 2.4em;
@@ -16,7 +20,7 @@ label {
 }
 
 /* Hide default HTML checkbox */
-label input {
+input {
     opacity: 0;
     width: 0;
     height: 0;

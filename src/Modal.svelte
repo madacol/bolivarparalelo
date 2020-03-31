@@ -63,6 +63,7 @@
 		height: 100%;
 		background: rgba(0,0,0,0.3);
 		z-index: 1;
+		visibility: visible;
 	}
 
 	modal {
@@ -78,6 +79,7 @@
 		background: var(--gray2);
 		z-index: 2;
 		padding: 1em;
+		visibility: visible;
 	}
 	.body {
 		overflow: auto;

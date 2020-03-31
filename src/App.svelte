@@ -127,6 +127,7 @@
 		max-width: 1100px;
 	}
 	#newRate > button {
+		cursor: pointer;
 		padding: 0.5em;
 		width: 100%;
 		max-width: 1100px;

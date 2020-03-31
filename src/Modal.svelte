@@ -95,6 +95,7 @@
 	}
 
 	.closeButton {
+		cursor: pointer;
 		display: block;
 		background-color: transparent;
 		border: 1px solid var(--gray4);

@@ -12,6 +12,9 @@
 </label>
 
 <style>
+label {
+    cursor: pointer;
+}
 div {
     position: relative;
     display: inline-block;
@@ -29,7 +32,6 @@ input {
 /* The slider */
 span {
     position: absolute;
-    cursor: pointer;
     top: 0;
     left: 0;
     right: 0;

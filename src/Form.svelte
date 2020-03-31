@@ -56,6 +56,9 @@
 	.flag > input:checked + div{
 		font-size: 60px;
 	}
+	.flag > input:not(:checked) + div{
+		cursor: pointer;
+	}
 	hr {
 		border-color: var(--gray1)
 	}

@@ -45,14 +45,13 @@
 	<div class="header">
 		<slot name="header"></slot>
 	</div>
-	<hr>
-	<slot></slot>
-	<hr>
-
-	<div class="d-flex justify-content-center">
-		<!-- svelte-ignore a11y-autofocus -->
-		<button class="closeButton" autofocus on:click={close}>Cerrar</button>
+	<div class="body">
+		<div>
+			<slot></slot>
+		</div>
 	</div>
+
+	<button class="closeButton" on:click={close}>Cerrar</button>
 </modal>
 
 <style>
@@ -64,23 +63,30 @@
 		height: 100%;
 		background: rgba(0,0,0,0.3);
 		z-index: 1;
-		visibility: visible;
 	}
 
 	modal {
+		display: flex;
+		flex-direction: column;
 		position: absolute;
 		left: 50%;
 		top: 50%;
-		width: calc(100vw - 4em);
-		max-width: 32em;
-		max-height: calc(100vh - 4em);
-		overflow: auto;
 		transform: translate(-50%,-50%);
-		padding: 1em;
-		border-radius: 0.2em;
-		background: rgb(36, 36, 36);
+		max-width: calc(100vw - 2em);
+		max-height: calc(100vh - 120px);
+		border-radius: 1em;
+		background: var(--gray2);
 		z-index: 2;
-		visibility: visible;
+		padding: 1em;
+	}
+	.body {
+		overflow: auto;
+		border-top: 1px solid var(--gray3);
+		border-bottom: 1px solid var(--gray3);
+		margin: 0.5em 0;
+	}
+	.body > div {
+		margin: 0.3em 10px;
 	}
 	.header {
 		font-size: 2em;

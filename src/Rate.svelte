@@ -152,7 +152,7 @@
 					<div class="update-time">Hace {updated_time}</div>
 				{:else}
 					{#if showRateCalcWhenGraph}
-						<RateCalculator {rate} {base_currency} {counter_currency} />
+						<RateCalculator {rate} {base_currency} {counter_currency} {showBuySell} />
 					{/if}
 					<div class="d-flex justify-content-between align-items-center mt-2" >
 						<div class="flex-grow">

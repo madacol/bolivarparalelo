@@ -40,16 +40,12 @@
 		const allConfigs = [];
 		// Simple block to scope `configs`, and I think it looks more readable
 		{
-			const configs = [];
-			configs.push(counter_currency_code);
-			configs.push(base_currency_code);
+			const configs = [counter_currency_code, base_currency_code];
 			if (showBuySell) configs.push(1);
 			allConfigs.push(configs.join(','));
 		}
 		if (start_hourRange_str || hourRange_str) {
-			const timeRangeConfigs = [];
-			timeRangeConfigs.push(start_hourRange_str);
-			timeRangeConfigs.push(hourRange_str);
+			const timeRangeConfigs = [start_hourRange_str, hourRange_str];
 			if (showConfig > 0) timeRangeConfigs.push(showConfig);
 			allConfigs.push(timeRangeConfigs.join(','));
 		}

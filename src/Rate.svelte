@@ -17,25 +17,35 @@
 	/**********
 	 * States *
 	 **********/
-	const [configs, timeRangeConfigs] = rateHash.split('_');
-	let [counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
-	let [start_hourRange_str, hourRange_str, showConfig] = (timeRangeConfigs || '').split(',');
-	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
-	const hourRange = hourRange_str && Number(hourRange_str);
-	let end_date_time = hourRange && (Date.now() - start_hourRange*_1Hms);
-	let date_time     = hourRange && (end_date_time - hourRange*_1Hms);
 	let counter_currency = {};
 	let base_currency = {};
 	let chartData = [];
 	let updated_time = "";
 	let showModal = false;
+
+	let counter_currency_code, base_currency_code, showBuySell, start_hourRange_str, hourRange_str, showConfig;
+	{ // Set initial values of previous states
+		const [configs, timeRangeConfigs] = rateHash.split('_');
+		[counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
+		[start_hourRange_str, hourRange_str, showConfig] = (timeRangeConfigs || '').split(',');
+	}
+
+	let end_date_time, date_time;
+	{ // Set initial values of previous states
+		const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
+		const hourRange = hourRange_str && Number(hourRange_str);
+		end_date_time = hourRange && (Date.now() - start_hourRange*_1Hms);
+		date_time     = hourRange && (end_date_time - hourRange*_1Hms);
+	}
+
     // Reactive Declarations
 	$: counter_currency = {...counter_currency, code: counter_currency_code };
 	$: base_currency    = {...base_currency, code: base_currency_code };
 	$: rate_Promise = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
 	$: isRateValid = counter_currency_code && base_currency_code;
 	$: ({showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[0])
-    // Reactive Statements
+
+	// Reactive Statements
 	$: { // Update `rateHash` whenever a parameter is changed
 		const allConfigs = [];
 		{

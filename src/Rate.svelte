@@ -61,7 +61,7 @@
 	 * Functions *
 	 *************/
 
-	const getQueryUrl = (counter_code, base_code, date_time, end_date_time) => {
+	function getQueryUrl (counter_code, base_code, date_time, end_date_time) {
 		let url = `/api/rate/${counter_code.toLowerCase()}/${base_code.toLowerCase()}`
 		if (!date_time)    return url
 
@@ -92,7 +92,7 @@
 		}
 	}
 
-	const fetchData = async (counter_code, base_code, date_time, end_date_time) => {
+	async function fetchData (counter_code, base_code, date_time, end_date_time) {
 		if (!counter_code || !base_code) {
 			showModal = true;
 			throw new Error('no currencies selected')

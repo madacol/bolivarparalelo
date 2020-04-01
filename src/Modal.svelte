@@ -6,7 +6,7 @@
 
 	let modal;
 
-	const handle_keydown = e => {
+	function handle_keydown (e) {
 		if (e.key === 'Escape') {
 			close();
 			return;

@@ -27,12 +27,12 @@
     /************
      * HANDLERS *
      ************/
-    const handleCounterAmountChange = newAmount => {
+    function handleCounterAmountChange (newAmount) {
         counter_amount = newAmount;
         base_amount = counter_amount / rate.avg;
     }
 
-    const handleBaseAmountChange = newAmount => {
+    function handleBaseAmountChange (newAmount) {
         base_amount = newAmount;
         counter_amount = base_amount * rate.avg;
     }

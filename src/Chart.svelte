@@ -2,7 +2,7 @@
 
     export let chartData;
 
-	const canvasMounted = (canvas, chartData) => {
+	function canvasMounted (canvas, chartData) {
 		let ctx = canvas.getContext('2d');
 
 		const height = canvas.height;

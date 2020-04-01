@@ -35,8 +35,8 @@
 	$: rate_Promise = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
 	$: isRateValid = counter_currency_code && base_currency_code;
 	$: ({showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[0])
-	// Update `rateHash` whenever a parameter is changed
-	$: {
+    // Reactive Statements
+	$: { // Update `rateHash` whenever a parameter is changed
 		const allConfigs = [];
 		{
 			const configs = [counter_currency_code, base_currency_code];

@@ -38,7 +38,6 @@
 	// Update `rateHash` whenever a parameter is changed
 	$: {
 		const allConfigs = [];
-		// Simple block to scope `configs`, and I think it looks more readable
 		{
 			const configs = [counter_currency_code, base_currency_code];
 			if (showBuySell) configs.push(1);

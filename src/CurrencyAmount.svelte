@@ -28,8 +28,6 @@
         if (parsedNumber) {
             handleAmountChange(parsedNumber);
             e.target.value = numberString;
-        } else {
-            e.target.value = '';
         }
 
         // Adapt input size to content

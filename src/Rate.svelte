@@ -6,22 +6,39 @@
 	import getHumanRate from './helpers/getHumanRate.js'
 	import { _1Hms, SHOW_CONFIG } from './CONSTANTS.js'
 
-	// Props
+
+	/*********
+	 * Props *
+	 *********/
 	export let rateHash;
 	export let currencies;
 
-	const [configs, rangeConfigs] = rateHash.split('_');
-	let [counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
-	let [start_hourRange_str, hourRange_str, showConfig] = (rangeConfigs || '').split(',');
 
-	$: isRateValid = counter_currency_code && base_currency_code;
+	/**********
+	 * States *
+	 **********/
+	const [configs, timeRangeConfigs] = rateHash.split('_');
+	let [counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
+	let [start_hourRange_str, hourRange_str, showConfig] = (timeRangeConfigs || '').split(',');
 	const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
 	const hourRange = hourRange_str && Number(hourRange_str);
+	let end_date_time = hourRange && (Date.now() - start_hourRange*_1Hms);
+	let date_time     = hourRange && (end_date_time - hourRange*_1Hms);
+	let counter_currency = {};
+	let base_currency = {};
+	let chartData = [];
+	let updated_time = "";
+	let showModal = false;
+    // Reactive Declarations
+	$: counter_currency = {...counter_currency, code: counter_currency_code };
+	$: base_currency    = {...base_currency, code: base_currency_code };
+	$: rate_Promise = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
+	$: isRateValid = counter_currency_code && base_currency_code;
 	$: ({showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[0])
-
 	// Update `rateHash` whenever a parameter is changed
 	$: {
 		const allConfigs = [];
+		// Simple block to scope `configs`, and I think it looks more readable
 		{
 			const configs = [];
 			configs.push(counter_currency_code);
@@ -30,26 +47,14 @@
 			allConfigs.push(configs.join(','));
 		}
 		if (start_hourRange_str || hourRange_str) {
-			const rangeConfigs = [];
-			rangeConfigs.push(start_hourRange_str);
-			rangeConfigs.push(hourRange_str);
-			if (showConfig > 0) rangeConfigs.push(showConfig);
-			allConfigs.push(rangeConfigs.join(','));
+			const timeRangeConfigs = [];
+			timeRangeConfigs.push(start_hourRange_str);
+			timeRangeConfigs.push(hourRange_str);
+			if (showConfig > 0) timeRangeConfigs.push(showConfig);
+			allConfigs.push(timeRangeConfigs.join(','));
 		}
 		rateHash = allConfigs.join('_');
 	}
-
-	// States
-	let end_date_time = hourRange && (Date.now() - start_hourRange*_1Hms);
-	let date_time     = hourRange && (end_date_time - hourRange*_1Hms);
-	let counter_currency = {};
-	let base_currency = {};
-	$: counter_currency = {...counter_currency, code: counter_currency_code };
-	$: base_currency    = {...base_currency, code: base_currency_code };
-	$: rate_Promise = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
-	let chartData = [];
-	let updated_time = "";
-	let showModal = false;
 
 
 	/*************

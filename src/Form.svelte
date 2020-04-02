@@ -1,5 +1,5 @@
 <script context="module">
-	import { _1Hms } from './CONSTANTS.js'
+	import { _1H_in_ms } from './CONSTANTS.js'
 
 	/**
 	 * Check if browser supports input's type `datetime-local`
@@ -47,7 +47,7 @@
 				const date = new Date(unixTime);
 				return date_to_input_date(date);
 			}
-			inputValue_to_unixTime = input_value => Date.parse(input_value) + new Date().getTimezoneOffset() * _1Hms / 60;
+			inputValue_to_unixTime = input_value => Date.parse(input_value) + new Date().getTimezoneOffset() * _1H_in_ms / 60;
 		} else {
 			unixTime_to_inputValue = unixTime => {
 				const date = new Date(unixTime);

@@ -4,7 +4,7 @@
 	import Modal from './Modal.svelte';
 	import RateCalculator from './RateCalculator.svelte';
 	import getHumanRate from './helpers/getHumanRate.js'
-	import { _1Hms, SHOW_CONFIG } from './CONSTANTS.js'
+	import { _1H_in_ms, SHOW_CONFIG } from './CONSTANTS.js'
 
 
 	/*********
@@ -30,8 +30,8 @@
 		[counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
 		const [start_hourRange_str, hourRange_str, showConfig_str] = (timeRangeConfigs || '').split(',');
 		isTimeRangeEnabled = (typeof timeRangeConfigs === "string") && timeRangeConfigs.length > 1;
-		end_unix_time = start_hourRange_str && (Date.now() - Number(start_hourRange_str)*_1Hms);
-		start_unix_time     = hourRange_str && (end_unix_time - Number(hourRange_str)*_1Hms);
+		end_unix_time = start_hourRange_str && (Date.now() - Number(start_hourRange_str)*_1H_in_ms);
+		start_unix_time     = hourRange_str && (end_unix_time - Number(hourRange_str)*_1H_in_ms);
 		showConfig = Number(showConfig_str) || 0;
 	}
 
@@ -51,8 +51,8 @@
 			allConfigs.push(configs.join(','));
 		}
 		if (isTimeRangeEnabled) {
-			const start_hourRange = Math.round((Date.now() - end_unix_time) / _1Hms);
-			const hourRange = Math.round((end_unix_time - start_unix_time) / _1Hms);
+			const start_hourRange = Math.round((Date.now() - end_unix_time) / _1H_in_ms);
+			const hourRange = Math.round((end_unix_time - start_unix_time) / _1H_in_ms);
 			const timeRangeConfigs = [start_hourRange, hourRange];
 			if (showConfig > 0) timeRangeConfigs.push(showConfig);
 			allConfigs.push(timeRangeConfigs.join(','));

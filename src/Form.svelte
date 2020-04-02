@@ -60,6 +60,14 @@
 		}
 	}
 
+	/*************
+	 * Constants *
+	 *************/
+	const CHOOSE_TIME = [
+		[false, "Más Reciente"],
+		[true, "Escojer fecha"],
+	]
+
 </script>
 
 
@@ -121,30 +129,39 @@
 		bind:checked={showBuySell}
 	/>
 	<hr>
-	<div class="timeRange">
-		<span>Escojer rango de fechas</span>
-		<br>
-		<label>
-			Fecha Inicial: <input type={inputDateType} value={start_input_value} on:change={e=>start_input_value=e.target.value}>
-		</label>
-		<label>
-			Fecha Fin: <input type={inputDateType} value={end_input_value} on:change={e=>end_input_value=e.target.value}>
-		</label>
+	<div class="chooseTime">
+		{#each CHOOSE_TIME as [value, label]}
+			<RadioButton
+				{label}
+				{value}
+				bind:group={isTimeRangeEnabled}
+			/>
+		{/each}
 	</div>
-	<hr>
-	<div class="d-flex flex-column align-items-center">
-		<span>Qué mostrar:</span>
-		<br>
-		<div class="d-flex justify-content-center">
-			{#each SHOW_CONFIG as {name},i}
-				<RadioButton
-					label={name}
-					bind:group={showConfig}
-					value={i}
-				/>
-			{/each}
+	{#if isTimeRangeEnabled}
+		<div class="timeRange">
+			<label>
+				Fecha Inicial: <input type={inputDateType} value={start_input_value} on:change={e=>start_input_value=e.target.value}>
+			</label>
+			<label>
+				Fecha Fin: <input type={inputDateType} value={end_input_value} on:change={e=>end_input_value=e.target.value}>
+			</label>
 		</div>
-	</div>
+		<hr>
+		<div class="d-flex flex-column align-items-center">
+			<span>Qué mostrar:</span>
+			<br>
+			<div class="d-flex justify-content-center">
+				{#each SHOW_CONFIG as {name},i}
+					<RadioButton
+						label={name}
+						bind:group={showConfig}
+						value={i}
+					/>
+				{/each}
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -168,10 +185,12 @@
 	hr {
 		border-color: var(--gray1)
 	}
-	.timeRange span {
+	.chooseTime {
 		display: flex;
 		justify-content: center;
-		font-size: 1.2em;
 		margin-bottom: 0.7em;
+	}
+	.timeRange > label:first-child{
+		margin-bottom: 0.5em
 	}
 </style>

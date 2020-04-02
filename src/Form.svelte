@@ -64,7 +64,7 @@
 	 * Constants *
 	 *************/
 	const CHOOSE_TIME = [
-		[false, "Más Reciente"],
+		[false, "Más reciente"],
 		[true, "Escoger fecha"],
 	]
 

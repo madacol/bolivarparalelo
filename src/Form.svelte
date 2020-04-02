@@ -65,7 +65,7 @@
 	 *************/
 	const CHOOSE_TIME = [
 		[false, "Más Reciente"],
-		[true, "Escojer fecha"],
+		[true, "Escoger fecha"],
 	]
 
 </script>

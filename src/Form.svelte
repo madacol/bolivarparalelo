@@ -29,10 +29,10 @@
 	 * one for input.type=='date' and another for input.type=='datetime-local',
 	 * depending if the browser supports 'datetime-local'
 	 * 
-	 * `unixTime_to_input_value` converts **unix time** into a value that can be understood by the correspondig input ('date' or 'datetime-local')
-	 * `input_value_to_unixTime` Does the opposite, converts from the input value to **unix time**
+	 * `unixTime_to_inputValue` converts **unix time** into a value that can be understood by the correspondig input ('date' or 'datetime-local')
+	 * `inputValue_to_unixTime` Does the opposite, converts from the input value to **unix time**
 	 */
-	let unixTime_to_input_value, input_value_to_unixTime;
+	let unixTime_to_inputValue, inputValue_to_unixTime;
 	{
 		const stringOptions = [navigator.language, {minimumIntegerDigits: 2, useGrouping: false}];
 		const date_to_input_date = date => {
@@ -43,20 +43,20 @@
 		};
 
 		if (!browserSupportsDatetime) {
-			unixTime_to_input_value = unixTime => {
+			unixTime_to_inputValue = unixTime => {
 				const date = new Date(unixTime);
 				return date_to_input_date(date);
 			}
-			input_value_to_unixTime = input_value => Date.parse(input_value) + new Date().getTimezoneOffset() * _1Hms / 60;
+			inputValue_to_unixTime = input_value => Date.parse(input_value) + new Date().getTimezoneOffset() * _1Hms / 60;
 		} else {
-			unixTime_to_input_value = unixTime => {
+			unixTime_to_inputValue = unixTime => {
 				const date = new Date(unixTime);
 				const dateString = date_to_input_date(date)
 				const hours = date.getHours().toLocaleString(...stringOptions)
 				const minutes = date.getMinutes().toLocaleString(...stringOptions)
 				return `${dateString}T${hours}:${minutes}`;
 			}
-			input_value_to_unixTime = input_value => Date.parse(input_value);
+			inputValue_to_unixTime = input_value => Date.parse(input_value);
 		}
 	}
 
@@ -94,11 +94,11 @@
 	/**********
 	 * States *
 	 **********/
-	let end_input_value = isTimeRangeEnabled && unixTime_to_input_value(end_unix_time);
-	let start_input_value = isTimeRangeEnabled && unixTime_to_input_value(start_unix_time);
+	let end_input_value = isTimeRangeEnabled && unixTime_to_inputValue(end_unix_time);
+	let start_input_value = isTimeRangeEnabled && unixTime_to_inputValue(start_unix_time);
 	// Reactive assignments
-	$: end_unix_time = isTimeRangeEnabled && input_value_to_unixTime(end_input_value);
-	$: start_unix_time = isTimeRangeEnabled && input_value_to_unixTime(start_input_value);
+	$: end_unix_time = isTimeRangeEnabled && inputValue_to_unixTime(end_input_value);
+	$: start_unix_time = isTimeRangeEnabled && inputValue_to_unixTime(start_input_value);
 
 </script>
 

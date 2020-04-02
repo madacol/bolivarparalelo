@@ -23,25 +23,22 @@
 	let updated_time = "";
 	let showModal = false;
 
-	let counter_currency_code, base_currency_code, showBuySell, start_hourRange_str, hourRange_str, showConfig;
+	// Extract states from `rateHash`
+	let counter_currency_code, base_currency_code, showBuySell, showConfig, isTimeRangeEnabled, end_unix_time, start_unix_time;
 	{ // Set initial values of previous states
 		const [configs, timeRangeConfigs] = rateHash.split('_');
 		[counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
-		[start_hourRange_str, hourRange_str, showConfig] = (timeRangeConfigs || '').split(',');
-	}
-
-	let end_date_time, date_time;
-	{ // Set initial values of previous states
-		const start_hourRange = start_hourRange_str && Number(start_hourRange_str);
-		const hourRange = hourRange_str && Number(hourRange_str);
-		end_date_time = hourRange && (Date.now() - start_hourRange*_1Hms);
-		date_time     = hourRange && (end_date_time - hourRange*_1Hms);
+		const [start_hourRange_str, hourRange_str, _showConfig] = (timeRangeConfigs || '').split(',');
+		isTimeRangeEnabled = (typeof timeRangeConfigs === "string") && timeRangeConfigs.length > 1;
+		end_unix_time = start_hourRange_str && (Date.now() - Number(start_hourRange_str)*_1Hms);
+		start_unix_time     = hourRange_str && (end_unix_time - Number(hourRange_str)*_1Hms);
+		showConfig = _showConfig;
 	}
 
     // Reactive Declarations
 	$: counter_currency = {...counter_currency, code: counter_currency_code };
 	$: base_currency    = {...base_currency, code: base_currency_code };
-	$: rate_Promise = fetchData(counter_currency_code, base_currency_code, date_time, end_date_time);
+	$: rate_Promise = fetchData(counter_currency_code, base_currency_code, start_unix_time, end_unix_time);
 	$: isRateValid = counter_currency_code && base_currency_code;
 	$: ({showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[0])
 
@@ -53,8 +50,10 @@
 			if (showBuySell) configs.push(1);
 			allConfigs.push(configs.join(','));
 		}
-		if (start_hourRange_str || hourRange_str) {
-			const timeRangeConfigs = [start_hourRange_str, hourRange_str];
+		if (isTimeRangeEnabled) {
+			const start_hourRange = Math.round((Date.now() - end_unix_time) / _1Hms);
+			const hourRange = Math.round((end_unix_time - start_unix_time) / _1Hms);
+			const timeRangeConfigs = [start_hourRange, hourRange];
 			if (showConfig > 0) timeRangeConfigs.push(showConfig);
 			allConfigs.push(timeRangeConfigs.join(','));
 		}
@@ -66,14 +65,14 @@
 	 * Functions *
 	 *************/
 
-	function getQueryUrl (counter_code, base_code, date_time, end_date_time) {
+	function getQueryUrl (counter_code, base_code, start_unix_time, end_unix_time) {
 		let url = `/api/rate/${counter_code.toLowerCase()}/${base_code.toLowerCase()}`
-		if (!date_time)    return url
+		if (!start_unix_time)    return url
 
-		url += `/time/${date_time}`;
-		if (!end_date_time)    return url
+		url += `/time/${start_unix_time}`;
+		if (!end_unix_time)    return url
 
-		url += `/${end_date_time}`;
+		url += `/${end_unix_time}`;
 		return url;
 	}
 
@@ -97,17 +96,17 @@
 		}
 	}
 
-	async function fetchData (counter_code, base_code, date_time, end_date_time) {
+	async function fetchData (counter_code, base_code, start_unix_time, end_unix_time) {
 		if (!counter_code || !base_code) {
 			showModal = true;
 			throw new Error('no currencies selected')
 		}
-		const url = getQueryUrl(counter_code, base_code, date_time, end_date_time);
+		const url = getQueryUrl(counter_code, base_code, start_unix_time, end_unix_time);
 		const response = await fetch(url);
 		const json = await response.json();
 		counter_currency = json.counter_currency;
 		base_currency = json.base_currency;
-		if (!date_time) {
+		if (!start_unix_time) {
 			updated_time = getHumanTime(Date.now() - json.unix_time_ms)
 			return {
 				avg: parseFloat(json.avg),
@@ -165,7 +164,7 @@
 				<p>Cargando...</p>
 			{:then rate}
 				<!-- promise was fulfilled -->
-				{#if !showGraph || !date_time || chartData.length <= 1}
+				{#if !showGraph || !isTimeRangeEnabled || chartData.length <= 1}
 					<RateCalculator {rate} {base_currency} {counter_currency} {showBuySell} />
 					<div class="update-time">Hace {updated_time}</div>
 				{:else}
@@ -203,8 +202,8 @@
 				bind:showBuySell
 				bind:counter_currency_code
 				bind:base_currency_code
-				bind:end_date_time
-				bind:date_time
+				bind:end_unix_time
+				bind:start_unix_time
 			/>
 		</Modal>
 	{/if}

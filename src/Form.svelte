@@ -6,8 +6,8 @@
 	 *********/
 	export let counter_currency_code;
 	export let base_currency_code;
-	export let end_date_time;
-	export let date_time;
+	export let end_unix_time;
+	export let start_unix_time;
 	export let currencies;
 	export let showBuySell=false;
 

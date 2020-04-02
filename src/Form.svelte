@@ -1,3 +1,69 @@
+<script context="module">
+	import { _1Hms } from './CONSTANTS.js'
+
+	/**
+	 * Check if browser supports input's type `datetime-local`
+	 * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local#Examples
+	 */
+	let browserSupportsDatetime;
+	{
+		const input = document.createElement('input');
+
+		try {
+			input.type = 'datetime-local';
+		} catch (e) {
+			console.log(e.description);
+		}
+
+		browserSupportsDatetime = (input.type === 'datetime-local')
+	}
+
+	const inputDateType = browserSupportsDatetime ? "datetime-local" : "date";
+
+
+	/*************
+	 * Functions *
+	 *************/
+	/**
+	 * Following functions have 2 versions,
+	 * one for input.type=='date' and another for input.type=='datetime-local',
+	 * depending if the browser supports 'datetime-local'
+	 * 
+	 * `unixTime_to_input_value` converts **unix time** into a value that can be understood by the correspondig input ('date' or 'datetime-local')
+	 * `input_value_to_unixTime` Does the opposite, converts from the input value to **unix time**
+	 */
+	let unixTime_to_input_value, input_value_to_unixTime;
+	{
+		const stringOptions = [navigator.language, {minimumIntegerDigits: 2, useGrouping: false}];
+		const date_to_input_date = date => {
+			const year = date.getFullYear().toLocaleString(...stringOptions);
+			const month = (date.getMonth()+1).toLocaleString(...stringOptions);
+			const day = date.getDate().toLocaleString(...stringOptions);
+			return `${year}-${month}-${day}`
+		};
+
+		if (!browserSupportsDatetime) {
+			unixTime_to_input_value = unixTime => {
+				const date = new Date(unixTime);
+				return date_to_input_date(date);
+			}
+			input_value_to_unixTime = input_value => Date.parse(input_value) + new Date().getTimezoneOffset() * _1Hms / 60;
+		} else {
+			unixTime_to_input_value = unixTime => {
+				const date = new Date(unixTime);
+				const dateString = date_to_input_date(date)
+				const hours = date.getHours().toLocaleString(...stringOptions)
+				const minutes = date.getMinutes().toLocaleString(...stringOptions)
+				return `${dateString}T${hours}:${minutes}`;
+			}
+			input_value_to_unixTime = input_value => Date.parse(input_value);
+		}
+	}
+
+</script>
+
+
+
 <script>
 	import CheckboxToggle from './CheckboxToggle.svelte'
 
@@ -10,6 +76,17 @@
 	export let start_unix_time;
 	export let currencies;
 	export let showBuySell=false;
+	export let isTimeRangeEnabled=false;
+
+
+	/**********
+	 * States *
+	 **********/
+	let end_input_value = isTimeRangeEnabled && unixTime_to_input_value(end_unix_time);
+	let start_input_value = isTimeRangeEnabled && unixTime_to_input_value(start_unix_time);
+	// Reactive assignments
+	$: end_unix_time = isTimeRangeEnabled && input_value_to_unixTime(end_input_value);
+	$: start_unix_time = isTimeRangeEnabled && input_value_to_unixTime(start_input_value);
 
 </script>
 
@@ -39,6 +116,17 @@
 		label="Tasas de compra y venta:"
 		bind:checked={showBuySell}
 	/>
+	<hr>
+	<div class="timeRange">
+		<span>Escojer rango de fechas</span>
+		<br>
+		<label>
+			Fecha Inicial: <input type={inputDateType} value={start_input_value} on:change={e=>start_input_value=e.target.value}>
+		</label>
+		<label>
+			Fecha Fin: <input type={inputDateType} value={end_input_value} on:change={e=>end_input_value=e.target.value}>
+		</label>
+	</div>
 </div>
 
 <style>
@@ -61,5 +149,11 @@
 	}
 	hr {
 		border-color: var(--gray1)
+	}
+	.timeRange span {
+		display: flex;
+		justify-content: center;
+		font-size: 1.2em;
+		margin-bottom: 0.7em;
 	}
 </style>

@@ -200,6 +200,7 @@
 			<Form
 				{currencies}
 				bind:showBuySell
+				bind:showConfig
 				bind:isTimeRangeEnabled
 				bind:counter_currency_code
 				bind:base_currency_code

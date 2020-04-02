@@ -66,6 +66,9 @@
 
 <script>
 	import CheckboxToggle from './CheckboxToggle.svelte'
+	import RadioButton from './RadioButton.svelte'
+	import { SHOW_CONFIG } from './CONSTANTS.js'
+
 
 	/*********
 	 * Props *
@@ -76,6 +79,7 @@
 	export let start_unix_time;
 	export let currencies;
 	export let showBuySell=false;
+	export let showConfig=0;
 	export let isTimeRangeEnabled=false;
 
 
@@ -126,6 +130,20 @@
 		<label>
 			Fecha Fin: <input type={inputDateType} value={end_input_value} on:change={e=>end_input_value=e.target.value}>
 		</label>
+	</div>
+	<hr>
+	<div class="d-flex flex-column align-items-center">
+		<span>Qué mostrar:</span>
+		<br>
+		<div class="d-flex justify-content-center">
+			{#each SHOW_CONFIG as {name},i}
+				<RadioButton
+					label={name}
+					bind:group={showConfig}
+					value={i}
+				/>
+			{/each}
+		</div>
 	</div>
 </div>
 

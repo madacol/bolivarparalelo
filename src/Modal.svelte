@@ -62,7 +62,7 @@
 		width: 100%;
 		height: 100%;
 		background: rgba(0,0,0,0.3);
-		z-index: 1;
+		z-index: 100;
 		visibility: visible;
 	}
 
@@ -77,7 +77,7 @@
 		max-height: calc(100vh - 120px);
 		border-radius: 1em;
 		background: var(--gray2);
-		z-index: 2;
+		z-index: 101;
 		padding: 1em;
 		visibility: visible;
 	}

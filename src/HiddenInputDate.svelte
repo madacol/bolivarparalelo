@@ -1,0 +1,29 @@
+<label>
+    <input on:change type="date" {...$$restProps}>
+    <div>
+        <slot/>
+    </div>
+</label>
+
+<style>
+    label {
+        position: relative;
+    }
+    input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        z-index: 1;
+    }
+    input::-webkit-calendar-picker-indicator {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+    input:hover + div > :global(*) {
+        opacity: 100%;
+    }
+</style>

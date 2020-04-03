@@ -3,8 +3,10 @@
 	import Form from './Form.svelte';
 	import Modal from './Modal.svelte';
 	import RateCalculator from './RateCalculator.svelte';
+	import HiddenInputDate from './HiddenInputDate.svelte';
 	import getHumanRate from './helpers/getHumanRate.js'
-	import { _1H_in_ms, SHOW_CONFIG } from './CONSTANTS.js'
+	import { _1H_in_ms, _1D_in_ms, SHOW_CONFIG } from './CONSTANTS.js'
+	import parseLocalDate from './helpers/parseLocalDate.js'
 
 
 	/*********
@@ -150,6 +152,12 @@
 			return removeRate();
 		showModal=false;
 	}
+	function searchDate (e) {
+		start_unix_time = parseLocalDate(e.target.value);
+		end_unix_time = start_unix_time + _1D_in_ms;
+		isTimeRangeEnabled = true;
+		showConfig=2;
+	}
 
 </script>
 
@@ -188,7 +196,9 @@
 			{/await}
 		</div>
 		<div class="ml-3">
-			<i class="fas fa-search"/>
+			<HiddenInputDate on:change={searchDate} >
+				<i class="fas fa-search"/>
+			</HiddenInputDate>
 			<br>
 			<i on:click={()=>showModal=true} class="fas fa-cog mt-1"/>
 		</div>
@@ -230,7 +240,8 @@
 		padding: 0.3em;
 		opacity: 50%;
 	}
-	.fas:hover, .fas:focus {
+	.fas:hover,
+	.fas:focus {
 		opacity: 100%;
 	}
 	.chart-labels {

@@ -10,10 +10,10 @@
     export let sellAmount=null;
     export let className='';
     export let currency=null;
-    export let title='';
     export let showBuySell=false;
 
     $: text = getHumanRate(amount)
+    $: title = `compra: ${buyAmount}\n    venta: ${sellAmount}`
 
     // $: attr_name = (amount === 1) ? "name" : "namePlural"
 

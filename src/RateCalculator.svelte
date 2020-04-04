@@ -19,10 +19,8 @@
     // Reactive Declarations
     $: counter_buy_amount = getHumanRate(base_amount * rate.buy);
     $: counter_sell_amount = getHumanRate(base_amount * rate.sell);
-    $: counter_title = `compra: ${counter_buy_amount}\n    venta: ${counter_sell_amount}`
     $: base_buy_amount = getHumanRate(counter_amount / rate.sell);
     $: base_sell_amount = getHumanRate(counter_amount / rate.buy);
-    $: base_title = `compra: ${base_buy_amount}\n    venta: ${base_sell_amount}`
 
     /************
      * HANDLERS *
@@ -48,7 +46,6 @@
         sellAmount={base_sell_amount}
         handleAmountChange={handleBaseAmountChange}
         currency={base_currency}
-        title={base_title}
         {showBuySell}
     />
 
@@ -60,7 +57,6 @@
         sellAmount={counter_sell_amount}
         handleAmountChange={handleCounterAmountChange}
         currency={counter_currency}
-        title={counter_title}
         {showBuySell}
     />
 

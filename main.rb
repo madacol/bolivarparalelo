@@ -148,10 +148,13 @@ def filterCurrencyAttr(currency)
 end
 
 
-get '/' do
+get '/classic' do
   erb :index, :locals => {:data => getMainData(request)}
 end
 
+get '/' do
+  send_file 'public/index.html'
+end
 get '/beta' do
   send_file 'public/index.html'
 end

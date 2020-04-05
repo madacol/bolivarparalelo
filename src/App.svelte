@@ -92,7 +92,7 @@
 <nav class="navbar d-flex justify-content-between">
 	<div></div>
 	{#if bitcoin_rate}
-		<div class="navbar-brand">Bitcoin: {bitcoin_rate.avg} $</div>
+		<div id="bitcoin" class="navbar-brand">Bitcoin: {bitcoin_rate.avg} $</div>
 	{/if}
 	<div>
 		<a href="https://twitter.com/bolivarparalel0">
@@ -108,15 +108,23 @@
 	nav{
 		background-color: var(--navBackgroundColor);
 		min-height: 60px;
+		font-size: calc(13px + 0.3vw);
+	}
+	nav a {
+		font-size: 1.2em;
 	}
 	#body {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		height: calc(100vh - 120px);
 		overflow: auto;
-		font-size: calc(10px + 0.9vw);
 		line-height: 1.15;
 		padding: 1em;
+		font-size: calc(10px + 0.9vw);
+	}
+	#bitcoin {
+		font-size: 1.2em;
 	}
 	#navbarSupportedContent ul li {
 		position: relative;

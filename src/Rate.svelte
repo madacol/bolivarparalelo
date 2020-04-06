@@ -172,13 +172,12 @@
 				<p>Cargando...</p>
 			{:then rate}
 				<!-- promise was fulfilled -->
-				{#if !showGraph || !isTimeRangeEnabled || chartData.length <= 1}
+				{#if !showGraph || !isTimeRangeEnabled || chartData.length <= 1 || showRateCalcWhenGraph}
 					<RateCalculator {rate} {base_currency} {counter_currency} {showBuySell} />
-					<div class="update-time">Hace {updated_time}</div>
-				{:else}
-					{#if showRateCalcWhenGraph}
-						<RateCalculator {rate} {base_currency} {counter_currency} {showBuySell} />
+					{#if updated_time}
+						<div class="update-time">Hace {updated_time}</div>
 					{/if}
+				{:else}
 					<div class="d-flex justify-content-between align-items-center mt-2" >
 						<div class="flex-grow">
 							<Chart {chartData}/>

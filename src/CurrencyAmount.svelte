@@ -48,7 +48,7 @@
     {#if showBuySell}
         <span class="buy-sell">{buyAmount}</span>
     {/if}
-    <input type="text" onfocus="this.select();" on:keyup={handleKeyUp} value={text} size={text.length} />
+    <input type="text" onfocus="this.select();" on:keyup={handleKeyUp} value={text} size={text.length || 1} />
     {#if showBuySell}
         <span class="buy-sell">{sellAmount}</span>
     {/if}

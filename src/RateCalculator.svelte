@@ -3,9 +3,13 @@
     import Form from './Form.svelte';
     import Modal from './Modal.svelte';
     import CurrencyAmount from './CurrencyAmount.svelte';
-    import getHumanRate from './helpers/getHumanRate.js'
+    import getHumanRate from './helpers/getHumanRate.js';
+    import { autoPilotBaseAmount } from './stores.js';
 
-    // Props
+
+    /*********
+     * PROPS *
+     *********/
     export let rate;
     export let base_currency;
     export let counter_currency;
@@ -14,13 +18,17 @@
     /**********
      * STATES *
      **********/
-    let base_amount = 1;
-    let counter_amount = base_amount * rate.avg;
+    let base_amount, counter_amount;
+    $: {
+        base_amount = $autoPilotBaseAmount;
+        counter_amount = ($autoPilotBaseAmount || 1) * rate.avg;
+    }
     // Reactive Declarations
     $: counter_buy_amount = getHumanRate(base_amount * rate.buy);
     $: counter_sell_amount = getHumanRate(base_amount * rate.sell);
     $: base_buy_amount = getHumanRate(counter_amount / rate.sell);
     $: base_sell_amount = getHumanRate(counter_amount / rate.buy);
+
 
     /************
      * HANDLERS *

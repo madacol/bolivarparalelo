@@ -3,6 +3,8 @@
 	import Modal from './Modal.svelte';
 	import Form from './Form.svelte';
 	import { onMount } from 'svelte';
+	import { autoPilotBaseAmount } from './stores.js';
+	import { TUTORIAL_INTERVAL_DELAY, WRITE_DELAY, RANDOM_NUMBER_RANGE } from './CONSTANTS.js'
 
 
 	/*************
@@ -22,8 +24,14 @@
 	 * Setup *
 	 *********/
 	moment.locale(navigator.language)
-	// Set hash to default if empty
-	window.location.hash = window.location.hash || defaultHashLayout;
+	// Check if hash is empty
+	let isTutorial = false;
+	if (!window.location.hash) {
+		// Enable tutorial
+		isTutorial = true;
+		// Set hash to default
+		window.location.hash = defaultHashLayout;
+	}
 	let currencies = [];
 	let bitcoin_rate;
 	// Get rates from hash
@@ -31,6 +39,38 @@
 	// Filter removed rates and update hash
 	$: { window.location.hash = rateHashes.filter(x=>x).join(';') }
 
+	/******************
+	 * Setup Tutorial *
+	 ******************/
+	let tutorialIntervals = [];
+	onMount(() => {
+		if (isTutorial) {
+			function getRandomInt(min, max) { // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_integer_between_two_values
+				min = Math.ceil(min);
+				max = Math.floor(max);
+				return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+			}
+			function delayedWrite (stringList, delay) {
+				const setTimeoutID = setTimeout( () => {
+					const [nextLetter, ...remainingLetters] = stringList;
+					$autoPilotBaseAmount += nextLetter;
+					if (remainingLetters.length > 0) {
+						delayedWrite(remainingLetters, delay);
+					} else {
+						tutorialIntervals.pop();
+					}
+				}, delay)
+				tutorialIntervals[1] = setTimeoutID;
+			}
+			function setRandomBaseNumber() {
+				const randomNumber = getRandomInt(...RANDOM_NUMBER_RANGE);
+				$autoPilotBaseAmount = '';
+				const stringList = randomNumber.toString().split('');
+				delayedWrite(stringList, WRITE_DELAY);
+			}
+			tutorialIntervals.push( setInterval(setRandomBaseNumber, TUTORIAL_INTERVAL_DELAY) );
+		}
+	})
 
 	/**************
 	 * LifeCycles *
@@ -47,8 +87,11 @@
 	/************
 	 * HANLDERS *
 	 ************/
-	function AddRate(){
+	function AddRate() {
 		rateHashes = [...rateHashes, ','];
+	}
+	function disableTutorial() {
+		tutorialIntervals.forEach( intervalID => clearInterval(intervalID) );
 	}
 
 </script>
@@ -76,7 +119,7 @@
 </nav>
 
 
-<div id="body">
+<div id="body" on:click|once={disableTutorial}>
 	{#each rateHashes as rateHash}
 		{#if rateHash}
 			<Rate bind:rateHash {currencies} />

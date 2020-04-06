@@ -32,8 +32,8 @@
 		[counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
 		const [start_hourRange_str, hourRange_str, showConfig_str] = (timeRangeConfigs || '').split(',');
 		isTimeRangeEnabled = (typeof timeRangeConfigs === "string") && timeRangeConfigs.length > 1;
-		end_unix_time = start_hourRange_str && (Date.now() - Number(start_hourRange_str)*_1H_in_ms);
-		start_unix_time     = hourRange_str && (end_unix_time - Number(hourRange_str)*_1H_in_ms);
+		end_unix_time = isTimeRangeEnabled && start_hourRange_str && (Date.now() - Number(start_hourRange_str)*_1H_in_ms);
+		start_unix_time = isTimeRangeEnabled && hourRange_str && (end_unix_time - Number(hourRange_str)*_1H_in_ms);
 		showConfig = Number(showConfig_str) || 0;
 	}
 

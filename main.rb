@@ -156,7 +156,7 @@ get '/' do
   send_file 'public/index.html'
 end
 get '/beta' do
-  send_file 'public/index.html'
+  redirect '/'
 end
 
 namespace '/api' do

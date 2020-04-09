@@ -38,14 +38,6 @@
 						},
 					}]
 				},
-				pan: {
-					enabled: true,
-					mode: 'x'
-				},
-				zoom: {
-					enabled: true,
-					mode: 'x',
-				},
 			}
 		});
 

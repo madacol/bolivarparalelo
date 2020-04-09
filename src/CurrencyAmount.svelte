@@ -93,8 +93,8 @@
     }
     .buy-sell {
         height: 1.1em;
-        font-size: 0.8em;
-        opacity: 60%;
+        font-size: 0.9em;
+        opacity: 70%;
         width: 100%;
         text-align: "center";
     }

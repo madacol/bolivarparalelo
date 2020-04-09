@@ -1,3 +1,7 @@
+<script context="module">
+	moment.locale(navigator.language)
+</script>
+
 <script>
 
     export let chartData;

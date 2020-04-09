@@ -23,7 +23,6 @@
 	/*********
 	 * Setup *
 	 *********/
-	moment.locale(navigator.language)
 	// Check if hash is empty
 	let isTutorial = false;
 	if (!window.location.hash) {

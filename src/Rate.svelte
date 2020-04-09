@@ -161,7 +161,7 @@
 
 </script>
 
-<div class={`rateContainer ${isRateValid ? '' : 'hide-collapse'}`}>
+<div class="rateContainer" class:hide-collapse={!isRateValid}>
 	<div class="d-flex justify-content-center align-items-center">
 		<div class="mr-3">
 			<i on:click={removeRate} class="fas fa-times"/>

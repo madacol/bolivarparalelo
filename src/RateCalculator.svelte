@@ -48,7 +48,7 @@
 <div class="rateCalculator d-flex justify-content-center align-items-end flex-wrap">
 
     <CurrencyAmount
-        className={"reverse"}
+        reverseAlign={true}
         amount={base_amount}
         buyAmount={base_buy_amount}
         sellAmount={base_sell_amount}

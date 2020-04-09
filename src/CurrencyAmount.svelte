@@ -8,7 +8,7 @@
     // Optional Props
     export let buyAmount=null;
     export let sellAmount=null;
-    export let className='';
+    export let reverseAlign=false;
     export let fakeCursor=false;
     export let currency=null;
     export let showBuySell=false;
@@ -38,7 +38,7 @@
 </script>
 
 
-<div class={`currencyAmount d-flex flex-column flex-wrap ${className}`} {title}>
+<div class:reverseAlign class="currencyAmount d-flex flex-column flex-wrap" {title}>
     {#if currency}
         <div class="currency d-flex">
             <span class="flag">{@html `${currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}`}</span>
@@ -78,10 +78,10 @@
     .currencyAmount {
         align-items: flex-start;
     }
-    .currencyAmount.reverse {
+    .currencyAmount.reverseAlign {
         align-items: flex-end !important;
     }
-    .reverse > .currency {
+    .reverseAlign > .currency {
         flex-flow: row-reverse;
     }
     .code {

@@ -114,7 +114,13 @@
 	<div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
 	<ul class="navbar-nav">
 		<li class="nav-item">
-			<span on:click={()=>isTutorial=true}>Ver demo</span>
+			<span on:click={()=>isTutorial=!isTutorial}>
+				{#if isTutorial}
+					Cancelar demo
+				{:else}
+					Ver demo
+				{/if}
+			</span>
 		</li>
 		<div class="border"></div>
 		<li class="nav-item">

@@ -52,7 +52,6 @@
 		return {
 			update(chartData) {
 				chart.data.datasets[0].data = chartData;
-				chart.resetZoom();
 			}
 		}
 

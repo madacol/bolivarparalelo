@@ -4,7 +4,7 @@
     import Modal from './Modal.svelte';
     import CurrencyAmount from './CurrencyAmount.svelte';
     import getHumanRate from './helpers/getHumanRate.js';
-    import { autoPilotBaseAmount } from './stores.js';
+    import { autoPilotBaseAmount, fakeCursor } from './stores.js';
 
 
     /*********
@@ -55,6 +55,7 @@
         handleAmountChange={handleBaseAmountChange}
         currency={base_currency}
         {showBuySell}
+        fakeCursor={$fakeCursor}
     />
 
     <div class="equal {showBuySell ? 'buy-sell' : ''}">=</div>

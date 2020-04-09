@@ -9,6 +9,7 @@
     export let buyAmount=null;
     export let sellAmount=null;
     export let className='';
+    export let fakeCursor=false;
     export let currency=null;
     export let showBuySell=false;
 
@@ -48,7 +49,9 @@
     {#if showBuySell}
         <span class="buy-sell">{buyAmount}</span>
     {/if}
-    <input type="text" onfocus="this.select();" on:keyup={handleKeyUp} value={text} size={text.length || 1} />
+    <div class="amount">
+        <input type="text" class:fakeCursor onfocus="this.select();" on:keyup={handleKeyUp} value={text} size={text.length || 1} />
+    </div>
     {#if showBuySell}
         <span class="buy-sell">{sellAmount}</span>
     {/if}
@@ -56,14 +59,21 @@
 
 
 <style>
-    div > input {
+    input {
         font-size: 2em;
         line-height: 1.15;
         background-color: transparent;
         color: white;
+        border: 0;
+        border-right: 1px solid transparent;
+        margin: 0 0.2em;
+    }
+    .fakeCursor {
+        border-right: 1px solid white;
+    }
+    .amount {
         border: 1px solid var(--gray3);
         border-radius: 0.2em;
-        padding: 0 0.2em;
     }
     .currencyAmount {
         align-items: flex-start;

@@ -3,8 +3,8 @@
 	import Modal from './Modal.svelte';
 	import Form from './Form.svelte';
 	import { onMount } from 'svelte';
-	import { autoPilotBaseAmount } from './stores.js';
-	import { TUTORIAL_INTERVAL_DELAY, WRITE_DELAY, RANDOM_NUMBER_RANGE } from './CONSTANTS.js'
+	import { autoPilotBaseAmount, fakeCursor } from './stores.js';
+	import { TUTORIAL_INTERVAL_DELAY, WRITE_DELAY, RANDOM_NUMBER_RANGE, FAKE_CURSOR_BLINK_DELAY } from './CONSTANTS.js'
 
 
 	/*************
@@ -60,7 +60,7 @@
 						tutorialIntervals.pop();
 					}
 				}, delay)
-				tutorialIntervals[1] = setTimeoutID;
+				tutorialIntervals[2] = setTimeoutID;
 			}
 			function setRandomBaseNumber() {
 				const randomNumber = getRandomInt(...RANDOM_NUMBER_RANGE);
@@ -68,7 +68,8 @@
 				const stringList = randomNumber.toString().split('');
 				delayedWrite(stringList, WRITE_DELAY);
 			}
-			tutorialIntervals.push( setInterval(setRandomBaseNumber, TUTORIAL_INTERVAL_DELAY) );
+			tutorialIntervals[0] = setInterval(setRandomBaseNumber, TUTORIAL_INTERVAL_DELAY);
+			tutorialIntervals[1] = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
 		}
 	})
 
@@ -92,6 +93,9 @@
 	}
 	function disableTutorial() {
 		tutorialIntervals.forEach( intervalID => clearInterval(intervalID) );
+		isTutorial = false;
+		$fakeCursor = false;
+		$autoPilotBaseAmount = 1;
 	}
 
 </script>

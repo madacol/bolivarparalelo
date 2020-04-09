@@ -12,4 +12,5 @@ export const SHOW_CONFIG = [
 export const TUTORIAL_INTERVAL_DELAY = 5000;
 // export const TUTORIAL_DELAY = 10000 - TUTORIAL_INTERVAL;
 export const WRITE_DELAY = 300;
+export const FAKE_CURSOR_BLINK_DELAY = 500;
 export const RANDOM_NUMBER_RANGE = [1, 300];

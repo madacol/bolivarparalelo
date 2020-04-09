@@ -17,6 +17,7 @@
         height: 100%;
         opacity: 0;
         z-index: 1;
+        cursor: pointer;
     }
     input::-webkit-calendar-picker-indicator {
         position: absolute;

@@ -167,7 +167,8 @@
 
 <style>
 	.flags {
-		justify-content: space-around
+		justify-content: space-around;
+		padding-top: 0.5em;
 	}
 	.flag {
 		font-size: 35px;
@@ -189,7 +190,9 @@
 	.chooseTime {
 		display: flex;
 		justify-content: center;
-		margin-bottom: 0.7em;
+	}
+	.timeRange {
+		margin-top: 0.7em;
 	}
 	.timeRange > label:first-child{
 		margin-bottom: 0.5em

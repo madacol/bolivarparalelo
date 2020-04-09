@@ -1,4 +1,5 @@
 <script>
+	import { tick } from 'svelte';
 	import Chart from './Chart.svelte';
 	import Form from './Form.svelte';
 	import Modal from './Modal.svelte';
@@ -23,7 +24,8 @@
 	let base_currency = {};
 	let chartData = [];
 	let updated_time = "";
-	let showModal = false;
+	let showSettings = false;
+	let rateContainerRef;
 
 	// Extract states from `rateHash`
 	let counter_currency_code, base_currency_code, showBuySell, showConfig, isTimeRangeEnabled, end_unix_time, start_unix_time;
@@ -41,7 +43,6 @@
 	$: counter_currency = {...counter_currency, code: counter_currency_code };
 	$: base_currency    = {...base_currency, code: base_currency_code };
 	$: rate_Promise = fetchData(counter_currency_code, base_currency_code, start_unix_time, end_unix_time);
-	$: isRateValid = counter_currency_code && base_currency_code;
 	$: ({showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[0])
 
 	// Reactive Statements
@@ -100,7 +101,7 @@
 
 	async function fetchData (counter_code, base_code, start_unix_time, end_unix_time) {
 		if (!counter_code || !base_code) {
-			showModal = true;
+			openSettings();
 			throw new Error('no currencies selected')
 		}
 		const url = getQueryUrl(counter_code, base_code, start_unix_time, end_unix_time);
@@ -147,22 +148,22 @@
 	 * Handlers *
 	 ***********/
 	function removeRate () { rateHash = null; }
-	function closeModal () {
-		if (!isRateValid)
-			return removeRate();
-		showModal=false;
-	}
 	function searchDate (e) {
 		start_unix_time = parseLocalDate(e.target.value);
 		end_unix_time = start_unix_time + _1D_in_ms;
 		isTimeRangeEnabled = true;
 		showConfig=2;
 	}
+	async function openSettings () {
+		showSettings=true;
+		await tick();
+		rateContainerRef.scrollIntoView();
+	}
 
 </script>
 
-<div class="rateContainer" class:hide-collapse={!isRateValid}>
-	<div class="d-flex justify-content-center align-items-center">
+<div bind:this={rateContainerRef} class="rateContainer" >
+	<div class="rate d-flex justify-content-center align-items-center">
 		<div class="mr-3">
 			<i on:click={removeRate} class="fas fa-times"/>
 		</div>
@@ -199,14 +200,17 @@
 			<HiddenInputDate on:change={searchDate} >
 				<i class="fas fa-search"/>
 			</HiddenInputDate>
-			<br>
-			<i on:click={()=>showModal=true} class="fas fa-cog mt-1"/>
 		</div>
 	</div>
-
-	{#if showModal}
-		<Modal on:close={closeModal}>
-			<span slot="header">Configuracion</span>
+	{#if !showSettings}
+		<div class="settingsButton borderRadiusBottom" on:click={openSettings}>
+			<i class="fas fa-cog"/>
+		</div>
+	{:else}
+		<div class="settingsButton" on:click={()=>showSettings=false}>
+			<i class="fas fa-angle-up"/>
+		</div>
+		<div class="settings borderRadiusBottom">
 			<Form
 				{currencies}
 				bind:showBuySell
@@ -217,7 +221,7 @@
 				bind:end_unix_time
 				bind:start_unix_time
 			/>
-		</Modal>
+		</div>
 	{/if}
 </div>
 
@@ -225,23 +229,39 @@
 	.rateContainer {
 		align-self: center;
 		text-align: center;
-		padding: 0.5em;
 		width: 100%;
 		max-width: 1100px;
 		border: 1px solid var(--gray3);
 		border-radius: 1em;
 		margin-bottom: 1em;
 	}
+	.rate {
+		padding: 0.5em;
+	}
 	.chart-average {
 		font-size: 1em;
 	}
-	.fas {
+	i {
 		font-size: 1.2em;
 		padding: 0.3em;
 		opacity: 50%;
+		cursor: pointer;
 	}
-	.fas:hover,
-	.fas:focus {
+	.settingsButton > i {
+		font-size: 0.9em;
+	}
+	.settingsButton {
+		background-color: var(--gray3);
+		cursor: pointer;
+	}
+	.borderRadiusBottom {
+		border-radius: 0 0 1em 1em;
+	}
+	.settings {
+		background-color: var(--gray2)
+	}
+	i:hover,
+	i:focus {
 		opacity: 100%;
 	}
 	.chart-labels {

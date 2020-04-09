@@ -10,7 +10,7 @@
 	/*************
 	 * Constants *
 	 *************/
-	const defaultHashLayout = `#ves,usd;ves,eur;ves,usd,_0,${24*7}`
+	const defaultHashLayout = `#ves,usd;ves,eur;ves,usd_0,${24*7}`
 	const bitcoin_currency = {
 		id: 0,
 		code: "btc",
@@ -50,6 +50,13 @@
 				max = Math.floor(max);
 				return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 			}
+			/**
+			 * Writes to the variable `$autoPilotBaseAmount` by appending the (list of)string received
+			 * character-by-character with a delay between each write
+			 * 
+			 * @param {String|Array<String>} stringList - string or list of characters
+			 * @param {Integer} delay - miliseconds to wait to add next character
+			 */
 			function delayedWrite (stringList, delay) {
 				const setTimeoutID = setTimeout( () => {
 					const [nextLetter, ...remainingLetters] = stringList;

@@ -41,43 +41,48 @@
 	/******************
 	 * Setup Tutorial *
 	 ******************/
+	function getRandomInt(min, max) { // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_integer_between_two_values
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+	}
+	/**
+	 * Writes to the variable `$autoPilotBaseAmount` by appending the (list of)string received
+	 * character-by-character with a delay between each write
+	 * 
+	 * @param {String|Array<String>} stringList - string or list of characters
+	 * @param {Integer} delay - miliseconds to wait to add next character
+	 */
+	function delayedWrite (stringList, delay) {
+		const setTimeoutID = setTimeout( () => {
+			const [nextLetter, ...remainingLetters] = stringList;
+			$autoPilotBaseAmount += nextLetter;
+			if (remainingLetters.length > 0) {
+				delayedWrite(remainingLetters, delay);
+			} else {
+				tutorialIntervals.pop();
+			}
+		}, delay)
+		tutorialIntervals[2] = setTimeoutID;
+	}
+	function setRandomBaseNumber() {
+		const randomNumber = getRandomInt(...RANDOM_NUMBER_RANGE);
+		$autoPilotBaseAmount = '';
+		const stringList = randomNumber.toString().split('');
+		delayedWrite(stringList, WRITE_DELAY);
+	}
+	function enableTutorial() {
+		tutorialIntervals[0] = setInterval(setRandomBaseNumber, TUTORIAL_INTERVAL_DELAY);
+		tutorialIntervals[1] = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
+	}
+	function disableTutorial() {
+		tutorialIntervals.forEach( intervalID => clearInterval(intervalID) );
+		$fakeCursor = false;
+		$autoPilotBaseAmount = 1;
+	}
 	let tutorialIntervals = [];
-	onMount(() => {
-		if (isTutorial) {
-			function getRandomInt(min, max) { // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_integer_between_two_values
-				min = Math.ceil(min);
-				max = Math.floor(max);
-				return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-			}
-			/**
-			 * Writes to the variable `$autoPilotBaseAmount` by appending the (list of)string received
-			 * character-by-character with a delay between each write
-			 * 
-			 * @param {String|Array<String>} stringList - string or list of characters
-			 * @param {Integer} delay - miliseconds to wait to add next character
-			 */
-			function delayedWrite (stringList, delay) {
-				const setTimeoutID = setTimeout( () => {
-					const [nextLetter, ...remainingLetters] = stringList;
-					$autoPilotBaseAmount += nextLetter;
-					if (remainingLetters.length > 0) {
-						delayedWrite(remainingLetters, delay);
-					} else {
-						tutorialIntervals.pop();
-					}
-				}, delay)
-				tutorialIntervals[2] = setTimeoutID;
-			}
-			function setRandomBaseNumber() {
-				const randomNumber = getRandomInt(...RANDOM_NUMBER_RANGE);
-				$autoPilotBaseAmount = '';
-				const stringList = randomNumber.toString().split('');
-				delayedWrite(stringList, WRITE_DELAY);
-			}
-			tutorialIntervals[0] = setInterval(setRandomBaseNumber, TUTORIAL_INTERVAL_DELAY);
-			tutorialIntervals[1] = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
-		}
-	})
+	$: if (isTutorial) enableTutorial()
+	else disableTutorial()
 
 	/**************
 	 * LifeCycles *
@@ -97,12 +102,6 @@
 	function AddRate() {
 		rateHashes = [...rateHashes, ','];
 	}
-	function disableTutorial() {
-		tutorialIntervals.forEach( intervalID => clearInterval(intervalID) );
-		isTutorial = false;
-		$fakeCursor = false;
-		$autoPilotBaseAmount = 1;
-	}
 
 </script>
 
@@ -114,22 +113,17 @@
 	<div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
 	<ul class="navbar-nav">
 		<li class="nav-item">
-			<a href="/classic" class="navbar-brand">Ver versión clásica</a>
+			<span on:click={()=>isTutorial=true}>Ver demo</span>
 		</li>
-		<!-- <li class="nav-item">
-			<input type="date" id="get_date_history" on:change={handleSearchDate}>
-			<label class="btn btn-outline-dark" for="get_date_history">
-				<span id="calendar_text">{calendar_text} </span>
-				<img alt="calendar icon" src="/icons/calendar_icon_white.png" width="25" height="25">
-			</label>
-		</li> -->
-		<li class="nav-item px-2">
+		<div class="border"></div>
+		<li class="nav-item">
+			<a href="/classic">Ver versión clásica</a>
 		</li>
 	</ul>
 </nav>
 
 
-<div id="body" on:click|once={disableTutorial}>
+<div id="body" on:click={()=>isTutorial=false}>
 	{#each rateHashes as rateHash}
 		{#if rateHash}
 			<Rate bind:rateHash {currencies} />
@@ -163,8 +157,12 @@
 		min-height: 60px;
 		font-size: calc(13px + 0.3vw);
 	}
+	nav span,
 	nav a {
 		font-size: 1.2em;
+		cursor: pointer;
+		white-space: nowrap;
+		color: white;
 	}
 	#body {
 		display: flex;
@@ -180,6 +178,7 @@
 	}
 	#navbarSupportedContent ul li {
 		position: relative;
+		margin: 0 1em;
 	}
 	#newRate {
 		align-self: center;

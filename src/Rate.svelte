@@ -179,7 +179,7 @@
 						<div class="update-time">Hace {updated_time}</div>
 					{/if}
 				{/if}
-				{#if showGraph && chartData.length > 1 }
+				{#if isTimeRangeEnabled && showGraph && chartData.length > 1 }
 					<div class="d-flex justify-content-between align-items-center mt-2" >
 						<div class="flex-grow">
 							<Chart {chartData}/>

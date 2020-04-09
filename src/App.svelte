@@ -72,6 +72,7 @@
 		delayedWrite(stringList, WRITE_DELAY);
 	}
 	function enableTutorial() {
+		setRandomBaseNumber();
 		tutorialIntervals[0] = setInterval(setRandomBaseNumber, TUTORIAL_INTERVAL_DELAY);
 		tutorialIntervals[1] = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
 	}

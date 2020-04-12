@@ -133,7 +133,7 @@
 </nav>
 
 
-<div id="body" on:click={bodyHandler}>
+<div id="body" on:click={bodyHandler} on:keydown={bodyHandler}>
 	{#each rateHashes as rateHash}
 		{#if rateHash}
 			<Rate bind:rateHash {currencies} />

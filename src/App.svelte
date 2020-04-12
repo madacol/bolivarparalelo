@@ -27,7 +27,7 @@
 	let tutorialIntervals = [];
 	// Check if hash is empty
 	if (!window.location.hash) {
-		enableTutorial();
+		enableTutorial(false);
 		// Set hash to default
 		window.location.hash = defaultHashLayout;
 	}
@@ -45,10 +45,10 @@
 	$: demoHandler = isTutorial ? disableTutorial : enableTutorial;
 
 	// Functions
-	function enableTutorial() {
-		setRandomBaseAmount();
+	function enableTutorial(fireImmediately=true) {
 		tutorialIntervals[0] = setInterval(setRandomBaseAmount, TUTORIAL_INTERVAL_DELAY);
 		tutorialIntervals[1] = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
+		if (fireImmediately) setRandomBaseAmount();
 		isTutorial = true;
 	}
 	function disableTutorial() {

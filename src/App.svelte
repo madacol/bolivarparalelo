@@ -23,11 +23,11 @@
 	/*********
 	 * Setup *
 	 *********/
-	// Check if hash is empty
 	let isTutorial = false;
+	let tutorialIntervals = [];
+	// Check if hash is empty
 	if (!window.location.hash) {
-		// Enable tutorial
-		isTutorial = true;
+		enableTutorial();
 		// Set hash to default
 		window.location.hash = defaultHashLayout;
 	}
@@ -41,20 +41,21 @@
 	/******************
 	 * Setup Tutorial *
 	 ******************/
-	let tutorialIntervals = [];
-	$: if (isTutorial) enableTutorial()
-	else disableTutorial()
+	$: bodyHandler = isTutorial ? disableTutorial : null;
+	$: demoHandler = isTutorial ? disableTutorial : enableTutorial;
 
 	// Functions
 	function enableTutorial() {
 		setRandomBaseAmount();
 		tutorialIntervals[0] = setInterval(setRandomBaseAmount, TUTORIAL_INTERVAL_DELAY);
 		tutorialIntervals[1] = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
+		isTutorial = true;
 	}
 	function disableTutorial() {
 		tutorialIntervals.forEach( intervalID => clearInterval(intervalID) );
 		$fakeCursor = false;
 		$autoPilotBaseAmount = 1;
+		isTutorial = false;
 	}
 	function setRandomBaseAmount() {
 		const randomNumber = getRandomInt(...RANDOM_NUMBER_RANGE);
@@ -116,11 +117,11 @@
 	<div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
 	<ul class="navbar-nav">
 		<li class="nav-item">
-			<span on:click={()=>isTutorial=!isTutorial}>
+			<span on:click={demoHandler}>
 				{#if isTutorial}
 					Cancelar demo
 				{:else}
-					Ver demo
+					Demo
 				{/if}
 			</span>
 		</li>
@@ -132,7 +133,7 @@
 </nav>
 
 
-<div id="body" on:click={()=>isTutorial=false}>
+<div id="body" on:click={bodyHandler}>
 	{#each rateHashes as rateHash}
 		{#if rateHash}
 			<Rate bind:rateHash {currencies} />

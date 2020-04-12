@@ -65,15 +65,15 @@
 		}, delay)
 		tutorialIntervals[2] = setTimeoutID;
 	}
-	function setRandomBaseNumber() {
+	function setRandomBaseAmount() {
 		const randomNumber = getRandomInt(...RANDOM_NUMBER_RANGE);
 		$autoPilotBaseAmount = '';
 		const stringList = randomNumber.toString().split('');
 		delayedWrite(stringList, WRITE_DELAY);
 	}
 	function enableTutorial() {
-		setRandomBaseNumber();
-		tutorialIntervals[0] = setInterval(setRandomBaseNumber, TUTORIAL_INTERVAL_DELAY);
+		setRandomBaseAmount();
+		tutorialIntervals[0] = setInterval(setRandomBaseAmount, TUTORIAL_INTERVAL_DELAY);
 		tutorialIntervals[1] = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
 	}
 	function disableTutorial() {

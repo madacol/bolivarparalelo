@@ -41,6 +41,27 @@
 	/******************
 	 * Setup Tutorial *
 	 ******************/
+	let tutorialIntervals = [];
+	$: if (isTutorial) enableTutorial()
+	else disableTutorial()
+
+	// Functions
+	function enableTutorial() {
+		setRandomBaseAmount();
+		tutorialIntervals[0] = setInterval(setRandomBaseAmount, TUTORIAL_INTERVAL_DELAY);
+		tutorialIntervals[1] = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
+	}
+	function disableTutorial() {
+		tutorialIntervals.forEach( intervalID => clearInterval(intervalID) );
+		$fakeCursor = false;
+		$autoPilotBaseAmount = 1;
+	}
+	function setRandomBaseAmount() {
+		const randomNumber = getRandomInt(...RANDOM_NUMBER_RANGE);
+		$autoPilotBaseAmount = '';
+		const stringList = randomNumber.toString().split('');
+		delayedWrite(stringList, WRITE_DELAY);
+	}
 	function getRandomInt(min, max) { // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_integer_between_two_values
 		min = Math.ceil(min);
 		max = Math.floor(max);
@@ -65,25 +86,6 @@
 		}, delay)
 		tutorialIntervals[2] = setTimeoutID;
 	}
-	function setRandomBaseAmount() {
-		const randomNumber = getRandomInt(...RANDOM_NUMBER_RANGE);
-		$autoPilotBaseAmount = '';
-		const stringList = randomNumber.toString().split('');
-		delayedWrite(stringList, WRITE_DELAY);
-	}
-	function enableTutorial() {
-		setRandomBaseAmount();
-		tutorialIntervals[0] = setInterval(setRandomBaseAmount, TUTORIAL_INTERVAL_DELAY);
-		tutorialIntervals[1] = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
-	}
-	function disableTutorial() {
-		tutorialIntervals.forEach( intervalID => clearInterval(intervalID) );
-		$fakeCursor = false;
-		$autoPilotBaseAmount = 1;
-	}
-	let tutorialIntervals = [];
-	$: if (isTutorial) enableTutorial()
-	else disableTutorial()
 
 	/**************
 	 * LifeCycles *

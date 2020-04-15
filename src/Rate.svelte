@@ -1,5 +1,6 @@
 <script>
     import { tick } from 'svelte';
+    import { slide } from 'svelte/transition';
     import Chart from './Chart.svelte';
     import Form from './Form.svelte';
     import Modal from './Modal.svelte';
@@ -8,6 +9,13 @@
     import getHumanRate from './helpers/getHumanRate.js'
     import { _1H_in_ms, _1D_in_ms, SHOW_CONFIG } from './CONSTANTS.js'
     import parseLocalDate from './helpers/parseLocalDate.js'
+
+    /*************
+     * Constants *
+     *************/
+    // Animation delays
+    const SETTINGS_DELAY = 300;
+    const SETTINGS_BUTTON_DELAY = 150;
 
 
     /*********
@@ -156,8 +164,10 @@
     }
     async function openSettings () {
         showSettings=true;
-        await tick();
-        rateContainerRef.scrollIntoView({behavior: "smooth"});
+            setTimeout(
+                ()=>rateContainerRef.scrollIntoView({behavior: "smooth"}),
+                SETTINGS_DELAY+SETTINGS_BUTTON_DELAY
+            )
     }
 
 </script>
@@ -203,14 +213,23 @@
         </div>
     </div>
     {#if !showSettings}
-        <div class="settingsButton borderRadiusBottom" on:click={openSettings}>
+        <div class="settingsButton borderRadiusBottom" on:click={openSettings}
+        in:slide={{ delay: SETTINGS_DELAY, duration: SETTINGS_BUTTON_DELAY }}
+        out:slide={{ duration: SETTINGS_BUTTON_DELAY }}
+        >
             <i class="fas fa-cog"/>
         </div>
     {:else}
-        <div class="settingsButton" on:click={()=>showSettings=false}>
+        <div class="settingsButton" on:click={()=>showSettings=false}
+        in:slide={{ duration: SETTINGS_BUTTON_DELAY }}
+        out:slide={{ delay: SETTINGS_DELAY, duration: SETTINGS_BUTTON_DELAY }}
+        >
             <i class="fas fa-angle-up"/>
         </div>
-        <div class="settings borderRadiusBottom">
+        <div class="settings borderRadiusBottom"
+        in:slide={{ delay: SETTINGS_BUTTON_DELAY, duration: SETTINGS_DELAY }}
+        out:slide={{ duration: SETTINGS_DELAY }}
+        >
             <Form
                 {currencies}
                 bind:showBuySell

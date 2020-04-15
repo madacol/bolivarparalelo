@@ -273,6 +273,11 @@
         background-color: var(--gray3);
         cursor: pointer;
     }
+    .settingsButton:hover,
+    .settingsButton:focus {
+        background-color: var(--gray4);
+        cursor: pointer;
+    }
     .borderRadiusBottom {
         border-radius: 0 0 1em 1em;
     }

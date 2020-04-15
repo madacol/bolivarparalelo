@@ -157,7 +157,7 @@
     async function openSettings () {
         showSettings=true;
         await tick();
-        rateContainerRef.scrollIntoView();
+        rateContainerRef.scrollIntoView({behavior: "smooth"});
     }
 
 </script>

@@ -184,7 +184,7 @@ end
 def addKeywordsToAds(ad_list, currency_code)
   return ad_list.collect do |ad|
     bank_name = ad['data']['bank_name']
-    bank_name_normalized = I18n.transliterate bank_name.downcase
+    bank_name_normalized = bank_name ? I18n.transliterate(bank_name.downcase) : ''
     regex1 = /[^a-zA-Z0-9.,]+/     # matches all characters that are not: a-zA-Z0-9_.,   | "a-z" translates to abcdefghij...
     regex2 = /(?<=\D)[.,]/         # matches any , or . that is preceded by a non-digit
     regex  = /#{regex1}|#{regex2}/ # matches regex1 or regex2

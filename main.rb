@@ -221,9 +221,11 @@ namespace '/api' do
           rates_hourstamped = {}
           base_btc_rates.each do |rate|
             hourstamp = rate.created_at.strftime("%D %H")
-            counter_btc_avg = counter_rates_hourstamped[ hourstamp ][:avg]
-            counter_btc_buy = counter_rates_hourstamped[ hourstamp ][:buy]
-            counter_btc_sell = counter_rates_hourstamped[ hourstamp ][:sell]
+            counter_btc = counter_rates_hourstamped[ hourstamp ]
+            next if counter_btc.nil?
+            counter_btc_avg = counter_btc[:avg]
+            counter_btc_buy = counter_btc[:buy]
+            counter_btc_sell = counter_btc[:sell]
             next if counter_btc_avg.nil?
             base_btc_avg = getBuySellAvg rate
             rates_hourstamped[ hourstamp ]={}

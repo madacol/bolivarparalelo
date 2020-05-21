@@ -10,7 +10,7 @@
     /*************
      * Constants *
      *************/
-    const defaultHashLayout = `#ves,usd;ves,eur;ves,usd_0,${24*7}`
+    const defaultHashLayout = `#ves,usd,1;ves,eur;ves,usd_0,160` // 160 = 24*7 (hours in a week)
     const bitcoin_currency = {
         id: 0,
         code: "btc",

@@ -95,11 +95,11 @@
     /**********
      * States *
      **********/
-    let end_input_value = isTimeRangeEnabled && unixTime_to_inputValue(end_unix_time);
-    let start_input_value = isTimeRangeEnabled && unixTime_to_inputValue(start_unix_time);
-    // Reactive assignments
-    $: end_unix_time = isTimeRangeEnabled && inputValue_to_unixTime(end_input_value);
-    $: start_unix_time = isTimeRangeEnabled && inputValue_to_unixTime(start_input_value);
+    const end_input_value = unixTime_to_inputValue(end_unix_time);
+    const start_input_value = unixTime_to_inputValue(start_unix_time);
+
+    function handleEndDate(e) { end_unix_time = inputValue_to_unixTime(e.target.value) }
+    function handleStartDate(e) { start_unix_time = inputValue_to_unixTime(e.target.value) }
 
 </script>
 
@@ -141,12 +141,8 @@
     </div>
     {#if isTimeRangeEnabled}
         <div class="timeRange">
-            <label>
-                Fecha Inicial: <input type={inputDateType} value={start_input_value} on:change={e=>start_input_value=e.target.value}>
-            </label>
-            <label>
-                Fecha Fin: <input type={inputDateType} value={end_input_value} on:change={e=>end_input_value=e.target.value}>
-            </label>
+            <label> Fecha Inicial: <input type={inputDateType} value={start_input_value} on:change={handleStartDate}> </label>
+            <label> Fecha Fin: <input type={inputDateType} value={end_input_value} on:change={handleEndDate}> </label>
         </div>
         <hr>
         <div class="d-flex flex-column align-items-center">

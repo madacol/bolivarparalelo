@@ -32,10 +32,12 @@
 - Sustitute moment.js and Chart.js with (Pancake | OWID)?
 - Improve UI to choose currencies (Maybe flags around a circle with selected flag in the middle)
 
-# Bug
-- Rate refreshes when opening form when browser does not support datetime input
+
+# Bugs
 - (Nerio) Inputs don't allow entering big numbers, when entering `150000` it resets to `15`
 - Back: Fix failures in obtaining rates
+## Fixed
+- Rate refreshes when opening form when browser does not support datetime input
 
 
 # Done

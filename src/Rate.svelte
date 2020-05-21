@@ -7,7 +7,7 @@
     import RateCalculator from './RateCalculator.svelte';
     import HiddenInputDate from './HiddenInputDate.svelte';
     import getHumanRate from './helpers/getHumanRate.js'
-    import { _1H_in_ms, _1D_in_ms, SHOW_CONFIG } from './CONSTANTS.js'
+    import { _1H_in_ms, _1D_in_ms, _1W_in_ms, SHOW_CONFIG } from './CONSTANTS.js'
     import parseLocalDate from './helpers/parseLocalDate.js'
 
     /*************
@@ -42,15 +42,30 @@
         [counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
         const [start_hourRange_str, hourRange_str, showConfig_str] = (timeRangeConfigs || '').split(',');
         isTimeRangeEnabled = (typeof timeRangeConfigs === "string") && timeRangeConfigs.length > 1;
-        end_unix_time = isTimeRangeEnabled && start_hourRange_str && (Date.now() - Number(start_hourRange_str)*_1H_in_ms);
-        start_unix_time = isTimeRangeEnabled && hourRange_str && (end_unix_time - Number(hourRange_str)*_1H_in_ms);
+        let start_hourRange, hourRange;
+        if (isTimeRangeEnabled) {
+            start_hourRange = Number(start_hourRange_str);
+            hourRange = Number(hourRange_str);
+        }
+        if (Number.isInteger(start_hourRange) && Number.isInteger(hourRange)) {
+            end_unix_time = Date.now() - start_hourRange*_1H_in_ms;
+            start_unix_time = end_unix_time - hourRange*_1H_in_ms;
+        } else {
+            end_unix_time = Date.now();
+            start_unix_time = end_unix_time - _1W_in_ms;
+        }
         showConfig = Number(showConfig_str) || 0;
     }
 
     // Reactive Declarations
     $: counter_currency = {...counter_currency, code: counter_currency_code };
     $: base_currency    = {...base_currency, code: base_currency_code };
-    $: rate_Promise = fetchData(counter_currency_code, base_currency_code, start_unix_time, end_unix_time);
+    let rate_Promise;
+    $: if (isTimeRangeEnabled) {
+        rate_Promise = fetchData(counter_currency_code, base_currency_code, start_unix_time, end_unix_time);
+    } else {
+        rate_Promise = fetchData(counter_currency_code, base_currency_code);
+    }
     $: ({showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[0])
 
     // Reactive Statements
@@ -107,7 +122,7 @@
         }
     }
 
-    async function fetchData (counter_code, base_code, start_unix_time, end_unix_time) {
+    async function fetchData (counter_code, base_code, start_unix_time=false, end_unix_time=false) {
         if (!counter_code || !base_code) {
             openSettings();
             throw new Error('no currencies selected')

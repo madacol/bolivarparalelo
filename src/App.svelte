@@ -3,8 +3,8 @@
     import Modal from './Modal.svelte';
     import Form from './Form.svelte';
     import { onMount } from 'svelte';
-    import { autoPilotBaseAmount, fakeCursor } from './stores.js';
-    import { TUTORIAL_INTERVAL_DELAY, WRITE_DELAY, RANDOM_NUMBER_RANGE, FAKE_CURSOR_BLINK_DELAY } from './CONSTANTS.js'
+    import { fakeCursor } from './stores.js';
+    import { FAKE_CURSOR_BLINK_DELAY } from './CONSTANTS.js'
 
 
     /*************
@@ -24,7 +24,7 @@
      * Setup *
      *********/
     let isTutorial = false;
-    let tutorialIntervals = [];
+    let intervalID;
     // Check if hash is empty
     if (!window.location.hash) {
         enableTutorial(false);
@@ -46,46 +46,13 @@
 
     // Functions
     function enableTutorial(fireImmediately=true) {
-        tutorialIntervals[0] = setInterval(setRandomBaseAmount, TUTORIAL_INTERVAL_DELAY);
-        tutorialIntervals[1] = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
-        if (fireImmediately) setRandomBaseAmount();
+        intervalID = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
         isTutorial = true;
     }
     function disableTutorial() {
-        tutorialIntervals.forEach( intervalID => clearInterval(intervalID) );
+        clearInterval(intervalID);
         $fakeCursor = false;
-        $autoPilotBaseAmount = 1;
         isTutorial = false;
-    }
-    function setRandomBaseAmount() {
-        const randomNumber = getRandomInt(...RANDOM_NUMBER_RANGE);
-        $autoPilotBaseAmount = '';
-        const stringList = randomNumber.toString().split('');
-        delayedWrite(stringList, WRITE_DELAY);
-    }
-    function getRandomInt(min, max) { // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_integer_between_two_values
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-    }
-    /**
-     * Writes to the variable `$autoPilotBaseAmount` by appending the (list of)string received
-     * character-by-character with a delay between each write
-     * 
-     * @param {String|Array<String>} stringList - string or list of characters
-     * @param {Integer} delay - miliseconds to wait to add next character
-     */
-    function delayedWrite (stringList, delay) {
-        const setTimeoutID = setTimeout( () => {
-            const [nextLetter, ...remainingLetters] = stringList;
-            $autoPilotBaseAmount += nextLetter;
-            if (remainingLetters.length > 0) {
-                delayedWrite(remainingLetters, delay);
-            } else {
-                tutorialIntervals.pop();
-            }
-        }, delay)
-        tutorialIntervals[2] = setTimeoutID;
     }
 
     /**************

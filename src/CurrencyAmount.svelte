@@ -26,7 +26,7 @@
         // Validate then update amount
         const numberString = normalizeNumberSeparators(e.target.value);
         const parsedNumber = parseFloat(numberString);
-        if (parsedNumber) {
+        if (parsedNumber && parsedNumber !== amount) {
             handleAmountChange(parsedNumber);
             e.target.value = numberString;
         }

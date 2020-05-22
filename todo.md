@@ -13,7 +13,6 @@
 - Set form dates with sensible defaults, specially for hours
 - Hide **what to show** when dates are null
 - Improve page rating - Chrome/lighthouse
-- Save ratehashes into LocalStorage
 - Add mobile gestures to open and close rate settings
 - Sustitute ratehashes with json zipped? [json-url](https://github.com/masotime/json-url)
 - Add analytics to API endpoints
@@ -48,5 +47,6 @@
 - remove unnecessary libraries (hammer, popper, zoom-plugin)
 - Move settings to a collapsable div, as a bar button at the bottom of each rate
 - convert tabbed-files to spaces
+- Save ratehashes into LocalStorage
 - Add hover style to settings button bar
 - Add transition to collapsing elements

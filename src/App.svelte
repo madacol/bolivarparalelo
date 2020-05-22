@@ -4,13 +4,14 @@
     import Form from './Form.svelte';
     import { onMount } from 'svelte';
     import { fakeCursor } from './stores.js';
-    import { FAKE_CURSOR_BLINK_DELAY } from './CONSTANTS.js'
+    import { hashLS } from './localStorageStore.js';
+    import { FAKE_CURSOR_BLINK_DELAY } from './CONSTANTS.js';
 
 
     /*************
      * Constants *
      *************/
-    const defaultHashLayout = `#ves,usd,1;ves,eur;ves,usd_0,160` // 160 = 24*7 (hours in a week)
+    const defaultHash = `ves,usd,1;ves,eur;ves,usd_0,160` // 160 = 24*7 (hours in a week)
     const bitcoin_currency = {
         id: 0,
         code: "btc",
@@ -25,18 +26,26 @@
      *********/
     let isTutorial = false;
     let intervalID;
+    let hash;
     // Check if hash is empty
-    if (!window.location.hash) {
-        enableTutorial(false);
+    const isUsingHashUrl = !!window.location.hash
+    if (isUsingHashUrl) {
         // Set hash to default
-        window.location.hash = defaultHashLayout;
+        hash = window.location.hash.slice(1);
+    } else {
+        hash = $hashLS || defaultHash;
+        if (!$hashLS) enableTutorial(false);
     }
     let currencies = [];
     let bitcoin_rate;
     // Get rates from hash
-    let rateHashes = window.location.hash.slice(1).split(';');
-    // Filter removed rates and update hash
-    $: { window.location.hash = rateHashes.filter(x=>x).join(';') }
+    let rateHashes = hash.split(';');
+    // Filter removed rates and update hash or Local Storage
+    $: if (isUsingHashUrl) {
+        window.location.hash = rateHashes.filter(x=>x).join(';');
+    } else {
+        $hashLS = rateHashes.filter(x=>x).join(';');
+    }
 
     /******************
      * Setup Tutorial *

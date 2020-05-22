@@ -4,15 +4,12 @@
 ### Extra pain
 - Improve color contrasts (line-chart, buy-sell rates, backgrounds)
 - Refactor color variables to use **primary** **secondary** paradigm and the variants made by applying opacity
-- Chance favicon.ico
 - Pressing anywhere to cancel demo is not intuitive
 
 
 ## medium
 - Export data
-- Set form dates with sensible defaults, specially for hours
 - Hide **what to show** when dates are null
-- Improve page rating - Chrome/lighthouse
 - Add mobile gestures to open and close rate settings
 - Sustitute ratehashes with json zipped? [json-url](https://github.com/masotime/json-url)
 - Add analytics to API endpoints
@@ -21,15 +18,18 @@
 ### Extra pain
 - Flags fallback rendering (using css?) https://github.com/lipis/flag-icon-css
 - Add translations
+- Create favicon.ico
 - Branding
 
 
 ## hard
 - Move to netlify
+- Move back to NodeJS
 - Implement SSR or Sapper
+- Improve page rating - Chrome/lighthouse
 ### Extra pain
 - Sustitute moment.js and Chart.js with (Pancake | OWID)?
-- Improve UI to choose currencies (Maybe flags around a circle with selected flag in the middle)
+- Improve UI to choose currencies (Maybe flags around a circle with selected flag in the middle https://stackoverflow.com/questions/12813573/position-icons-into-circle)
 
 
 # Bugs
@@ -50,3 +50,4 @@
 - Save ratehashes into LocalStorage
 - Add hover style to settings button bar
 - Add transition to collapsing elements
+- Set form dates with sensible defaults, specially for hours

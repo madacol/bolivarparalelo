@@ -8,7 +8,7 @@ import {writable as internal, get} from 'svelte/store'
 function writable(key, initialValue) {
   // create an underlying store
   const store = internal(initialValue)
-  const {subscribe, set, update} = store
+  const {subscribe, set} = store
   // get the last value from localStorage
   const json = localStorage.getItem(key)
   

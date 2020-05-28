@@ -50,7 +50,7 @@
         <span class="buy-sell">{buyAmount}</span>
     {/if}
     <div class="amount">
-        <input type="text" class:fakeCursor onfocus="this.select();" on:keyup={handleKeyUp} value={text} size={text.length || 1} />
+        <input type="text" class:fakeCursor onfocus="this.select();" on:keyup={handleKeyUp} value={text} size={text.length || 1} data-hj-whitelist />
     </div>
     {#if showBuySell}
         <span class="buy-sell">{sellAmount}</span>

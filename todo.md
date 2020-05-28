@@ -1,6 +1,9 @@
 # todo
 
 ## easy
+- Share button, general and specific rate
+- Remove Demo button
+- Link to methodology
 ### Extra pain
 - Improve color contrasts (line-chart, buy-sell rates, backgrounds)
 - Refactor color variables to use **primary** **secondary** paradigm and the variants made by applying opacity
@@ -8,8 +11,8 @@
 
 
 ## medium
+- Custom analytics for default and casual rates.
 - Export data
-- Hide **what to show** when dates are null
 - Add mobile gestures to open and close rate settings
 - Sustitute ratehashes with json zipped? [json-url](https://github.com/masotime/json-url)
 - Add analytics to API endpoints
@@ -51,3 +54,4 @@
 - Add hover style to settings button bar
 - Add transition to collapsing elements
 - Set form dates with sensible defaults, specially for hours
+- Hide **what to show** when dates are null

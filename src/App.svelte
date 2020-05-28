@@ -117,7 +117,7 @@
     {/each}
     <div id="newRate">
         <button on:click={AddRate}>
-            Agregar Tasa
+            Agregar Tasa o Gráfico
         </button>
     </div>
 </div>

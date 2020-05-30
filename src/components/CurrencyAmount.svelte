@@ -1,6 +1,6 @@
 <script>
-    import getHumanRate from './helpers/getHumanRate.js'
-    import normalizeNumberSeparators from './helpers/normalizeNumberSeparators.js'
+    import getHumanRate from '../helpers/getHumanRate.js'
+    import normalizeNumberSeparators from '../helpers/normalizeNumberSeparators.js'
 
     // Props
     export let handleAmountChange;

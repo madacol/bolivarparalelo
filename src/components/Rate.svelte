@@ -6,9 +6,9 @@
     import Modal from './Modal.svelte';
     import RateCalculator from './RateCalculator.svelte';
     import HiddenInputDate from './HiddenInputDate.svelte';
-    import getHumanRate from './helpers/getHumanRate.js'
-    import { _1H_in_ms, _1D_in_ms, _1W_in_ms, SHOW_CONFIG } from './CONSTANTS.js'
-    import parseLocalDate from './helpers/parseLocalDate.js'
+    import getHumanRate from '../helpers/getHumanRate.js'
+    import { _1H_in_ms, _1D_in_ms, _1W_in_ms, SHOW_CONFIG } from '../CONSTANTS.js'
+    import parseLocalDate from '../helpers/parseLocalDate.js'
 
     /*************
      * Constants *

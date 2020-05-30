@@ -1,5 +1,7 @@
 set_config_vars.sh
 /public/build/
 /node_modules/
+/src/node_modules/
 
 .DS_Store
+__sapper__

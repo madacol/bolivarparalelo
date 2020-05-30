@@ -1,6 +1,7 @@
 <script context="module">
-    import { _1H_in_ms } from './CONSTANTS.js'
-    import parseLocalDate from './helpers/parseLocalDate.js'
+	import { onMount } from 'svelte';
+    import { _1H_in_ms } from '../CONSTANTS.js'
+    import parseLocalDate from '../helpers/parseLocalDate.js'
 
     /**
      * Check if browser supports input's type `datetime-local`
@@ -29,7 +30,7 @@
      * Following functions have 2 versions,
      * one for input.type=='date' and another for input.type=='datetime-local',
      * depending if the browser supports 'datetime-local' or not
-     * 
+     *
      * `unixTime_to_inputValue` converts **unix time** into a value that can be understood by the correspondig input ('date' or 'datetime-local')
      * `inputValue_to_unixTime` Does the opposite, converts from the input's value to **unix time**
      */
@@ -76,7 +77,7 @@
 <script>
     import CheckboxToggle from './CheckboxToggle.svelte'
     import RadioButton from './RadioButton.svelte'
-    import { SHOW_CONFIG } from './CONSTANTS.js'
+    import { SHOW_CONFIG } from '../CONSTANTS.js'
 
 
     /*********

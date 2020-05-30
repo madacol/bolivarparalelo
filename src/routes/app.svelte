@@ -1,11 +1,11 @@
 <script>
-    import Rate from './Rate.svelte';
-    import Modal from './Modal.svelte';
-    import Form from './Form.svelte';
+    import Rate from '../components/Rate.svelte';
+    import Modal from '../components/Modal.svelte';
+    import Form from '../components/Form.svelte';
     import { onMount } from 'svelte';
-    import { fakeCursor } from './stores.js';
-    import { hashLS } from './localStorageStore.js';
-    import { FAKE_CURSOR_BLINK_DELAY } from './CONSTANTS.js';
+    import { fakeCursor } from '../stores';
+    import { hashLS } from '../localStorageStore.js';
+    import { FAKE_CURSOR_BLINK_DELAY } from '../CONSTANTS.js';
 
 
     /*************
@@ -84,6 +84,12 @@
     }
 
 </script>
+
+
+<svelte:head>
+	<title>Bolivar Paralelo</title>
+</svelte:head>
+
 
 <nav class="navbar navbar-expand-lg navbar-dark">
     <a href="/" class="navbar-brand">Bolívar Paralelo</a>

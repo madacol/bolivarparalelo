@@ -1,7 +1,5 @@
 <script>
     import Rate from '../components/Rate.svelte';
-    import Modal from '../components/Modal.svelte';
-    import Form from '../components/Form.svelte';
     import { onMount } from 'svelte';
     import { fakeCursor } from '../stores';
     import { hashLS } from '../localStorageStore.js';

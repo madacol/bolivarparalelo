@@ -1,7 +1,4 @@
 <script>
-    import Chart from './Chart.svelte';
-    import Form from './Form.svelte';
-    import Modal from './Modal.svelte';
     import CurrencyAmount from './CurrencyAmount.svelte';
     import getHumanRate from '../helpers/getHumanRate.js';
     import { fakeCursor } from '../stores.js';

@@ -2,13 +2,21 @@
     import { tick } from 'svelte';
     import { slide } from 'svelte/transition';
     import Chart from './Chart.svelte';
-    import Form from './Form.svelte';
     import Modal from './Modal.svelte';
     import RateCalculator from './RateCalculator.svelte';
     import HiddenInputDate from './HiddenInputDate.svelte';
     import getHumanRate from '../helpers/getHumanRate.js'
     import { _1H_in_ms, _1D_in_ms, _1W_in_ms, SHOW_CONFIG } from '../CONSTANTS.js'
     import parseLocalDate from '../helpers/parseLocalDate.js'
+    /*********************************
+     * Dynamic import on client-side *
+     *********************************/
+    import { onMount } from 'svelte';
+    let Form;
+    onMount(async () => {
+        const module = await import('./Form.svelte');
+        Form = module.default;
+    });
 
     /*************
      * Constants *
@@ -245,7 +253,7 @@
         in:slide={{ delay: SETTINGS_BUTTON_DELAY, duration: SETTINGS_DELAY }}
         out:slide={{ duration: SETTINGS_DELAY }}
         >
-            <Form
+            <svelte:component this={Form}
                 {currencies}
                 bind:showBuySell
                 bind:showConfig

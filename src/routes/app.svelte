@@ -2,57 +2,19 @@
     import Rate from '../components/Rate.svelte';
     import { onMount } from 'svelte';
     import { fakeCursor } from '../stores';
-    import { hashLS } from '../localStorageStore.js';
     import { FAKE_CURSOR_BLINK_DELAY } from '../CONSTANTS.js';
 
 
-    /*************
-     * Constants *
-     *************/
-    const defaultHash = `ves,usd,1;ves,eur;ves,usd_0,160` // 160 = 24*7 (hours in a week)
-    const bitcoin_currency = {
-        id: 0,
-        code: "btc",
-        symbol: "₿",
-        name: "Bitcoin",
-        namePlural: "Bitcoins",
-    }
 
-
-    /*********
-     * Setup *
-     *********/
+    /************
+     * Tutorial *
+     ************/
     let isTutorial = false;
-    let intervalID;
-    let hash;
-    // Check if hash is empty
-    const isUsingHashUrl = !!window.location.hash
-    if (isUsingHashUrl) {
-        // Set hash to default
-        hash = window.location.hash.slice(1);
-    } else {
-        hash = $hashLS || defaultHash;
-        if (!$hashLS) enableTutorial(false);
-    }
-    let currencies = [];
-    let bitcoin_rate;
-    // Get rates from hash
-    let rateHashes = hash.split(';');
-    // Filter removed rates and update hash or Local Storage
-    $: if (isUsingHashUrl) {
-        window.location.hash = rateHashes.filter(x=>x).join(';');
-    } else {
-        $hashLS = rateHashes.filter(x=>x).join(';');
-    }
-
-    /******************
-     * Setup Tutorial *
-     ******************/
     $: bodyHandler = isTutorial ? disableTutorial : null;
     $: demoHandler = isTutorial ? disableTutorial : enableTutorial;
-
+    let intervalID;
     // Functions
-    function enableTutorial(fireImmediately=true) {
+    function enableTutorial() {
         intervalID = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
         isTutorial = true;
     }
@@ -63,19 +25,57 @@
     }
 
     /**************
-     * LifeCycles *
+     * Currencies *
      **************/
+    const bitcoin_currency = {
+        id: 0,
+        code: "btc",
+        symbol: "₿",
+        name: "Bitcoin",
+        namePlural: "Bitcoins",
+    }
+    let currencies = [];
     onMount(async () => {
         const response = await fetch('/api/currencies');
         currencies = [...(await response.json()), bitcoin_currency]
     })
+
+
+    /****************
+     * Bitcoin rate *
+     ****************/
+    let bitcoin_rate;
     onMount(async () => {
         const response = await fetch('/api/rate/usd/btc');
         bitcoin_rate = await response.json();
     })
 
+
+    /****************
+     * Rates layout *
+     ****************/
+    // Get rates from hash
+    const defaultHash = `ves,usd,1;ves,eur;ves,usd_0,160` // 160 = 24*7 (hours in a week)
+    let hash = defaultHash;
+    let isUsingHashUrl = false;
+    let hashLS;
+    onMount( async () => {
+        ({ hashLS } = await import('../localStorageStore.js'));
+
+        // Check if hash has info
+        isUsingHashUrl = !!window.location.hash
+        if (isUsingHashUrl)
+            hash = window.location.hash.slice(1);
+        else if ($hashLS)
+            hash = $hashLS;
+        else
+            enableTutorial();
+    })
+    $: rateHashes = hash.split(';');
+
+
     /************
-     * HANLDERS *
+     * Handlers *
      ************/
     function AddRate() {
         rateHashes = [...rateHashes, ','];

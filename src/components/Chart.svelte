@@ -1,5 +1,5 @@
 <script context="module">
-    moment.locale(navigator.language)
+    // moment.locale(navigator.language)
 </script>
 
 <script>

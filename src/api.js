@@ -36,7 +36,7 @@ const BITCOIN = {
 router.get('/rate/:counter_currency_code', async (req, res) => {
     const { counter_currency_code } = req.params;
     const counter = await getlastestRate(counter_currency_code);
-    if (!counter) return res.status(404).send(`Currency ${counter_currency_code} not found`);
+    if (!counter) return res.status(404).send(`Currency "${counter_currency_code}" not found`);
     const {currency, buy, sell, date} = counter;
     res.send({
         counter_currency: currency,
@@ -53,8 +53,8 @@ router.get('/rate/:counter_currency_code/:base_currency_code', async (req, res) 
     const basePromise = getlastestRate(base_currency_code);
     const counter = await counterPromise;
     const base = await basePromise;
-    if (!counter) return res.status(404).send(`Currency ${counter_currency_code} not found`);
-    if (!base)    return res.status(404).send(`Currency ${base_currency_code} not found`);
+    if (!counter) return res.status(404).send(`Currency "${counter_currency_code}" not found`);
+    if (!base)    return res.status(404).send(`Currency "${base_currency_code}" not found`);
     res.send({
         counter_currency: counter.currency,
         base_currency: base.currency,
@@ -104,7 +104,7 @@ router.get('/rate/:counter_currency_code/:base_currency_code/time/:start_str/:en
     if (base_currency_code !== 'btc') basePromise = getTimeRangeRates(base_currency_code, start, end);
 
     const counterCurrency = await counterPromise;
-    if (!counterCurrency) return res.status(404).send(`Currency ${counter_currency_code} not found`);
+    if (!counterCurrency) return res.status(404).send(`Currency "${counter_currency_code}" not found`);
     const counter_rates_hourstamped = {};
     counterCurrency.rates.forEach( rate => {
         const hourstamp = `${rate.date.toLocaleDateString()} ${rate.date.getHours()}`
@@ -120,7 +120,7 @@ router.get('/rate/:counter_currency_code/:base_currency_code/time/:start_str/:en
     }
 
     const baseCurrency = await basePromise;
-    if (!baseCurrency) return res.status(404).send(`Currency ${base_currency_code} not found`);
+    if (!baseCurrency) return res.status(404).send(`Currency "${base_currency_code}" not found`);
     const rates_hourstamped = {};
     baseCurrency.rates.forEach( base_btc => {
         const hourstamp = `${base_btc.date.toLocaleDateString()} ${base_btc.date.getHours()}`

@@ -1,10 +1,12 @@
 import express from 'express';
 import compression from 'compression';
+import morgan from 'morgan';
 import * as sapper from '@sapper/server';
 import api from './api';
 
 express() // You can also use Express
 	.use(
+		morgan('dev'),
 		compression(),
 		express.static('static'),
 	)

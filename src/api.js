@@ -17,12 +17,12 @@ async function getlastestRate(currency_code) {
             LIMIT 1',
         [currency_code]
     );
-    if (!rows[0]) return null;
+    if (rows.length === 0) return null;
     const {buy, sell, date, ...currency} = rows[0];
     return {
         currency,
-        buy,
-        sell,
+        buy: Number(buy),
+        sell: Number(sell),
         date
     }
 }
@@ -53,7 +53,6 @@ router.get('/rate/:counter_currency_code/:base_currency_code', async (req, res) 
     const basePromise = getlastestRate(base_currency_code);
     const counter = await counterPromise;
     const base = await basePromise;
-    console.log(counter, base)
     if (!counter) return res.status(404).send(`Currency ${counter_currency_code} not found`);
     if (!base)    return res.status(404).send(`Currency ${base_currency_code} not found`);
     res.send({
@@ -61,7 +60,7 @@ router.get('/rate/:counter_currency_code/:base_currency_code', async (req, res) 
         base_currency: base.currency,
         buy: counter.buy / base.sell,
         sell: counter.sell / base.buy,
-        date: counter.date
+        date: new Date(Math.min(counter.date, base.date))
     });
 })
 

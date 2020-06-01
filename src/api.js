@@ -92,11 +92,13 @@ async function getTimeRangeRates(currency_code, start, end) {
 router.get('/rate/:counter_currency_code/:base_currency_code/time/:start_str/:end_str?', async (req, res) => {
     const { counter_currency_code, base_currency_code, start_str, end_str } = req.params;
     const start = new Date(Number(start_str) || start_str); // Try to cast to a number (unix time), if it fails fallback to string
+    if (isNaN(start.getTime())) return res.status(404).send(`Time string "${start_str}" could not be parsed`);
     const end = new Date(
         (end_str &&
             ( Number(end_str) || end_str ) // Try to cast to a number (unix time), if it fails fallback to string
         ) || (start.getTime() + 60*60*1000) // If no `end_str`, set `end` to 1 hour after `start`
     );
+    if (isNaN(end.getTime())) return res.status(404).send(`Time string "${end_str}" could not be parsed`);
     const counterPromise = getTimeRangeRates(counter_currency_code, start, end);
     let basePromise;
     if (base_currency_code !== 'btc') basePromise = getTimeRangeRates(base_currency_code, start, end);

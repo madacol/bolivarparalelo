@@ -51,7 +51,7 @@ router.get('/rate/:counter_currency_code/:base_currency_code?', async (req, res)
         base_currency: base.currency,
         buy: counter.buy / (isBaseBitcoin ? 1 : base.sell),
         sell: counter.sell / (isBaseBitcoin ? 1 : base.buy),
-        date: (isBaseBitcoin ? counter.date.getTime() : Math.min(counter.date.getTime(), base.date.getTime())),
+        unix_time: (isBaseBitcoin ? counter.date.getTime() : Math.min(counter.date.getTime(), base.date.getTime())),
     });
 })
 
@@ -102,7 +102,7 @@ router.get('/rate/:counter_currency_code/:base_currency_code/time/:start_str/:en
         counter_rates_hourstamped[hourstamp] = {
             buy: rate.buy,
             sell: rate.sell,
-            date: rate.date.getTime(),
+            unix_time: rate.date.getTime(),
         };
     })
 
@@ -124,7 +124,7 @@ router.get('/rate/:counter_currency_code/:base_currency_code/time/:start_str/:en
         rates_hourstamped[hourstamp] = {
             buy: counter_btc.buy / base_btc.sell,
             sell: counter_btc.sell / base_btc.buy,
-            date: counter_btc.date,
+            unix_time: counter_btc.unix_time,
         };
     })
 

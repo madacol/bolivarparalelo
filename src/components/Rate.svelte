@@ -125,7 +125,6 @@
             if (daysLeft > 0) time_strings.push(`${daysLeft} dia${   (daysLeft > 1) ? 's' : ''}`);
             if (hours    > 0) time_strings.push(`${hours   } hora${  (hours    > 1) ? 's' : ''}`);
             if (minutes  > 0) time_strings.push(`${minutes } minuto${(minutes  > 1) ? 's' : ''}`);
-
             return time_strings.join(", ");
         }
     }
@@ -138,30 +137,29 @@
         const url = getQueryUrl(counter_code, base_code, start_unix_time, end_unix_time);
         const response = await fetch(url);
         const json = await response.json();
-        counter_currency = json.counter_currency;
-        base_currency = json.base_currency;
+        ({counter_currency, base_currency} = json);
         if (!start_unix_time) {
-            updated_time = getHumanTime(Date.now() - json.unix_time_ms)
+            const {buy, sell, unix_time} = json;
+            updated_time = getHumanTime(Date.now() - unix_time);
             return {
-                avg: parseFloat(json.avg),
-                buy: parseFloat(json.buy),
-                sell: parseFloat(json.sell)
+                avg: (buy + sell)/2,
+                buy,
+                sell,
             };
         }
         const rates = Object.values(json.rates)
-        if (rates.length === 1) updated_time = getHumanTime(Date.now() - rates[0].unix_time_ms);
+        if (rates.length === 1) updated_time = getHumanTime(Date.now() - rates[0].unix_time);
         const chart_data = [];
         let sumAvg = 0;
         let sumBuy = 0;
         let sumSell = 0;
-        rates.forEach(rate => {
-            const avg = parseFloat( rate.avg )
+        rates.forEach( ({buy, sell, unix_time}) => {
+            const avg = (buy + sell)/2;
             sumAvg += avg;
-            sumBuy += parseFloat( rate.buy );
-            sumSell += parseFloat( rate.sell );
-            const timestamp = rate.unix_time_ms;
+            sumBuy += buy;
+            sumSell += sell;
             chart_data.push ({
-                x: timestamp,
+                x: unix_time,
                 y: avg.toFixed(2),
             });
         })

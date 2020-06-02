@@ -33,34 +33,25 @@ const BITCOIN = {
     name: 'Bitcoin',
     namePlural: 'Bitcoins'
 }
-router.get('/rate/:counter_currency_code', async (req, res) => {
-    const { counter_currency_code } = req.params;
-    const counter = await getlastestRate(counter_currency_code);
-    if (!counter) return res.status(404).send(`Currency "${counter_currency_code}" not found`);
-    const {currency, buy, sell, date} = counter;
-    res.send({
-        counter_currency: currency,
-        base_currency: BITCOIN,
-        buy,
-        sell,
-        date
-    });
-})
 
-router.get('/rate/:counter_currency_code/:base_currency_code', async (req, res) => {
+router.get('/rate/:counter_currency_code/:base_currency_code?', async (req, res) => {
     const { counter_currency_code, base_currency_code } = req.params;
     const counterPromise = getlastestRate(counter_currency_code);
-    const basePromise = getlastestRate(base_currency_code);
+    const isBaseBitcoin = !base_currency_code || (base_currency_code === 'btc');
+    let base;
+    if (isBaseBitcoin)
+        base = {currency: BITCOIN};
+    else
+        base = await getlastestRate(base_currency_code);
     const counter = await counterPromise;
-    const base = await basePromise;
     if (!counter) return res.status(404).send(`Currency "${counter_currency_code}" not found`);
     if (!base)    return res.status(404).send(`Currency "${base_currency_code}" not found`);
     res.send({
         counter_currency: counter.currency,
         base_currency: base.currency,
-        buy: counter.buy / base.sell,
-        sell: counter.sell / base.buy,
-        date: new Date(Math.min(counter.date, base.date))
+        buy: counter.buy / (isBaseBitcoin ? 1 : base.sell),
+        sell: counter.sell / (isBaseBitcoin ? 1 : base.buy),
+        date: (isBaseBitcoin ? counter.date.getTime() : Math.min(counter.date.getTime(), base.date.getTime())),
     });
 })
 
@@ -108,7 +99,11 @@ router.get('/rate/:counter_currency_code/:base_currency_code/time/:start_str/:en
     const counter_rates_hourstamped = {};
     counterCurrency.rates.forEach( rate => {
         const hourstamp = `${rate.date.toLocaleDateString()} ${rate.date.getHours()}`
-        counter_rates_hourstamped[hourstamp] = rate;
+        counter_rates_hourstamped[hourstamp] = {
+            buy: rate.buy,
+            sell: rate.sell,
+            date: rate.date.getTime(),
+        };
     })
 
     if ((base_currency_code === 'btc')) {
@@ -129,7 +124,7 @@ router.get('/rate/:counter_currency_code/:base_currency_code/time/:start_str/:en
         rates_hourstamped[hourstamp] = {
             buy: counter_btc.buy / base_btc.sell,
             sell: counter_btc.sell / base_btc.buy,
-            date: counter_btc.date
+            date: counter_btc.date,
         };
     })
 

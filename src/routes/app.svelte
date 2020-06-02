@@ -1,9 +1,62 @@
+<script context="module">
+
+
+    /**************
+     * Currencies *
+     **************/
+    async function getCurrencies() {
+        const BITCOIN_CURRENCY = {
+            id: 0,
+            code: "btc",
+            symbol: "₿",
+            name: "Bitcoin",
+            namePlural: "Bitcoins",
+        }
+        const response = await this.fetch('/api/currencies');
+        const currencies = await response.json();
+        currencies.push(BITCOIN_CURRENCY);
+
+        return currencies;
+    }
+
+
+    /****************
+     * Bitcoin rate *
+     ****************/
+    async function getBitcoinRate() {
+        const response = await this.fetch('/api/rate/usd/btc');
+        const bitcoin_rate = await response.json();
+        bitcoin_rate.avg = (bitcoin_rate.buy + bitcoin_rate.sell) / 2
+
+        return bitcoin_rate;
+    }
+
+    /**
+     * Preload `bitcoin_rate` and `currencies`
+     */
+    export async function preload(page, session) {
+        const { slug } = page.params;
+
+        return {
+            bitcoin_rate: await getBitcoinRate.apply(this),
+            currencies: await getCurrencies.apply(this),
+        };
+    }
+</script>
+
+
 <script>
     import Rate from '../components/Rate.svelte';
     import { onMount } from 'svelte';
     import { fakeCursor } from '../stores';
     import { FAKE_CURSOR_BLINK_DELAY } from '../CONSTANTS.js';
 
+
+    /*****************
+     * Initial Props *
+     *****************/
+    export let bitcoin_rate;
+    export let currencies;
 
 
     /************
@@ -23,32 +76,6 @@
         $fakeCursor = false;
         isTutorial = false;
     }
-
-    /**************
-     * Currencies *
-     **************/
-    const bitcoin_currency = {
-        id: 0,
-        code: "btc",
-        symbol: "₿",
-        name: "Bitcoin",
-        namePlural: "Bitcoins",
-    }
-    let currencies = [];
-    onMount(async () => {
-        const response = await fetch('/api/currencies');
-        currencies = [...(await response.json()), bitcoin_currency]
-    })
-
-
-    /****************
-     * Bitcoin rate *
-     ****************/
-    let bitcoin_rate;
-    onMount(async () => {
-        const response = await fetch('/api/rate/usd/btc');
-        bitcoin_rate = await response.json();
-    })
 
 
     /****************

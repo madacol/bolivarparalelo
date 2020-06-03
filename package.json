@@ -2,9 +2,12 @@
   "name": "bolivar-paralelo",
   "description": "An open source to way to get bolivar's exchange rate",
   "version": "1.0.0",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "dev": "sapper dev",
-    "build": "sapper build --legacy",
+    "build": "sapper build",
     "export": "sapper export --legacy",
     "start": "node __sapper__/build"
   },

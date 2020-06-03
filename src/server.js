@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import * as sapper from '@sapper/server';
 import api from './api';
 
-express() // You can also use Express
+const app = express()
 	.use(
 		morgan('dev'),
 		compression(),
@@ -20,3 +20,5 @@ express() // You can also use Express
 	.listen(process.env.PORT, err => {
 		if (err) console.log('error', err);
 	});
+
+export default app;

@@ -26,7 +26,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     equalizer (0.0.11)
     eventmachine (1.2.7)
-    geocoder (1.5.2)
+    geocoder (1.6.1)
     http (3.3.0)
       addressable (~> 2.3)
       http-cookie (~> 1.0)

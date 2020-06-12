@@ -49,8 +49,8 @@ router.get('/rate/:counter_currency_code/:base_currency_code?', async (req, res)
     res.send({
         counter_currency: counter.currency,
         base_currency: base.currency,
-        buy: counter.buy / (isBaseBitcoin ? 1 : base.sell),
-        sell: counter.sell / (isBaseBitcoin ? 1 : base.buy),
+        buy: (isBaseBitcoin ? counter.buy : counter.buy / base.sell),
+        sell: (isBaseBitcoin ? counter.sell : counter.sell / base.buy),
         unix_time: (isBaseBitcoin ? counter.date.getTime() : Math.min(counter.date.getTime(), base.date.getTime())),
     });
 })

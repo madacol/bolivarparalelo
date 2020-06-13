@@ -1,3 +1,12 @@
+<script context="module">
+    /*************
+     * Constants *
+     *************/
+    // Animation delays
+    const SETTINGS_DELAY = 300;
+    const SETTINGS_BUTTON_DELAY = 150;
+</script>
+
 <script>
     import { tick } from 'svelte';
     import { slide } from 'svelte/transition';
@@ -17,13 +26,6 @@
         const module = await import('./Form.svelte');
         Form = module.default;
     });
-
-    /*************
-     * Constants *
-     *************/
-    // Animation delays
-    const SETTINGS_DELAY = 300;
-    const SETTINGS_BUTTON_DELAY = 150;
 
 
     /*********

@@ -23,8 +23,7 @@
     import { onMount } from 'svelte';
     let Form;
     onMount(async () => {
-        const module = await import('./Form.svelte');
-        Form = module.default;
+        Form = (await import('./Form.svelte')).default;
     });
 
 

@@ -2,6 +2,7 @@
 
 ## easy
 - Share button, general and specific rate
+- Save to bookmark
 - Remove Demo button
 - Link to methodology
 ### Extra pain
@@ -26,6 +27,8 @@
 
 
 ## hard
+- Move DB https://aws.amazon.com/rds/aurora/serverless/
+- Implement Redis or cache for hot data <- maybe not, seems to cost as much as a DB
 - Move to netlify
 - Move back to NodeJS
 - Implement SSR or Sapper

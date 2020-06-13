@@ -35,11 +35,13 @@
      * Preload `bitcoin_rate` and `currencies`
      */
     export async function preload(page, session) {
+        const getBitcoinRatePromise = getBitcoinRate.apply(this)
+        const getCurrenciesPromise = getCurrencies.apply(this)
         const { slug } = page.params;
 
         return {
-            bitcoin_rate: await getBitcoinRate.apply(this),
-            currencies: await getCurrencies.apply(this),
+            bitcoin_rate: await getBitcoinRatePromise,
+            currencies: await getCurrenciesPromise,
         };
     }
 </script>

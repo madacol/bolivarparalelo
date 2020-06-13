@@ -7,7 +7,7 @@
     /*********
      * PROPS *
      *********/
-    export let rate;
+    export let rates;
     export let base_currency;
     export let counter_currency;
     export let showBuySell;
@@ -16,12 +16,12 @@
      * STATES *
      **********/
     let base_amount = 1;
-    let counter_amount = base_amount * rate.avg;
+    let counter_amount = base_amount * rates.avg;
     // Reactive Declarations
-    $: counter_buy_amount = getHumanRate(base_amount * rate.buy);
-    $: counter_sell_amount = getHumanRate(base_amount * rate.sell);
-    $: base_buy_amount = getHumanRate(counter_amount / rate.sell);
-    $: base_sell_amount = getHumanRate(counter_amount / rate.buy);
+    $: counter_buy_amount = getHumanRate(base_amount * rates.buy);
+    $: counter_sell_amount = getHumanRate(base_amount * rates.sell);
+    $: base_buy_amount = getHumanRate(counter_amount / rates.sell);
+    $: base_sell_amount = getHumanRate(counter_amount / rates.buy);
 
 
     /************
@@ -29,12 +29,12 @@
      ************/
     function handleCounterAmountChange (newAmount) {
         counter_amount = newAmount;
-        base_amount = counter_amount / rate.avg;
+        base_amount = counter_amount / rates.avg;
     }
 
     function handleBaseAmountChange (newAmount) {
         base_amount = newAmount;
-        counter_amount = base_amount * rate.avg;
+        counter_amount = base_amount * rates.avg;
     }
 
 </script>

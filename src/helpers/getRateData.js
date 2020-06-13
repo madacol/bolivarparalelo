@@ -68,6 +68,7 @@ async function getRateData (counter_code, base_code, start_unix_time=false, end_
             avg: (buy + sell)/2,
             buy,
             sell,
+            chartData: [],
             updated_time,
         };
     }
@@ -77,7 +78,7 @@ async function getRateData (counter_code, base_code, start_unix_time=false, end_
      */
     const rates = Object.values(json.rates)
     const updated_time = (rates.length === 1) && getHumanTime(Date.now() - rates[0].unix_time);
-    const chart_data = [];
+    const chartData = [];
     // Calculate averages of each rate
     let sumAvg = 0;
     let sumBuy = 0;
@@ -87,7 +88,7 @@ async function getRateData (counter_code, base_code, start_unix_time=false, end_
         sumAvg += avg;
         sumBuy += buy;
         sumSell += sell;
-        chart_data.push ({
+        chartData.push ({
             x: unix_time,
             y: avg.toFixed(2),
         });
@@ -96,7 +97,7 @@ async function getRateData (counter_code, base_code, start_unix_time=false, end_
         avg: sumAvg / rates.length,
         buy: sumBuy / rates.length,
         sell: sumSell / rates.length,
-        chart_data,
+        chartData,
         updated_time,
     };
 }

@@ -31,17 +31,50 @@
         return bitcoin_rate;
     }
 
+
+    /**********************
+     * Get Layout's Rates *
+     **********************/
+    import getRateData from '../helpers/getRateData.js'
+    import { _1H_in_ms, _1W_in_ms } from '../CONSTANTS.js'
+    import { decodeLayout } from '../helpers/layoutEncoding.js'
+    function getRates(layoutRaw) {
+        let layout, isTutorial;
+        if (layoutRaw) {
+            layout = decodeLayout(layoutRaw);
+            isTutorial = true
+        } else {
+            // Default layout
+            layout = [
+                {params: {counter_currency_code: "ves", base_currency_code: "usd"}, showType: 0, showBuySell: true},
+                {params: {counter_currency_code: "ves", base_currency_code: "eur"}, showType: 0, showBuySell: false},
+                {params: {counter_currency_code: "ves", base_currency_code: "usd", timeRange: {start: (Date.now()-_1W_in_ms), end: Date.now()}}, showType: 0, showBuySell: false},
+            ]
+        }
+        return Promise.all(
+            layout.map(
+                async rateLayout => {
+                    const {params: {counter_currency_code, base_currency_code, timeRange}} = rateLayout;
+                    let start, end;
+                    if (timeRange) ({start, end} = timeRange);
+                    const data = await getRateData.call(this, counter_currency_code, base_currency_code, start, end);
+                    return {...rateLayout, data};
+                }
+            )
+        )
+    }
+
     /**
      * Preload `bitcoin_rate` and `currencies`
      */
     export async function preload(page, session) {
         const getBitcoinRatePromise = getBitcoinRate.apply(this)
         const getCurrenciesPromise = getCurrencies.apply(this)
-        const { slug } = page.params;
-
+        const getRatesPromise = getRates.apply(this, session.layout)
         return {
             bitcoin_rate: await getBitcoinRatePromise,
             currencies: await getCurrenciesPromise,
+            ratesLayout: await getRatesPromise,
         };
     }
 </script>
@@ -54,17 +87,20 @@
     import { FAKE_CURSOR_BLINK_DELAY } from '../CONSTANTS.js';
 
 
+
     /*****************
      * Initial Props *
      *****************/
     export let bitcoin_rate;
     export let currencies;
+    export let ratesLayout;
+    export let isTutorial;
 
 
     /************
      * Tutorial *
      ************/
-    let isTutorial = false;
+    if (isTutorial) enableTutorial();
     $: bodyHandler = isTutorial ? disableTutorial : null;
     $: demoHandler = isTutorial ? disableTutorial : enableTutorial;
     let intervalID;
@@ -80,34 +116,13 @@
     }
 
 
-    /****************
-     * Rates layout *
-     ****************/
-    // Get rates from hash
-    const defaultHash = `ves,usd,1;ves,eur;ves,usd_0,160` // 160 = 24*7 (hours in a week)
-    let hash = defaultHash;
-    let isUsingHashUrl = false;
-    let hashLS;
-    onMount( async () => {
-        ({ hashLS } = await import('../localStorageStore.js'));
-
-        // Check if hash has info
-        isUsingHashUrl = !!window.location.hash
-        if (isUsingHashUrl)
-            hash = window.location.hash.slice(1);
-        else if ($hashLS)
-            hash = $hashLS;
-        else
-            enableTutorial();
-    })
-    $: rateHashes = hash.split(';');
 
 
     /************
      * Handlers *
      ************/
     function AddRate() {
-        rateHashes = [...rateHashes, ','];
+        ratesLayout = [...ratesLayout, null];
     }
 
 </script>
@@ -143,9 +158,9 @@
 
 
 <div id="body" on:click={bodyHandler} on:keydown={bodyHandler}>
-    {#each rateHashes as rateHash}
-        {#if rateHash}
-            <Rate bind:rateHash {currencies} />
+    {#each ratesLayout as rateLayout}
+        {#if rateLayout}
+            <Rate bind:rateLayout {currencies} />
         {/if}
     {/each}
     <div id="newRate">

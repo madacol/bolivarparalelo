@@ -8,14 +8,12 @@
 </script>
 
 <script>
-    import { tick } from 'svelte';
     import { slide } from 'svelte/transition';
     import Chart from './Chart.svelte';
-    import Modal from './Modal.svelte';
     import RateCalculator from './RateCalculator.svelte';
     import HiddenInputDate from './HiddenInputDate.svelte';
     import getHumanRate from '../helpers/getHumanRate.js'
-    import { _1H_in_ms, _1D_in_ms, _1W_in_ms, SHOW_CONFIG } from '../CONSTANTS.js'
+    import { _1D_in_ms, SHOW_CONFIG } from '../CONSTANTS.js'
     import parseLocalDate from '../helpers/parseLocalDate.js'
     /*********************************
      * Dynamic import on client-side *
@@ -30,159 +28,34 @@
     /*********
      * Props *
      *********/
-    export let rateHash;
+    export let rateLayout;
     export let currencies;
 
 
     /**********
      * States *
      **********/
-    let counter_currency = {};
-    let base_currency = {};
-    let chartData = [];
-    let updated_time = "";
+    let {params, showBuySell, showType, data} = rateLayout;
+    rateLayout.newParams = params;
+    $: ( {counter_currency_code, base_currency_code, timeRange} = params )
+    $: counter_currency = currencies.find( ({code}) => (code === counter_currency_code) );
+    $: base_currency = currencies.find( ({code}) => (code === base_currency_code) );
+    $: ( {chartData, updated_time, ...rates} = data )
+    $: ( {showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showType] )
     let showSettings = false;
     let rateContainerRef;
-
-    // Extract states from `rateHash`
-    let counter_currency_code, base_currency_code, showBuySell, showConfig, isTimeRangeEnabled, end_unix_time, start_unix_time;
-    { // Set initial values of previous states
-        const [configs, timeRangeConfigs] = rateHash.split('_');
-        [counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
-        const [start_hourRange_str, hourRange_str, showConfig_str] = (timeRangeConfigs || '').split(',');
-        isTimeRangeEnabled = (typeof timeRangeConfigs === "string") && timeRangeConfigs.length > 1;
-        let start_hourRange, hourRange;
-        if (isTimeRangeEnabled) {
-            start_hourRange = Number(start_hourRange_str);
-            hourRange = Number(hourRange_str);
-        }
-        if (Number.isInteger(start_hourRange) && Number.isInteger(hourRange)) {
-            end_unix_time = Date.now() - start_hourRange*_1H_in_ms;
-            start_unix_time = end_unix_time - hourRange*_1H_in_ms;
-        } else {
-            end_unix_time = Date.now();
-            start_unix_time = end_unix_time - _1W_in_ms;
-        }
-        showConfig = Number(showConfig_str) || 0;
-    }
-
-    // Reactive Declarations
-    $: counter_currency = {...counter_currency, code: counter_currency_code };
-    $: base_currency    = {...base_currency, code: base_currency_code };
-    let rate_Promise;
-    $: if (isTimeRangeEnabled) {
-        rate_Promise = fetchData(counter_currency_code, base_currency_code, start_unix_time, end_unix_time);
-    } else {
-        rate_Promise = fetchData(counter_currency_code, base_currency_code);
-    }
-    $: ({showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showConfig] || SHOW_CONFIG[0])
-
-    // Reactive Statements
-    $: { // Update `rateHash` whenever a parameter is changed
-        const allConfigs = [];
-        {
-            const configs = [counter_currency_code, base_currency_code];
-            if (showBuySell) configs.push(1);
-            allConfigs.push(configs.join(','));
-        }
-        if (isTimeRangeEnabled) {
-            const start_hourRange = Math.round((Date.now() - end_unix_time) / _1H_in_ms);
-            const hourRange = Math.round((end_unix_time - start_unix_time) / _1H_in_ms);
-            const timeRangeConfigs = [start_hourRange, hourRange];
-            if (showConfig > 0) timeRangeConfigs.push(showConfig);
-            allConfigs.push(timeRangeConfigs.join(','));
-        }
-        rateHash = allConfigs.join('_');
-    }
-
-
-    /*************
-     * Functions *
-     *************/
-
-    function getQueryUrl (counter_code, base_code, start_unix_time, end_unix_time) {
-        let url = `/api/rate/${counter_code.toLowerCase()}/${base_code.toLowerCase()}`
-        if (!start_unix_time)    return url
-
-        url += `/time/${start_unix_time}`;
-        if (!end_unix_time)    return url
-
-        url += `/${end_unix_time}`;
-        return url;
-    }
-
-    function getHumanTime(miliseconds) {
-        const seconds = Math.floor(miliseconds / 1000);
-        const minutesLeft = Math.floor(seconds / 60)
-        if (minutesLeft == 0) {
-            return `${seconds} segundos`;
-        } else {
-            const minutes = (minutesLeft % 60);
-            const hoursLeft = ((minutesLeft-minutes) / 60);
-            const hours = (hoursLeft % 24);
-            const daysLeft = ((hoursLeft-hours) / 24);
-
-            const time_strings = []
-            if (daysLeft > 0) time_strings.push(`${daysLeft} dia${   (daysLeft > 1) ? 's' : ''}`);
-            if (hours    > 0) time_strings.push(`${hours   } hora${  (hours    > 1) ? 's' : ''}`);
-            if (minutes  > 0) time_strings.push(`${minutes } minuto${(minutes  > 1) ? 's' : ''}`);
-            return time_strings.join(", ");
-        }
-    }
-
-    async function fetchData (counter_code, base_code, start_unix_time=false, end_unix_time=false) {
-        if (!counter_code || !base_code) {
-            openSettings();
-            throw new Error('no currencies selected')
-        }
-        const url = getQueryUrl(counter_code, base_code, start_unix_time, end_unix_time);
-        const response = await fetch(url);
-        const json = await response.json();
-        ({counter_currency, base_currency} = json);
-        if (!start_unix_time) {
-            const {buy, sell, unix_time} = json;
-            updated_time = getHumanTime(Date.now() - unix_time);
-            return {
-                avg: (buy + sell)/2,
-                buy,
-                sell,
-            };
-        }
-        const rates = Object.values(json.rates)
-        if (rates.length === 1) updated_time = getHumanTime(Date.now() - rates[0].unix_time);
-        const chart_data = [];
-        let sumAvg = 0;
-        let sumBuy = 0;
-        let sumSell = 0;
-        rates.forEach( ({buy, sell, unix_time}) => {
-            const avg = (buy + sell)/2;
-            sumAvg += avg;
-            sumBuy += buy;
-            sumSell += sell;
-            chart_data.push ({
-                x: unix_time,
-                y: avg.toFixed(2),
-            });
-        })
-        chartData = chart_data;
-        // search_text = e.target.value;
-        return {
-            avg: sumAvg / rates.length,
-            buy: sumBuy / rates.length,
-            sell: sumSell / rates.length
-        };
-    }
-
 
     /***********
      * Handlers *
      ***********/
-    function removeRate () { rateHash = null; }
+    function removeRate () { rateLayout = null; }
     function searchDate (e) {
-        start_unix_time = parseLocalDate(e.target.value);
-        end_unix_time = start_unix_time + _1D_in_ms;
-        isTimeRangeEnabled = true;
-        showConfig=2;
+        const start = parseLocalDate(e.target.value),
+        timeRange = {
+            start,
+            end: start + _1D_in_ms,
+        }
+        showType=2;
     }
     async function openSettings () {
         showSettings=true;
@@ -200,33 +73,32 @@
             <i on:click={removeRate} class="fas fa-times"/>
         </div>
         <div class="flex-grow">
-            {#await rate_Promise}
-                <!-- promise is pending -->
+            <!-- {#await rate_Promise}
                 <p>Cargando...</p>
-            {:then rate}
+            {:then rate} -->
                 <!-- promise was fulfilled -->
-                {#if !showGraph || !isTimeRangeEnabled || chartData.length <= 1 || showRateCalcWhenGraph}
-                    <RateCalculator {rate} {base_currency} {counter_currency} {showBuySell} />
-                    {#if updated_time}
-                        <div class="update-time">Hace {updated_time}</div>
-                    {/if}
+            {#if !showGraph || !timeRange || chartData.length <= 1 || showRateCalcWhenGraph}
+                <RateCalculator {rates} {base_currency} {counter_currency} {showBuySell} />
+                {#if updated_time}
+                    <div class="update-time">Hace {updated_time}</div>
                 {/if}
-                {#if isTimeRangeEnabled && showGraph && chartData.length > 1 }
-                    <div class="d-flex justify-content-between align-items-center mt-2" >
-                        <div class="flex-grow">
-                            <Chart {chartData}/>
-                        </div>
-                        <div class="d-flex justify-content-center align-items-center flex-column">
-                            <div class="chart-labels" style="margin-bottom: 1em">Promedio</div>
-                            <div class="chart-average"><strong>{getHumanRate(rate.avg)}</strong></div>
-                            <div>
-                                <div class="chart-labels">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
-                                <div class="chart-labels" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>
-                            </div>
+            {/if}
+            {#if timeRange && showGraph && chartData.length > 1 }
+                <div class="d-flex justify-content-between align-items-center mt-2" >
+                    <div class="flex-grow">
+                        <Chart {chartData}/>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center flex-column">
+                        <div class="chart-labels" style="margin-bottom: 1em">Promedio</div>
+                        <div class="chart-average"><strong>{getHumanRate(rates.avg)}</strong></div>
+                        <div>
+                            <div class="chart-labels">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
+                            <div class="chart-labels" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>
                         </div>
                     </div>
-                {/if}
-            {/await}
+                </div>
+            {/if}
+            <!-- {/await} -->
         </div>
         <div class="ml-3">
             <HiddenInputDate on:change={searchDate} >
@@ -255,12 +127,10 @@
             <svelte:component this={Form}
                 {currencies}
                 bind:showBuySell
-                bind:showConfig
-                bind:isTimeRangeEnabled
+                bind:showType
+                bind:timeRange
                 bind:counter_currency_code
                 bind:base_currency_code
-                bind:end_unix_time
-                bind:start_unix_time
             />
         </div>
     {/if}

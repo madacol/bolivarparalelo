@@ -66,16 +66,18 @@
     }
 
     /**
-     * Preload `bitcoin_rate` and `currencies`
+     * Preload props
      */
-    export async function preload(page, session) {
+    export async function preload(page, {layout, langs}) {
         const getBitcoinRatePromise = getBitcoinRate.apply(this)
         const getCurrenciesPromise = getCurrencies.apply(this)
-        const getRatesPromise = getRates.apply(this, session.layout)
+        const getRatesPromise = getRates.apply(this, layout)
         return {
             bitcoin_rate: await getBitcoinRatePromise,
             currencies: await getCurrenciesPromise,
             ratesLayout: await getRatesPromise,
+            isTutorial: false,
+            _lang: langs[0],
         };
     }
 </script>
@@ -84,7 +86,7 @@
 <script>
     import Rate from '../components/Rate.svelte';
     import { onMount } from 'svelte';
-    import { fakeCursor } from '../stores';
+    import { fakeCursor, lang } from '../stores';
     import { FAKE_CURSOR_BLINK_DELAY } from '../CONSTANTS.js';
 
 
@@ -96,7 +98,10 @@
     export let currencies;
     export let ratesLayout;
     export let isTutorial;
+    export let _lang;
 
+
+    if (_lang) $lang = _lang;
 
     /************
      * Tutorial *

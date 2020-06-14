@@ -16,6 +16,7 @@ app.use('/api', api)
 app.use(sapper.middleware({
 	session: (req, res) => ({
 		layout: req.query.layout || req.cookies.layout,
+		langs: req.acceptsLanguages(),
 	})
 }))
 app.listen(process.env.PORT, err => {

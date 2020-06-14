@@ -38,6 +38,7 @@
     import getRateData from '../helpers/getRateData.js'
     import { _1H_in_ms, _1W_in_ms } from '../CONSTANTS.js'
     import { decodeLayout } from '../helpers/layoutEncoding.js'
+    import getHumanRate from '../helpers/getHumanRate.js';
     function getRates(layoutRaw) {
         let layout, isTutorial;
         if (layoutRaw) {
@@ -173,7 +174,7 @@
 <nav class="navbar d-flex justify-content-between">
     <div></div>
     {#if bitcoin_rate}
-        <div id="bitcoin" class="navbar-brand">Bitcoin: {bitcoin_rate.avg} $</div>
+        <div id="bitcoin" class="navbar-brand">Bitcoin: {getHumanRate(bitcoin_rate.avg)} $</div>
     {/if}
     <div>
         <a href="https://twitter.com/bolivarparalel0">

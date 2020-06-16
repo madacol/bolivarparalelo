@@ -35,9 +35,9 @@
     /**********
      * States *
      **********/
-    let {params, showBuySell, showType, data} = rateLayout;
-    rateLayout.newParams = params;
+    let {params, config, data} = rateLayout;
     $: ( {counter_currency_code, base_currency_code, timeRange} = params )
+    $: ( {showBuySell, showType} = config )
     $: counter_currency = currencies.find( ({code}) => (code === counter_currency_code) );
     $: base_currency = currencies.find( ({code}) => (code === base_currency_code) );
     $: ( {chartData, updated_time, ...rates} = data )

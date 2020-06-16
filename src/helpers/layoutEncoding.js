@@ -17,9 +17,9 @@ const asciiToB64 = (typeof btoa === 'function') ? btoa : string => Buffer.from(s
  * NOTE: if example string is decoded again, `start` and `end` won't match since they are encoded as the number of hours in the past relative to current time
  * ```js
  *   [
- *      {params: {counter_currency_code: "ves", base_currency_code: "usd", timeRange: undefined}, showType: 0, showBuySell: true},
- *      {params: {counter_currency_code: "cop", base_currency_code: "btc", timeRange: undefined}, showType: 0, showBuySell: true},
- *      {params: {counter_currency_code: "usd", base_currency_code: "btc", timeRange: {start: 1591407769315, end: 1592012569315}}, showType: 0, showBuySell: false},
+ *      {params: {counter_currency_code: "ves", base_currency_code: "usd", timeRange: undefined}, config: {showType: 0, showBuySell: true}},
+ *      {params: {counter_currency_code: "cop", base_currency_code: "btc", timeRange: undefined}, config: {showType: 0, showBuySell: true}},
+ *      {params: {counter_currency_code: "usd", base_currency_code: "btc", timeRange: {start: 1591407769315, end: 1592012569315}}, config: {showType: 0, showBuySell: false}},
  *      {
  *          params: {
  *              counter_currency_code: "usd",
@@ -29,8 +29,10 @@ const asciiToB64 = (typeof btoa === 'function') ? btoa : string => Buffer.from(s
  *                  end: 1592012569315
  *              }
  *          },
- *          showType: 2,
- *          showBuySell: false
+ *          config: {
+ *              showType: 2,
+ *              showBuySell: false
+ *          }
  *      }
  *   ]
  * ```
@@ -63,8 +65,10 @@ export function decodeLayout(layoutString) {
                 base_currency_code,
                 timeRange,
             },
-            showType,
-            showBuySell: (showBuySell === '1'),
+            config: {
+                showType,
+                showBuySell: (showBuySell === '1'),
+            }
         };
 
         return rate;
@@ -81,7 +85,7 @@ export function decodeLayout(layoutString) {
 export function encodeLayout(layout) {
 
     const layoutStringList = layout.map(rate => {
-        const { params: {counter_currency_code, base_currency_code, timeRange}, showBuySell, showType } = rate;
+        const { params: {counter_currency_code, base_currency_code, timeRange}, config: {showBuySell, showType} } = rate;
 
         const allConfigs = [];
         {

@@ -1,4 +1,4 @@
-import { _1H_in_ms } from "../CONSTANTS";
+import { _1H_in_ms, _1W_in_ms } from "../CONSTANTS";
 
 /**
  * Normalize functions to encode/decode base64
@@ -38,6 +38,15 @@ const asciiToB64 = (typeof btoa === 'function') ? btoa : string => Buffer.from(s
  * ```
  */
 export function decodeLayout(layoutString) {
+
+    if (!layoutString) {
+        // Default layout
+        return [
+            {params: {counter_currency_code: "ves", base_currency_code: "usd"}, config: {showType: 0, showBuySell: true}},
+            {params: {counter_currency_code: "ves", base_currency_code: "eur"}, config: {showType: 0, showBuySell: false}},
+            {params: {counter_currency_code: "ves", base_currency_code: "usd", timeRange: {start: (Date.now()-_1W_in_ms), end: Date.now()}}, config: {showType: 0, showBuySell: false}},
+        ]
+    }
 
     const [version, base64String] = layoutString.split(/v(.+)/);
     const layout = b64ToAscii(base64String).split(';').map( rateString => {

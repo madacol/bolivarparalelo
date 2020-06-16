@@ -36,22 +36,11 @@
      * Get Layout's Rates *
      **********************/
     import getRateData from '../helpers/getRateData.js'
-    import { _1H_in_ms, _1W_in_ms } from '../CONSTANTS.js'
+    import { _1H_in_ms } from '../CONSTANTS.js'
     import { decodeLayout } from '../helpers/layoutEncoding.js'
     import getHumanRate from '../helpers/getHumanRate.js';
     function getRates(layoutRaw) {
-        let layout, isTutorial;
-        if (layoutRaw) {
-            layout = decodeLayout(layoutRaw);
-            isTutorial = true
-        } else {
-            // Default layout
-            layout = [
-                {params: {counter_currency_code: "ves", base_currency_code: "usd"}, showType: 0, showBuySell: true},
-                {params: {counter_currency_code: "ves", base_currency_code: "eur"}, showType: 0, showBuySell: false},
-                {params: {counter_currency_code: "ves", base_currency_code: "usd", timeRange: {start: (Date.now()-_1W_in_ms), end: Date.now()}}, showType: 0, showBuySell: false},
-            ]
-        }
+        const layout = decodeLayout(layoutRaw);
         return Promise.all(
             layout.map(
                 async rateLayout => {

@@ -65,7 +65,7 @@
             bitcoin_rate: await getBitcoinRatePromise,
             currencies: await getCurrenciesPromise,
             ratesLayout: await getRatesPromise,
-            isTutorial: false,
+            isTutorial: !layout,
             _lang: langs[0],
         };
     }
@@ -95,10 +95,10 @@
     /************
      * Tutorial *
      ************/
+    let intervalID;
     if (isTutorial) enableTutorial();
     $: bodyHandler = isTutorial ? disableTutorial : null;
     $: demoHandler = isTutorial ? disableTutorial : enableTutorial;
-    let intervalID;
     // Functions
     function enableTutorial() {
         intervalID = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);

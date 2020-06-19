@@ -108,8 +108,8 @@
 </script>
 
 <div class="rateform">
-    <div class="flags d-flex">
-        <div class="d-flex flex-column">
+    <div class="flags">
+        <div>
             {#each currencies as currency}
                 <label class="flag">
                     <input type="radio"
@@ -121,7 +121,7 @@
                 </label>
             {/each}
         </div>
-        <div class="d-flex flex-column">
+        <div>
             {#each currencies as currency}
                 {#if currency.code !== "btc"}
                     <label class="flag">
@@ -192,22 +192,37 @@
 
 <style>
     .flags {
+        display: flex;
         justify-content: space-around;
         padding-top: 0.5em;
     }
+    .flags > div {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        padding: 0 0.2em;
+        width: 50%;
+        max-width: 250px;
+    }
     .flag {
-        font-size: 35px;
-        margin: 0;
+        font-size: 30px;
         line-height: 0.9;
     }
     .flag > input {
         display: none
     }
-    .flag > input:checked + div{
-        font-size: 60px;
-    }
-    .flag > input:not(:checked) + div{
+    .flag > input + div{
+        padding: 6px;
         cursor: pointer;
+    }
+    .flag > input:checked + div{
+        font-size: 40px;
+        padding: 1px;
+        cursor: auto;
+    }
+    .flag:hover > input + div{
+        font-size: 40px;
+        padding: 1px;
     }
     hr {
         border-color: var(--gray1)

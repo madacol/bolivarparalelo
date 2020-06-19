@@ -113,7 +113,7 @@ export function encodeLayout(layout) {
             if (showType > 0) timeRangeConfigs.push(showType);
             allConfigs.push(timeRangeConfigs.join(','));
         }
-        rateString = allConfigs.join('_');
+        const rateString = allConfigs.join('_');
 
         return rateString;
     })

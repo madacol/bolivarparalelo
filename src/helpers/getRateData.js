@@ -52,10 +52,10 @@ function getHumanTime(miliseconds) {
  */
 async function getRateData (counter_code, base_code, start_unix_time=false, end_unix_time=false) {
 
-    const fetch = this.fetch || fetch;
+    const _fetch = (this && this.fetch) || fetch;
 
     const url = getQueryUrl(counter_code, base_code, start_unix_time, end_unix_time);
-    const response = await fetch(url);
+    const response = await _fetch(url);
     const json = await response.json();
 
     /**

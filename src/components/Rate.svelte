@@ -79,7 +79,7 @@
             else
                 data = await getRateData(counter_currency_code, base_currency_code);
             params = {...newParams};
-            dispatch('change');
+            setTimeout(() => dispatch('change'), 0);
         }
     }
 

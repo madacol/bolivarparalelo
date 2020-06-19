@@ -44,9 +44,7 @@
         return Promise.all(
             layout.map(
                 async rateLayout => {
-                    const {params: {counter_currency_code, base_currency_code, timeRange}} = rateLayout;
-                    let start, end;
-                    if (timeRange) ({start, end} = timeRange);
+                    const {params: {counter_currency_code, base_currency_code, start, end}} = rateLayout;
                     const data = await getRateData.call(this, counter_currency_code, base_currency_code, start, end);
                     return {...rateLayout, data};
                 }

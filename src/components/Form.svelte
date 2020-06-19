@@ -1,6 +1,6 @@
 <script context="module">
 	import { onMount } from 'svelte';
-    import { _1H_in_ms } from '../CONSTANTS.js'
+    import { _1H_in_ms, _1W_in_ms } from '../CONSTANTS.js'
     import parseLocalDate from '../helpers/parseLocalDate.js'
 
     /**
@@ -83,24 +83,24 @@
     /*********
      * Props *
      *********/
-    export let counter_currency_code;
-    export let base_currency_code;
-    export let end_unix_time;
-    export let start_unix_time;
+    export let newParams;
     export let currencies;
-    export let showBuySell=false;
-    export let showConfig=0;
-    export let isTimeRangeEnabled=false;
+    export let config;
 
 
     /**********
      * States *
      **********/
-    const end_input_value = unixTime_to_inputValue(end_unix_time);
-    const start_input_value = unixTime_to_inputValue(start_unix_time);
+    let end_input_value, start_input_value;
+    newParams.end = newParams.end || Date.now();
+    newParams.start = newParams.start || newParams.end - _1W_in_ms;
+    $: if (newParams.isTimeRange) {
+        end_input_value = unixTime_to_inputValue(newParams.end);
+        start_input_value = unixTime_to_inputValue(newParams.start);
+    }
 
-    function handleEndDate(e) { end_unix_time = inputValue_to_unixTime(e.target.value) }
-    function handleStartDate(e) { start_unix_time = inputValue_to_unixTime(e.target.value) }
+    function handleEndDate(e) { newParams.end = inputValue_to_unixTime(e.target.value) }
+    function handleStartDate(e) { newParams.start = inputValue_to_unixTime(e.target.value) }
 
 </script>
 
@@ -109,7 +109,10 @@
         <div class="d-flex flex-column">
             {#each currencies as currency}
                 <label class="flag">
-                    <input type="radio" bind:group={base_currency_code} value={currency.code}>
+                    <input type="radio"
+                        bind:group={newParams.base_currency_code}
+                        value={currency.code}
+                    >
                     <div>{currency.flag || currency.code.toUpperCase()}</div>
                 </label>
             {/each}
@@ -118,7 +121,10 @@
             {#each currencies as currency}
                 {#if currency.code !== "btc"}
                     <label class="flag">
-                        <input type="radio" bind:group={counter_currency_code} value={currency.code}>
+                        <input type="radio"
+                            bind:group={newParams.counter_currency_code}
+                            value={currency.code}
+                        >
                         <div>{currency.flag || currency.code.toUpperCase()}</div>
                     </label>
                 {/if}
@@ -128,22 +134,34 @@
     <hr>
     <CheckboxToggle
         label="Tasas de compra y venta:"
-        bind:checked={showBuySell}
+        bind:checked={config.showBuySell}
     />
     <hr>
     <div class="chooseTime">
         {#each CHOOSE_TIME as [value, label]}
             <RadioButton
+                bind:group={newParams.isTimeRange}
                 {label}
                 {value}
-                bind:group={isTimeRangeEnabled}
             />
         {/each}
     </div>
-    {#if isTimeRangeEnabled}
+    {#if newParams.isTimeRange}
         <div class="timeRange">
-            <label> Fecha Inicial: <input type={inputDateType} value={start_input_value} on:change={handleStartDate}> </label>
-            <label> Fecha Fin: <input type={inputDateType} value={end_input_value} on:change={handleEndDate}> </label>
+            <label> Fecha Inicial:
+                <input
+                    type={inputDateType}
+                    value={start_input_value}
+                    on:change={handleStartDate}
+                >
+            </label>
+            <label> Fecha Fin:
+                <input
+                    type={inputDateType}
+                    value={end_input_value}
+                    on:change={handleEndDate}
+                >
+            </label>
         </div>
         <hr>
         <div class="d-flex flex-column align-items-center">
@@ -153,7 +171,7 @@
                 {#each SHOW_CONFIG as {name},i}
                     <RadioButton
                         label={name}
-                        bind:group={showConfig}
+                        bind:group={config.showType}
                         value={i}
                     />
                 {/each}

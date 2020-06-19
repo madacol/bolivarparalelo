@@ -36,7 +36,7 @@
      * States *
      **********/
     let {params, config, data} = rateLayout;
-    $: ( {counter_currency_code, base_currency_code, timeRange} = params )
+    $: ( {counter_currency_code, base_currency_code, isTimeRange, start, end} = params )
     $: ( {showBuySell, showType} = config )
     $: counter_currency = currencies.find( ({code}) => (code === counter_currency_code) );
     $: base_currency = currencies.find( ({code}) => (code === base_currency_code) );
@@ -50,12 +50,11 @@
      ***********/
     function removeRate () { rateLayout = null; }
     function searchDate (e) {
-        const start = parseLocalDate(e.target.value),
-        timeRange = {
-            start,
-            end: start + _1D_in_ms,
-        }
-        showType=2;
+        const start = parseLocalDate(e.target.value);
+        newParams.isTimeRange = true;
+        newParams.start = start;
+        newParams.end = start + _1D_in_ms;
+        config.showType = 2;
     }
     async function openSettings () {
         showSettings=true;
@@ -77,13 +76,13 @@
                 <p>Cargando...</p>
             {:then rate} -->
                 <!-- promise was fulfilled -->
-            {#if !showGraph || !timeRange || chartData.length <= 1 || showRateCalcWhenGraph}
+            {#if !showGraph || !isTimeRange || chartData.length <= 1 || showRateCalcWhenGraph}
                 <RateCalculator {rates} {base_currency} {counter_currency} {showBuySell} />
                 {#if updated_time}
                     <div class="update-time">Hace {updated_time}</div>
                 {/if}
             {/if}
-            {#if timeRange && showGraph && chartData.length > 1 }
+            {#if isTimeRange && showGraph && chartData.length > 1 }
                 <div class="d-flex justify-content-between align-items-center mt-2" >
                     <div class="flex-grow">
                         <Chart {chartData}/>
@@ -126,11 +125,8 @@
         >
             <svelte:component this={Form}
                 {currencies}
-                bind:showBuySell
-                bind:showType
-                bind:timeRange
-                bind:counter_currency_code
-                bind:base_currency_code
+                bind:newParams
+                bind:config
             />
         </div>
     {/if}

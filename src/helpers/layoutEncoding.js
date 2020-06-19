@@ -17,17 +17,16 @@ const asciiToB64 = (typeof btoa === 'function') ? btoa : string => Buffer.from(s
  * NOTE: if example string is decoded again, `start` and `end` won't match since they are encoded as the number of hours in the past relative to current time
  * ```js
  *   [
- *      {params: {counter_currency_code: "ves", base_currency_code: "usd", timeRange: undefined}, config: {showType: 0, showBuySell: true}},
- *      {params: {counter_currency_code: "cop", base_currency_code: "btc", timeRange: undefined}, config: {showType: 0, showBuySell: true}},
- *      {params: {counter_currency_code: "usd", base_currency_code: "btc", timeRange: {start: 1591407769315, end: 1592012569315}}, config: {showType: 0, showBuySell: false}},
+ *      {params: {counter_currency_code: "ves", base_currency_code: "usd", isTimeRange: false, start: undefined, end: undefined}, config: {showType: 0, showBuySell: true}},
+ *      {params: {counter_currency_code: "cop", base_currency_code: "btc", isTimeRange: false, start: undefined, end: undefined}, config: {showType: 0, showBuySell: true}},
+ *      {params: {counter_currency_code: "usd", base_currency_code: "btc", isTimeRange: true, start: 1591407769315, end: 1592012569315}, config: {showType: 0, showBuySell: false}},
  *      {
  *          params: {
  *              counter_currency_code: "usd",
  *              base_currency_code: "btc",
- *              timeRange: {
- *                  start: 1591407769315,
- *                  end: 1592012569315
- *              }
+ *              isTimeRange: true,
+ *              start: 1591407769315,
+ *              end: 1592012569315
  *          },
  *          config: {
  *              showType: 2,
@@ -40,11 +39,13 @@ const asciiToB64 = (typeof btoa === 'function') ? btoa : string => Buffer.from(s
 export function decodeLayout(layoutString) {
 
     if (!layoutString) {
-        // Default layout
+        // Set default layout
+        const start = (Date.now()-_1W_in_ms);
+        const end = Date.now();
         return [
-            {params: {counter_currency_code: "ves", base_currency_code: "usd"}, config: {showType: 0, showBuySell: true}},
-            {params: {counter_currency_code: "ves", base_currency_code: "eur"}, config: {showType: 0, showBuySell: false}},
-            {params: {counter_currency_code: "ves", base_currency_code: "usd", timeRange: {start: (Date.now()-_1W_in_ms), end: Date.now()}}, config: {showType: 0, showBuySell: false}},
+            {params: {counter_currency_code: "ves", base_currency_code: "usd", isTimeRange: false}, config: {showType: 0, showBuySell: true}},
+            {params: {counter_currency_code: "ves", base_currency_code: "eur", isTimeRange: false}, config: {showType: 0, showBuySell: false}},
+            {params: {counter_currency_code: "ves", base_currency_code: "usd", isTimeRange: true, start, end}, config: {showType: 0, showBuySell: false}},
         ]
     }
 
@@ -53,18 +54,19 @@ export function decodeLayout(layoutString) {
         const [configs, timeRangeConfigs] = rateString.split('_');
         const [counter_currency_code, base_currency_code, showBuySell] = configs.split(',');
         const isTimeRangeEnabled = (typeof timeRangeConfigs === "string") && timeRangeConfigs.length > 1;
-        let timeRange, showType = 0;
+        let isTimeRange = false, start, end, showType = 0;
         if (isTimeRangeEnabled) {
             const [start_hourRange_str, hourRange_str, showType_str] = (timeRangeConfigs || '').split(',');
             const start_hourRange = Number(start_hourRange_str);
             const hourRange = Number(hourRange_str);
             if (Number.isInteger(start_hourRange) && Number.isInteger(hourRange)) {
-                const end = Date.now() - start_hourRange*_1H_in_ms;
-                const start = end - hourRange*_1H_in_ms;
-                timeRange = { start, end };
+                // time range is valid
+                isTimeRange = true;
+                end = Date.now() - start_hourRange*_1H_in_ms;
+                start = end - hourRange*_1H_in_ms;
                 if (showType_str) showType = Number(showType_str);
             } else {
-                console.error('timeRange is invalid');
+                console.error('time range is invalid');
                 console.error('timeRangeConfigs:', timeRangeConfigs)
             }
         }
@@ -72,7 +74,9 @@ export function decodeLayout(layoutString) {
             params: {
                 counter_currency_code,
                 base_currency_code,
-                timeRange,
+                isTimeRange,
+                end,
+                start,
             },
             config: {
                 showType,
@@ -94,7 +98,7 @@ export function decodeLayout(layoutString) {
 export function encodeLayout(layout) {
 
     const layoutStringList = layout.map(rate => {
-        const { params: {counter_currency_code, base_currency_code, timeRange}, config: {showBuySell, showType} } = rate;
+        const { params: {counter_currency_code, base_currency_code, isTimeRange, start, end}, config: {showBuySell, showType} } = rate;
 
         const allConfigs = [];
         {
@@ -102,8 +106,7 @@ export function encodeLayout(layout) {
             if (showBuySell) configs.push('1');
             allConfigs.push(configs.join(','));
         }
-        if (timeRange) {
-            const {start, end} = timeRange;
+        if (isTimeRange) {
             const start_hourRange = Math.round((Date.now() - end) / _1H_in_ms);
             const hourRange = Math.round((end - start) / _1H_in_ms);
             const timeRangeConfigs = [start_hourRange, hourRange];

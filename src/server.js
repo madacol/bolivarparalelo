@@ -7,7 +7,7 @@ import api from './api';
 
 const app = express();
 app.use(
-		morgan('dev'),
+	morgan('dev'),
 	compression(),
 	cookieParser(),
 	express.static('static'),
@@ -20,7 +20,7 @@ app.use(sapper.middleware({
 	})
 }))
 app.listen(process.env.PORT, err => {
-		if (err) console.log('error', err);
+	if (err) console.log('error', err);
 });
 
 export default app;

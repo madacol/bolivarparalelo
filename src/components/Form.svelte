@@ -78,6 +78,8 @@
     import CheckboxToggle from './CheckboxToggle.svelte'
     import RadioButton from './RadioButton.svelte'
     import { SHOW_CONFIG } from '../CONSTANTS.js'
+    import { createEventDispatcher, tick } from 'svelte';
+    const dispatch = createEventDispatcher();
 
 
     /*********
@@ -101,6 +103,7 @@
 
     function handleEndDate(e) { newParams.end = inputValue_to_unixTime(e.target.value) }
     function handleStartDate(e) { newParams.start = inputValue_to_unixTime(e.target.value) }
+    async function dispatchParamsChanged() { setTimeout(() => dispatch('paramsChange'), 0) }
 
 </script>
 
@@ -112,6 +115,7 @@
                     <input type="radio"
                         bind:group={newParams.base_currency_code}
                         value={currency.code}
+                        on:change={dispatchParamsChanged}
                     >
                     <div>{currency.flag || currency.code.toUpperCase()}</div>
                 </label>
@@ -124,6 +128,7 @@
                         <input type="radio"
                             bind:group={newParams.counter_currency_code}
                             value={currency.code}
+                            on:change={dispatchParamsChanged}
                         >
                         <div>{currency.flag || currency.code.toUpperCase()}</div>
                     </label>
@@ -133,6 +138,7 @@
     </div>
     <hr>
     <CheckboxToggle
+        on:change
         label="Tasas de compra y venta:"
         bind:checked={config.showBuySell}
     />
@@ -141,6 +147,7 @@
         {#each CHOOSE_TIME as [value, label]}
             <RadioButton
                 bind:group={newParams.isTimeRange}
+                on:change={dispatchParamsChanged}
                 {label}
                 {value}
             />
@@ -153,6 +160,7 @@
                     type={inputDateType}
                     value={start_input_value}
                     on:change={handleStartDate}
+                    on:change={dispatchParamsChanged}
                 >
             </label>
             <label> Fecha Fin:
@@ -160,6 +168,7 @@
                     type={inputDateType}
                     value={end_input_value}
                     on:change={handleEndDate}
+                    on:change={dispatchParamsChanged}
                 >
             </label>
         </div>
@@ -170,6 +179,7 @@
             <div class="d-flex justify-content-center">
                 {#each SHOW_CONFIG as {name},i}
                     <RadioButton
+                        on:change
                         label={name}
                         bind:group={config.showType}
                         value={i}

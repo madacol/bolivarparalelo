@@ -5,7 +5,7 @@
 </script>
 
 <label>
-    <input type="radio" bind:group {value}>
+    <input type="radio" on:change bind:group {value}>
     <span>{label}</span>
 </label>
 

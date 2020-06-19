@@ -6,7 +6,7 @@
 <label>
     {label}
     <div>
-        <input type="checkbox" bind:checked>
+        <input type="checkbox" bind:checked on:change>
         <span/>
     </div>
 </label>

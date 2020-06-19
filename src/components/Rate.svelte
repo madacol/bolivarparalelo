@@ -13,8 +13,11 @@
     import RateCalculator from './RateCalculator.svelte';
     import HiddenInputDate from './HiddenInputDate.svelte';
     import getHumanRate from '../helpers/getHumanRate.js'
+    import getRateData from '../helpers/getRateData.js'
     import { _1D_in_ms, SHOW_CONFIG } from '../CONSTANTS.js'
     import parseLocalDate from '../helpers/parseLocalDate.js'
+    import { createEventDispatcher } from 'svelte';
+    const dispatch = createEventDispatcher();
     /*********************************
      * Dynamic import on client-side *
      *********************************/
@@ -45,6 +48,42 @@
     let showSettings = false;
     let rateContainerRef;
 
+    /*******************
+     * Handle changes to params
+     *******************/
+    // Setup, copying `params` into `newParams`
+    let newParams = {...params};
+    let loading;
+    function hasParamsChanged(params, newParams) {
+        const {counter_currency_code, base_currency_code, isTimeRange, start, end} = params;
+        const {_counter_currency_code, _base_currency_code, _isTimeRange, _start, _end} = newParams;
+
+        if (counter_currency_code !== _counter_currency_code) return true
+        if (base_currency_code !== _base_currency_code) return true
+        if (isTimeRange !== _isTimeRange) return true
+        if (isTimeRange && _isTimeRange) {
+            if (start !== _start) return true
+            if (end !== _end) return true
+        }
+        return false
+    }
+    async function paramsChangeHandler() {
+        // TODO: cancel any pending request
+        console.log(newParams)
+        const paramsChanged = hasParamsChanged(params, newParams)
+        if (paramsChanged) {
+            loading = true;
+            const {counter_currency_code, base_currency_code, isTimeRange, start, end} = newParams;
+            if (isTimeRange)
+                data = await getRateData(counter_currency_code, base_currency_code, start, end);
+            else
+                data = await getRateData(counter_currency_code, base_currency_code);
+            params = {...newParams};
+            dispatch('change');
+        }
+    }
+
+
     /***********
      * Handlers *
      ***********/
@@ -55,6 +94,7 @@
         newParams.start = start;
         newParams.end = start + _1D_in_ms;
         config.showType = 2;
+        paramsChangeHandler()
     }
     async function openSettings () {
         showSettings=true;
@@ -127,6 +167,8 @@
                 {currencies}
                 bind:newParams
                 bind:config
+                on:change
+                on:paramsChange={paramsChangeHandler}
             />
         </div>
     {/if}

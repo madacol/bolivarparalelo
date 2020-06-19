@@ -100,8 +100,8 @@ router.get('/rate/:counter_currency_code/:base_currency_code/time/:start_str/:en
     counterCurrency.rates.forEach( rate => {
         const hourstamp = `${rate.date.toLocaleDateString()} ${rate.date.getHours()}`
         counter_rates_hourstamped[hourstamp] = {
-            buy: rate.buy,
-            sell: rate.sell,
+            buy: Number(rate.buy),
+            sell: Number(rate.sell),
             unix_time: rate.date.getTime(),
         };
     })

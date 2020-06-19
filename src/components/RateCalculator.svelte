@@ -16,7 +16,8 @@
      * STATES *
      **********/
     let base_amount = 1;
-    let counter_amount = base_amount * rates.avg;
+    const _base_amount = ()=>base_amount; // This is needed so that the next statement does not consider `base_amount` as a dependency
+    $: counter_amount = _base_amount() * rates.avg; // only re-run this when `rates.avg` changes
     // Reactive Declarations
     $: counter_buy_amount = getHumanRate(base_amount * rates.buy);
     $: counter_sell_amount = getHumanRate(base_amount * rates.sell);

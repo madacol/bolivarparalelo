@@ -28,7 +28,6 @@
         const parsedNumber = parseFloat(numberString);
         if (parsedNumber && parsedNumber !== amount) {
             handleAmountChange(parsedNumber);
-            e.target.value = numberString;
         }
 
         // Adapt input size to content

@@ -191,10 +191,12 @@
 </div>
 
 <style>
+    .rateform {
+        padding: 0.5em 0;
+    }
     .flags {
         display: flex;
         justify-content: space-around;
-        padding-top: 0.5em;
     }
     .flags > div {
         display: flex;

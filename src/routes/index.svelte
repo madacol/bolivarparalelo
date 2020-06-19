@@ -198,7 +198,7 @@
         overflow: auto;
         line-height: 1.15;
         padding: 1em;
-        font-size: calc(10px + 0.9vw);
+        font-size: calc(11px + 0.7vw);
     }
     #bitcoin {
         font-size: 1.2em;

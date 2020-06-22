@@ -15,7 +15,10 @@ app.use(
 app.use('/api', api)
 app.use(sapper.middleware({
 	session: (req, res) => ({
-		layout: req.query.layout || req.cookies.layout,
+		layouts: {
+			query: req.query.layout,
+			cookie: req.cookies.layout,
+		},
 		langs: req.acceptsLanguages(),
 	})
 }))

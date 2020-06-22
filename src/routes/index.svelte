@@ -55,16 +55,19 @@
     /**
      * Preload props
      */
-    export async function preload(page, {layout, langs}) {
-        const getBitcoinRatePromise = getBitcoinRate.apply(this)
-        const getCurrenciesPromise = getCurrencies.apply(this)
-        const getRatesPromise = getRates.apply(this, layout)
+    export async function preload(page, {layouts, langs}) {
+        const layout = layouts.query || layouts.cookie;
+        const persistLayout = !layouts.query;
+        const getBitcoinRatePromise = getBitcoinRate.call(this)
+        const getCurrenciesPromise = getCurrencies.call(this)
+        const getRatesPromise = getRates.call(this, layout)
         return {
             bitcoin_rate: await getBitcoinRatePromise,
             currencies: await getCurrenciesPromise,
             ratesLayout: await getRatesPromise,
             isTutorial: !layout,
             _lang: langs[0],
+            persistLayout,
         };
     }
 </script>
@@ -75,6 +78,7 @@
     import { onMount } from 'svelte';
     import { fakeCursor, lang } from '../stores';
     import { FAKE_CURSOR_BLINK_DELAY } from '../CONSTANTS.js';
+    import { encodeLayout } from '../helpers/layoutEncoding.js'
 
 
 
@@ -86,9 +90,11 @@
     export let ratesLayout;
     export let isTutorial;
     export let _lang;
+    export let persistLayout;
 
 
     if (_lang) $lang = _lang;
+
 
     /************
      * Tutorial *
@@ -109,6 +115,25 @@
     }
 
 
+    /***************
+     * Save Layout *
+     ***************/
+    let saveLayoutToCookie, saveLayoutToUrl;
+    $: saveLayout = persistLayout ? saveLayoutToCookie : saveLayoutToUrl;
+    $: if (saveLayout) saveLayout(ratesLayout)
+    onMount(async ()=>{
+        const Cookie = (await import('js-cookie')).default;
+        saveLayoutToCookie = async () => {
+            const layoutString = encodeLayout(ratesLayout);
+            Cookie.set('layout', layoutString, { expires: 365 });
+        }
+        saveLayoutToUrl = async () => {
+            const layoutString = encodeLayout(ratesLayout);
+            const url = window.location.pathname + '?layout=' + layoutString;
+            history.pushState(null, '', url);
+        }
+        if (persistLayout) saveLayoutToCookie();
+    })
 
 
     /************

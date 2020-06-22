@@ -46,22 +46,19 @@
     let showSettings = false;
     let rateContainerRef;
 
-    /*******************
-     * Handle changes to params
-     *******************/
+    /****************************
+     * Handle changes to params *
+     ****************************/
     // Setup, copying `params` into `newParams`
     let newParams = {...rateLayout.params};
     let loading;
     function hasParamsChanged(params, newParams) {
-        const {counter_currency_code, base_currency_code, isTimeRange, start, end} = params;
-        const {_counter_currency_code, _base_currency_code, _isTimeRange, _start, _end} = newParams;
-
-        if (counter_currency_code !== _counter_currency_code) return true
-        if (base_currency_code !== _base_currency_code) return true
-        if (isTimeRange !== _isTimeRange) return true
-        if (isTimeRange && _isTimeRange) {
-            if (start !== _start) return true
-            if (end !== _end) return true
+        if (params.counter_currency_code !== newParams.counter_currency_code) return true
+        if (params.base_currency_code !== newParams.base_currency_code) return true
+        if (params.isTimeRange !== newParams.isTimeRange) return true
+        if (params.isTimeRange && newParams.isTimeRange) {
+            if (params.start !== newParams.start) return true
+            if (params.end !== newParams.end) return true
         }
         return false
     }

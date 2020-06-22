@@ -11,7 +11,7 @@ const asciiToB64 = (typeof btoa === 'function') ? btoa : string => Buffer.from(s
 
 /**
  * Decodes a base64 string into a layout-config-object
- * @param {String} layoutString - A version+base64 string. E.g. `"1vdmVzLHVzZCwxO2NvcCxidGMsMTt1c2QsYnRjXzAsMTY4O3VzZCxidGNfMCwxNjgsMg=="`
+ * @param {String} layoutString - A version+base64 string. E.g. `"1vdmVzLHVzZCwxO2NvcCxidGMsMTt1c2QsYnRjXzAsMTY4O3VzZCxidGNfMCwxNjgsMg"`
  * 
  * @returns {Object} layout, E.g.
  * NOTE: if example string is decoded again, `start` and `end` won't match since they are encoded as the number of hours in the past relative to current time
@@ -117,7 +117,7 @@ export function encodeLayout(layout) {
 
         return rateString;
     })
-    const layoutString = asciiToB64(layoutStringList.join(';'));
+    const layoutString = asciiToB64(layoutStringList.join(';')).replaceAll('=','');
 
     return '1v'+layoutString;
 }

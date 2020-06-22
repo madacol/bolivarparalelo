@@ -117,7 +117,7 @@ export function encodeLayout(layout) {
 
         return rateString;
     })
-    const layoutString = asciiToB64(layoutStringList.join(';')).replaceAll('=','');
+    const layoutString = asciiToB64(layoutStringList.join(';')).split('=').join('');
 
     return '1v'+layoutString;
 }

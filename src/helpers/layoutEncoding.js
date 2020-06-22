@@ -97,8 +97,11 @@ export function decodeLayout(layoutString) {
  */
 export function encodeLayout(layout) {
 
-    const layoutStringList = layout.map(rate => {
+    let layoutStringList = layout.map(rate => {
         const { params: {counter_currency_code, base_currency_code, isTimeRange, start, end}, config: {showBuySell, showType} } = rate;
+
+        if (!counter_currency_code || !base_currency_code)
+            return null;    // Mark rate to be excluded
 
         const allConfigs = [];
         {
@@ -117,7 +120,11 @@ export function encodeLayout(layout) {
 
         return rateString;
     })
-    const layoutString = asciiToB64(layoutStringList.join(';')).split('=').join('');
+
+    const layoutString = asciiToB64(    // Convert to Base64
+        layoutStringList.filter(x=>x)   // Filter out invalid rates
+            .join(';')
+    ).split('=').join('');  // Remove trailing `=` characters due to conflicts with URL parameter encoding, and they are not needed for decoding correctly
 
     return '1v'+layoutString;
 }

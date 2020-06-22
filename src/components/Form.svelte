@@ -103,7 +103,7 @@
 
     function handleEndDate(e) { newParams.end = inputValue_to_unixTime(e.target.value) }
     function handleStartDate(e) { newParams.start = inputValue_to_unixTime(e.target.value) }
-    async function dispatchParamsChanged() { setTimeout(() => dispatch('paramsChange'), 0) }
+    async function dispatchParamsChanged() { dispatch('paramsChange') }
 
 </script>
 
@@ -138,9 +138,9 @@
     </div>
     <hr>
     <CheckboxToggle
+        bind:checked={config.showBuySell}
         on:change
         label="Tasas de compra y venta:"
-        bind:checked={config.showBuySell}
     />
     <hr>
     <div class="chooseTime">
@@ -179,9 +179,9 @@
             <div class="d-flex justify-content-center">
                 {#each SHOW_CONFIG as {name},i}
                     <RadioButton
+                        bind:group={config.showType}
                         on:change
                         label={name}
-                        bind:group={config.showType}
                         value={i}
                     />
                 {/each}

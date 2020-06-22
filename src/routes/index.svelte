@@ -120,7 +120,6 @@
      ***************/
     let saveLayoutToCookie, saveLayoutToUrl;
     $: saveLayout = persistLayout ? saveLayoutToCookie : saveLayoutToUrl;
-    $: if (saveLayout) saveLayout(ratesLayout)
     onMount(async ()=>{
         const Cookie = (await import('js-cookie')).default;
         saveLayoutToCookie = async () => {
@@ -178,7 +177,11 @@
 <div id="body" on:click={bodyHandler} on:keydown={bodyHandler}>
     {#each ratesLayout as rateLayout}
         {#if rateLayout}
-            <Rate bind:rateLayout {currencies} />
+            <Rate
+                bind:rateLayout
+                {currencies}
+                on:change={saveLayout}
+            />
         {/if}
     {/each}
     <div id="newRate">

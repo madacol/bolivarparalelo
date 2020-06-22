@@ -38,13 +38,11 @@
     /**********
      * States *
      **********/
-    let {params, config, data} = rateLayout;
-    $: ( {counter_currency_code, base_currency_code, isTimeRange, start, end} = params )
-    $: ( {showBuySell, showType} = config )
+    $: ( {counter_currency_code, base_currency_code, isTimeRange, start, end} = rateLayout.params )
     $: counter_currency = currencies.find( ({code}) => (code === counter_currency_code) );
     $: base_currency = currencies.find( ({code}) => (code === base_currency_code) );
-    $: ( {chartData, updated_time, ...rates} = data )
-    $: ( {showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[showType] )
+    $: ( {chartData, updated_time, ...rates} = rateLayout.data )
+    $: ( {showGraph, showRateCalcWhenGraph} = SHOW_CONFIG[rateLayout.config.showType] )
     let showSettings = false;
     let rateContainerRef;
 
@@ -52,7 +50,7 @@
      * Handle changes to params
      *******************/
     // Setup, copying `params` into `newParams`
-    let newParams = {...params};
+    let newParams = {...rateLayout.params};
     let loading;
     function hasParamsChanged(params, newParams) {
         const {counter_currency_code, base_currency_code, isTimeRange, start, end} = params;
@@ -70,16 +68,16 @@
     async function paramsChangeHandler() {
         // TODO: cancel any pending request
         console.log(newParams)
-        const paramsChanged = hasParamsChanged(params, newParams)
+        const paramsChanged = hasParamsChanged(rateLayout.params, newParams)
         if (paramsChanged) {
             loading = true;
             const {counter_currency_code, base_currency_code, isTimeRange, start, end} = newParams;
             if (isTimeRange)
-                data = await getRateData(counter_currency_code, base_currency_code, start, end);
+                rateLayout.data = await getRateData(counter_currency_code, base_currency_code, start, end);
             else
-                data = await getRateData(counter_currency_code, base_currency_code);
-            params = {...newParams};
-            setTimeout(() => dispatch('change'), 0);
+                rateLayout.data = await getRateData(counter_currency_code, base_currency_code);
+            rateLayout.params = {...newParams};
+            dispatch('change');
         }
     }
 
@@ -89,11 +87,10 @@
      ***********/
     function removeRate () { rateLayout = null; }
     function searchDate (e) {
-        const start = parseLocalDate(e.target.value);
         newParams.isTimeRange = true;
-        newParams.start = start;
+        newParams.start = parseLocalDate(e.target.value);
         newParams.end = start + _1D_in_ms;
-        config.showType = 2;
+        rateLayout.config.showType = 2;
         paramsChangeHandler()
     }
     async function openSettings () {
@@ -117,7 +114,7 @@
             {:then rate} -->
                 <!-- promise was fulfilled -->
             {#if !showGraph || !isTimeRange || chartData.length <= 1 || showRateCalcWhenGraph}
-                <RateCalculator {rates} {base_currency} {counter_currency} {showBuySell} />
+                <RateCalculator {rates} {base_currency} {counter_currency} showBuySell={rateLayout.config.showBuySell} />
                 {#if updated_time}
                     <div class="update-time">Hace {updated_time}</div>
                 {/if}
@@ -166,7 +163,7 @@
             <svelte:component this={Form}
                 {currencies}
                 bind:newParams
-                bind:config
+                bind:config={rateLayout.config}
                 on:change
                 on:paramsChange={paramsChangeHandler}
             />

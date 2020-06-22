@@ -5,6 +5,7 @@
 - Save to bookmark
 - Remove Demo button
 - Link to methodology
+- Describe how calculations are made
 ### Extra pain
 - Improve color contrasts (line-chart, buy-sell rates, backgrounds)
 - Refactor color variables to use **primary** **secondary** paradigm and the variants made by applying opacity

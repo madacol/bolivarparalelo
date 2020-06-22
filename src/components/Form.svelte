@@ -197,34 +197,36 @@
     .flags {
         display: flex;
         justify-content: space-around;
+        align-items: flex-start;
     }
     .flags > div {
         display: flex;
         justify-content: space-around;
         flex-wrap: wrap;
         padding: 0 0.2em;
-        width: 50%;
-        max-width: 250px;
+        width: 40%;
     }
     .flag {
-        font-size: 30px;
-        line-height: 0.9;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 2em;
+        width: 1.4em;
+        height: 1.4em;
     }
     .flag > input {
         display: none
     }
     .flag > input + div{
-        padding: 6px;
         cursor: pointer;
     }
     .flag > input:checked + div{
-        font-size: 40px;
-        padding: 1px;
+        font-size: 1.4em;
         cursor: auto;
     }
     .flag:hover > input + div{
-        font-size: 40px;
-        padding: 1px;
+        font-size: 1.4em;
     }
     hr {
         border-color: var(--gray1)

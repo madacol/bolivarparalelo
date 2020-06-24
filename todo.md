@@ -1,39 +1,38 @@
 # todo
 
+## MUST DO
+- Flags fallback rendering (using css?) https://github.com/lipis/flag-icon-css
+- Improve color contrasts (line-chart, buy-sell rates, backgrounds)
+- Add analytics for default and casual rates.
+- Show rate is loading
+- Link to or Describe how calculations are made
+- Move DB https://aws.amazon.com/rds/aurora/serverless/
+- Check rates inconsistency
+- Improve page rating - Chrome/lighthouse
+- Remove libraries from template or use them from a npm package
+
 ## easy
 - Share button, general and specific rate
 - Save to bookmark
 - Remove Demo button
-- Link to methodology
-- Describe how calculations are made
 ### Extra pain
-- Improve color contrasts (line-chart, buy-sell rates, backgrounds)
 - Refactor color variables to use **primary** **secondary** paradigm and the variants made by applying opacity
 - Pressing anywhere to cancel demo is not intuitive
 
 
 ## medium
-- Custom analytics for default and casual rates.
 - Export data
 - Add mobile gestures to open and close rate settings
-- Sustitute ratehashes with json zipped? [json-url](https://github.com/masotime/json-url)
-- Add analytics to API endpoints
-- Refactor
-- When a **Rate** is loaded, subsequent fetches should only show a tiny Loader, instead of unmounting current rate
+- Improve transitions for opening and closing `Form`
 ### Extra pain
-- Flags fallback rendering (using css?) https://github.com/lipis/flag-icon-css
 - Add translations
 - Create favicon.ico
 - Branding
 
 
 ## hard
-- Move DB https://aws.amazon.com/rds/aurora/serverless/
 - Implement Redis or cache for hot data <- maybe not, seems to cost as much as a DB
-- Move to netlify
 - Move back to NodeJS
-- Implement SSR or Sapper
-- Improve page rating - Chrome/lighthouse
 ### Extra pain
 - Sustitute moment.js and Chart.js with (Pancake | OWID)?
 - Improve UI to choose currencies (Maybe flags around a circle with selected flag in the middle https://stackoverflow.com/questions/12813573/position-icons-into-circle)
@@ -59,3 +58,8 @@
 - Add transition to collapsing elements
 - Set form dates with sensible defaults, specially for hours
 - Hide **what to show** when dates are null
+- Moved to Vercel --- Move to netlify
+- Sapper --- Implement SSR or Sapper
+- Had to do it anyway by implementing Sapper --- Refactor
+- Made a custom format and encoded in base64 --- Sustitute ratehashes with json zipped? [json-url](https://github.com/masotime/json-url)
+- N/A --- When a **Rate** is loaded, subsequent fetches should only show a tiny Loader, instead of unmounting current rate

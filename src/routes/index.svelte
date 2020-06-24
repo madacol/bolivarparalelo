@@ -124,7 +124,7 @@
         const Cookie = (await import('js-cookie')).default;
         saveLayoutToCookie = async () => {
             const layoutString = encodeLayout(ratesLayout);
-            Cookie.set('layout', layoutString, { expires: 365 });
+            Cookie.set('layout', layoutString, { expires: 365, sameSite: 'Strict' });
         }
         saveLayoutToUrl = async () => {
             const layoutString = encodeLayout(ratesLayout);

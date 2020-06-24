@@ -17,6 +17,7 @@ CURRENCY_FLAGS = {
   "aud" => "🇦🇺",
   "gbp" => "🇬🇧",
   "chf" => "🇨🇭",
+  "uyu" => "🇺🇾",
 }
 
 def getHumanRate(rate)

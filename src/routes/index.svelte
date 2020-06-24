@@ -107,6 +107,7 @@
     function enableTutorial() {
         intervalID = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
         isTutorial = true;
+        setTimeout(disableTutorial, 5000)
     }
     function disableTutorial() {
         clearInterval(intervalID);

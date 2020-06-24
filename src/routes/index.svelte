@@ -101,7 +101,7 @@
      ************/
     let intervalID;
     if (isTutorial) enableTutorial();
-    $: bodyHandler = isTutorial ? disableTutorial : null;
+    $: appHandler = isTutorial ? disableTutorial : null;
     $: demoHandler = isTutorial ? disableTutorial : enableTutorial;
     // Functions
     function enableTutorial() {
@@ -154,62 +154,64 @@
 	<title>Bolivar Paralelo</title>
 </svelte:head>
 
-
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <a href="/" class="navbar-brand">Bolívar Paralelo</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <span on:click={demoHandler}>
-                {#if isTutorial}
-                    Cancelar demo
-                {:else}
-                    Demo
-                {/if}
-            </span>
-        </li>
-        <div class="border"></div>
-        <li class="nav-item">
-            <a href="/classic">Ver versión clásica</a>
-        </li>
-    </ul>
-</nav>
-
-
-<div id="body" on:click={bodyHandler} on:keydown={bodyHandler}>
-    {#each ratesLayout as rateLayout}
-        {#if rateLayout}
-            <Rate
-                bind:rateLayout
-                {currencies}
-                on:change={saveLayout}
-            />
-        {/if}
-    {/each}
-    <div id="newRate">
-        <button on:click={AddRate}>
-            Agregar Tasa o Gráfico
+<main on:click={appHandler} on:keydown={appHandler}>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a href="/" class="navbar-brand">Bolívar Paralelo</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
         </button>
-    </div>
-</div>
+        <div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <span on:click={demoHandler}>
+                    {#if isTutorial}
+                        Cancelar demo
+                    {:else}
+                        Demo
+                    {/if}
+                </span>
+            </li>
+            <div class="border"></div>
+            <li class="nav-item">
+                <a href="/classic">Ver versión clásica</a>
+            </li>
+        </ul>
+    </nav>
 
-<nav class="navbar d-flex justify-content-between">
-    <div></div>
-    {#if bitcoin_rate}
-        <div id="bitcoin" class="navbar-brand">Bitcoin: {getHumanRate(bitcoin_rate.avg)} $</div>
-    {/if}
-    <div>
-        <a href="https://twitter.com/bolivarparalel0">
-            <img alt="twitter icon" src="/icons/Twitter_Social_Icon_Circle_White.png" width="40" height="40">
-        </a>
-        <a href="https://github.com/madacol/bolivarparalelo">
-            <img alt="github icon" src="/icons/GitHub-Mark-Light-64px.png" width="40" height="40">
-        </a>
+
+    <div id="body">
+        {#each ratesLayout as rateLayout}
+            {#if rateLayout}
+                <Rate
+                    bind:rateLayout
+                    {currencies}
+                    on:change={saveLayout}
+                />
+            {/if}
+        {/each}
+        <div id="newRate">
+            <button on:click={AddRate}>
+                Agregar Tasa o Gráfico
+            </button>
+        </div>
     </div>
-</nav>
+
+    <nav class="navbar d-flex justify-content-between">
+        <div></div>
+        {#if bitcoin_rate}
+            <div id="bitcoin" class="navbar-brand">Bitcoin: {getHumanRate(bitcoin_rate.avg)} $</div>
+        {/if}
+        <div>
+            <a href="https://twitter.com/bolivarparalel0">
+                <img alt="twitter icon" src="/icons/Twitter_Social_Icon_Circle_White.png" width="40" height="40">
+            </a>
+            <a href="https://github.com/madacol/bolivarparalelo">
+                <img alt="github icon" src="/icons/GitHub-Mark-Light-64px.png" width="40" height="40">
+            </a>
+        </div>
+    </nav>
+</main>
+
 
 <style>
     nav{

@@ -98,10 +98,11 @@ export function decodeLayout(layoutString) {
 export function encodeLayout(layout) {
 
     let layoutStringList = layout.map(rate => {
+        if (!rate) return null;     // Mark rate to be excluded
+
         const { params: {counter_currency_code, base_currency_code, isTimeRange, start, end}, config: {showBuySell, showType} } = rate;
 
-        if (!counter_currency_code || !base_currency_code)
-            return null;    // Mark rate to be excluded
+        if (!counter_currency_code || !base_currency_code) return null;    // Mark rate to be excluded
 
         const allConfigs = [];
         {

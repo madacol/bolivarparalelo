@@ -133,13 +133,18 @@
         }
         if (persistLayout) saveLayoutToCookie();
     })
+    $: ratesLayout = ratesLayout.filter(x=>x)   // remove `null` items
 
 
-    /************
-     * Handlers *
-     ************/
+    /****************
+     * Add new rate *
+     ****************/
+    const NEW_RATE_JSON = JSON.stringify({
+        params: {isTimeRange: false},
+        config: {showType: 0, showBuySell: true},
+    })
     function AddRate() {
-        ratesLayout = [...ratesLayout, null];
+        ratesLayout = [...ratesLayout, JSON.parse(NEW_RATE_JSON)];
     }
 
 </script>

@@ -220,10 +220,13 @@
     }
     .flag > input + div{
         cursor: pointer;
+        opacity: 50%;
     }
     .flag > input:checked + div{
         font-size: 1.4em;
         cursor: auto;
+        opacity: 100%;
+        z-index: 1;
     }
     .flag:hover > input + div{
         font-size: 1.4em;

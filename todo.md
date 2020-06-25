@@ -2,14 +2,13 @@
 
 ## MUST DO
 - Flags fallback rendering (using css?) https://github.com/lipis/flag-icon-css
-- Improve color contrasts (line-chart, buy-sell rates, backgrounds)
-- Add analytics for default and casual rates.
-- Show rate is loading
-- Link to or Describe how calculations are made
+- Color contrasts (line-chart, buy-sell rates, backgrounds)
+- Analytics for default and casual rates.
+- Loader: Show rate is loading
+- Methodology: Link to or Describe how calculations are made
 - Move DB https://aws.amazon.com/rds/aurora/serverless/
-- Check rates inconsistency
+- Heavy libraries: Remove libraries from template or use them from a npm package (https://css.gg/search - https://github.com/astrit/css.gg#get-started)
 - Improve page rating - Chrome/lighthouse
-- Remove libraries from template or use them from a npm package
 
 ## easy
 - Share button, general and specific rate
@@ -63,3 +62,4 @@
 - Had to do it anyway by implementing Sapper --- Refactor
 - Made a custom format and encoded in base64 --- Sustitute ratehashes with json zipped? [json-url](https://github.com/masotime/json-url)
 - N/A --- When a **Rate** is loaded, subsequent fetches should only show a tiny Loader, instead of unmounting current rate
+- Check rates inconsistency - There was no inconsistency. Turns out that a simple average is not a good middle point, but the **geometric mean** would be, but it wouldn't be intuitive for users `--_(:/)_--`

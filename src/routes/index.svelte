@@ -164,7 +164,7 @@
         <div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <span on:click={demoHandler}>
+                <span on:click|stopPropagation={demoHandler}>
                     {#if isTutorial}
                         Cancelar demo
                     {:else}

@@ -172,10 +172,7 @@
                     {/if}
                 </span>
             </li>
-            <div class="border"></div>
-            <li class="nav-item">
-                <a href="/classic">Ver versión clásica</a>
-            </li>
+            <!-- <div class="border"></div> -->
         </ul>
     </nav>
 

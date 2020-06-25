@@ -165,11 +165,7 @@
         <ul class="navbar-nav">
             <li class="nav-item">
                 <span on:click|stopPropagation={demoHandler}>
-                    {#if isTutorial}
-                        Cancelar demo
-                    {:else}
-                        Demo
-                    {/if}
+                    {isTutorial ? "Cancelar demo" : "Demo"}
                 </span>
             </li>
             <!-- <div class="border"></div> -->

@@ -1,19 +1,20 @@
 # todo
 
 ## MUST DO
-- Flags fallback rendering (using css?) https://github.com/lipis/flag-icon-css
 - Color contrasts (line-chart, buy-sell rates, backgrounds)
 - Analytics for default and casual rates.
 - Loader: Show rate is loading
 - Methodology: Link to or Describe how calculations are made
+- Get prices from NodeJs
 - Move DB https://aws.amazon.com/rds/aurora/serverless/
 - Heavy libraries: Remove libraries from template or use them from a npm package (https://css.gg/search - https://github.com/astrit/css.gg#get-started)
 - Improve page rating - Chrome/lighthouse
+- Remove Demo button
+
 
 ## easy
 - Share button, general and specific rate
 - Save to bookmark
-- Remove Demo button
 ### Extra pain
 - Refactor color variables to use **primary** **secondary** paradigm and the variants made by applying opacity
 - Pressing anywhere to cancel demo is not intuitive
@@ -23,6 +24,7 @@
 - Export data
 - Add mobile gestures to open and close rate settings
 - Improve transitions for opening and closing `Form`
+- Move back to NodeJS (Mostly Done)
 ### Extra pain
 - Add translations
 - Create favicon.ico
@@ -31,7 +33,6 @@
 
 ## hard
 - Implement Redis or cache for hot data <- maybe not, seems to cost as much as a DB
-- Move back to NodeJS
 ### Extra pain
 - Sustitute moment.js and Chart.js with (Pancake | OWID)?
 - Improve UI to choose currencies (Maybe flags around a circle with selected flag in the middle https://stackoverflow.com/questions/12813573/position-icons-into-circle)
@@ -63,3 +64,4 @@
 - Made a custom format and encoded in base64 --- Sustitute ratehashes with json zipped? [json-url](https://github.com/masotime/json-url)
 - N/A --- When a **Rate** is loaded, subsequent fetches should only show a tiny Loader, instead of unmounting current rate
 - Check rates inconsistency - There was no inconsistency. Turns out that a simple average is not a good middle point, but the **geometric mean** would be, but it wouldn't be intuitive for users `--_(:/)_--`
+- Flags fallback rendering (using css?) https://github.com/lipis/flag-icon-css

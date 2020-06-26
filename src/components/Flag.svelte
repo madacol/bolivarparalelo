@@ -15,7 +15,7 @@
     {#if currency.code === "btc"}
         <span>{currency.code.toUpperCase()}</span>
     {:else}
-        <img src={`/flags/${country_code}.svg`} alt={`${currency.flag}`}>
+        <img src={`/flags/${country_code}.svg`} alt={`${currency.code}`}>
     {/if}
     <!-- <div>{currency.flag || currency.code.toUpperCase()}</div> -->
 </label>

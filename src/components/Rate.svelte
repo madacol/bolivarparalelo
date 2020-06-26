@@ -64,7 +64,6 @@
         if (!newParams.counter_currency_code || !newParams.base_currency_code) return;
 
         // TODO: cancel any pending request
-        console.log(newParams)
         const paramsChanged = hasParamsChanged(params, newParams)
         if (paramsChanged) {
             const {counter_currency_code, base_currency_code, isTimeRange, start, end} = newParams;

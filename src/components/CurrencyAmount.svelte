@@ -15,6 +15,7 @@
 
     $: text = getHumanRate(amount)
     $: title = `compra: ${buyAmount}\n    venta: ${sellAmount}`
+    $: country_code = currency.code.substring(0,2);
 
     // $: attr_name = (amount === 1) ? "name" : "namePlural"
 
@@ -39,8 +40,14 @@
 
 <div class:reverseAlign class="currencyAmount d-flex flex-column flex-wrap" {title}>
     {#if currency}
-        <div class="currency d-flex">
-            <span class="flag">{@html `${currency.flag || `<strong>${currency.symbol.toUpperCase()}</strong>`}`}</span>
+        <div class="currency">
+            <span class="flag">
+                {#if currency.code === "btc"}
+                    <strong>{currency.symbol.toUpperCase()}</strong>
+                {:else}
+                    <img src={`/flags/${country_code}.svg`} alt={`${currency.flag}`}>
+                {/if}
+            </span>
             &nbsp;
             <span class="code">{currency.code.toUpperCase()}</span>
         </div>
@@ -80,6 +87,11 @@
     .currencyAmount.reverseAlign {
         align-items: flex-end !important;
     }
+    .currency {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.2em;
+    }
     .reverseAlign > .currency {
         flex-flow: row-reverse;
     }
@@ -88,7 +100,14 @@
         opacity: 70%;
     }
     .flag {
+        display: flex;
+        align-items: center;
         font-size: 1.2em;
+        width: 1.2em;
+    }
+    .flag > img{
+        width: 100%;
+        border-radius: 0.1em;
     }
     .buy-sell {
         height: 1.1em;

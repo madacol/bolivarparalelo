@@ -79,6 +79,7 @@
     import RadioButton from './RadioButton.svelte'
     import { SHOW_CONFIG } from '../CONSTANTS.js'
     import { createEventDispatcher, tick } from 'svelte';
+    import Flag from './Flag.svelte';
     const dispatch = createEventDispatcher();
 
 
@@ -111,27 +112,21 @@
     <div class="flags">
         <div>
             {#each currencies as currency}
-                <label class="flag">
-                    <input type="radio"
-                        bind:group={newParams.base_currency_code}
-                        value={currency.code}
-                        on:change={dispatchParamsChanged}
-                    >
-                    <div>{currency.flag || currency.code.toUpperCase()}</div>
-                </label>
+                <Flag
+                    bind:group={newParams.base_currency_code}
+                    on:change={dispatchParamsChanged}
+                    {currency}
+                />
             {/each}
         </div>
         <div>
             {#each currencies as currency}
                 {#if currency.code !== "btc"}
-                    <label class="flag">
-                        <input type="radio"
-                            bind:group={newParams.counter_currency_code}
-                            value={currency.code}
-                            on:change={dispatchParamsChanged}
-                        >
-                        <div>{currency.flag || currency.code.toUpperCase()}</div>
-                    </label>
+                    <Flag
+                        bind:group={newParams.counter_currency_code}
+                        on:change={dispatchParamsChanged}
+                        {currency}
+                    />
                 {/if}
             {/each}
         </div>
@@ -205,31 +200,6 @@
         flex-wrap: wrap;
         padding: 0 0.2em;
         width: 40%;
-    }
-    .flag {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-size: 2em;
-        width: 1.4em;
-        height: 1.4em;
-    }
-    .flag > input {
-        display: none
-    }
-    .flag > input + div{
-        cursor: pointer;
-        opacity: 50%;
-    }
-    .flag > input:checked + div{
-        font-size: 1.4em;
-        cursor: auto;
-        opacity: 100%;
-        z-index: 1;
-    }
-    .flag:hover > input + div{
-        font-size: 1.4em;
     }
     hr {
         border-color: var(--gray1)

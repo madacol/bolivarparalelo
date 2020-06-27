@@ -11,6 +11,7 @@
     import { slide } from 'svelte/transition';
     import HiddenInputDate from './HiddenInputDate.svelte';
     import RateData from './RateData.svelte';
+    import Loader from './Loader.svelte';
     import getRateData from '../helpers/getRateData.js'
     import { _1D_in_ms } from '../CONSTANTS.js'
     import parseLocalDate from '../helpers/parseLocalDate.js'
@@ -50,6 +51,7 @@
      ****************************/
     // Setup, copying `params` into `newParams`
     let newParams = {...params};
+    let isLoading;
     function hasParamsChanged(params, newParams) {
         if (params.counter_currency_code !== newParams.counter_currency_code) return true
         if (params.base_currency_code !== newParams.base_currency_code) return true
@@ -67,10 +69,12 @@
         const paramsChanged = hasParamsChanged(params, newParams)
         if (paramsChanged) {
             const {counter_currency_code, base_currency_code, isTimeRange, start, end} = newParams;
+            isLoading = true;
             if (isTimeRange)
                 data = await getRateData(counter_currency_code, base_currency_code, start, end);
             else
                 data = await getRateData(counter_currency_code, base_currency_code);
+            isLoading = false;
             params = {...newParams};
             rateLayout.params = params;
             dispatch('change');
@@ -95,6 +99,9 @@
 </script>
 
 <div bind:this={rateContainerRef} class="rateContainer" >
+    {#if isLoading}
+        <Loader/>
+    {/if}
     <div class="rate d-flex justify-content-center align-items-center">
         <div class="mr-3">
             <i on:click={removeRate} class="fas fa-times"/>
@@ -148,6 +155,7 @@
         border: 1px solid var(--gray3);
         border-radius: 1em;
         margin-bottom: 1em;
+        position: relative;
     }
     .rate {
         padding: 0.5em;

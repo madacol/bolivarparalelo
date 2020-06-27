@@ -1,15 +1,16 @@
 # todo
 
 ## MUST DO
-- Color contrasts (line-chart, buy-sell rates, backgrounds)
-- Analytics for default and casual rates.
-- Loader: Show rate is loading
-- Methodology: Link to or Describe how calculations are made
-- Get prices from NodeJs
+- Fix: vercel deploy
 - Move DB https://aws.amazon.com/rds/aurora/serverless/
 - Heavy libraries: Remove libraries from template or use them from a npm package (https://css.gg/search - https://github.com/astrit/css.gg#get-started)
+- Fix: Catch failures in fetch, e.g. like when date is in the future
+- Methodology: Link to or Describe how calculations are made
+- Analytics for default and casual rates.
 - Improve page rating - Chrome/lighthouse
+- Get prices from NodeJs
 - Remove Demo button
+- Color contrasts (line-chart, buy-sell rates, backgrounds)
 
 
 ## easy
@@ -65,3 +66,4 @@
 - N/A --- When a **Rate** is loaded, subsequent fetches should only show a tiny Loader, instead of unmounting current rate
 - Check rates inconsistency - There was no inconsistency. Turns out that a simple average is not a good middle point, but the **geometric mean** would be, but it wouldn't be intuitive for users `--_(:/)_--`
 - Flags fallback rendering (using css?) https://github.com/lipis/flag-icon-css
+- Loader: Show rate is loading

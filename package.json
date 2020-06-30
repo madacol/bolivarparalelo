@@ -12,15 +12,13 @@
     "start": "node __sapper__/build"
   },
   "dependencies": {
-    "compression": "^1.7.1",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "express-promise-router": "^3.0.3",
     "flag-icon-css": "^3.5.0",
     "js-cookie": "^2.2.1",
     "morgan": "^1.10.0",
-    "pg": "^8.2.1",
-    "sirv": "^0.4.0"
+    "pg": "^8.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

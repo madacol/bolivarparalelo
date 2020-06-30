@@ -5,6 +5,9 @@ import * as sapper from '@sapper/server';
 import api from './api';
 
 const app = express();
+if (process.env.NODE_ENV === 'development') {
+	app.use('/flags', express.static('node_modules/flag-icon-css/flags/4x3'))
+}
 app.use(
 	morgan('dev'),
 	cookieParser(),

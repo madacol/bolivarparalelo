@@ -12,6 +12,7 @@
     "start": "node __sapper__/build"
   },
   "dependencies": {
+    "chart.js": "^2.9.3",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "express-promise-router": "^3.0.3",

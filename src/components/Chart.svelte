@@ -3,6 +3,7 @@
 </script>
 
 <script>
+    import Chart from 'chart.js';
 
     export let chartData;
 
@@ -48,6 +49,7 @@
         // hack to keep height. For some reason after initialiazing chart, it forgets it.  --_(=/)_--
         canvas.height=height;
         canvas.style.height=`${height}px`;
+        canvas.style.width="100%";
 
         return {
             update(chartData) {

@@ -2,6 +2,7 @@
 
 ## MUST DO
 - Fix: vercel deploy
+- Fix: `HiddenInputDate` doesn't work in chrome anymore
 - Move DB https://aws.amazon.com/rds/aurora/serverless/
 - Heavy libraries: Remove libraries from template or use them from a npm package (https://css.gg/search - https://github.com/astrit/css.gg#get-started)
 - Fix: Catch failures in fetch, e.g. like when date is in the future

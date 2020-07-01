@@ -1,22 +1,24 @@
 # todo
 
 ## MUST DO
-- Fix: vercel deploy
-- Fix: `HiddenInputDate` doesn't work in chrome anymore
+- Serverless Function does not handle well a Pool connection https://vercel.com/guides/deploying-next-and-mysql-with-vercel#step-2:-set-up-your-project
 - Move DB https://aws.amazon.com/rds/aurora/serverless/
-- Heavy libraries: Remove libraries from template or use them from a npm package (https://css.gg/search - https://github.com/astrit/css.gg#get-started)
-- Fix: Catch failures in fetch, e.g. like when date is in the future
+- Fix: Catch failures in fetch, e.g. like when date is in the future or there is no data between those dates
 - Methodology: Link to or Describe how calculations are made
 - Analytics for default and casual rates.
 - Improve page rating - Chrome/lighthouse
 - Get prices from NodeJs
 - Remove Demo button
 - Color contrasts (line-chart, buy-sell rates, backgrounds)
-
+### Done
+- Heavy libraries: Remove libraries from template or use them from a npm package (https://css.gg/search - https://github.com/astrit/css.gg#get-started)
+- Fix: vercel deploy
+- Fix: `HiddenInputDate` doesn't work in chrome anymore
 
 ## easy
 - Share button, general and specific rate
 - Save to bookmark
+- Button to invert currencies position
 ### Extra pain
 - Refactor color variables to use **primary** **secondary** paradigm and the variants made by applying opacity
 - Pressing anywhere to cancel demo is not intuitive

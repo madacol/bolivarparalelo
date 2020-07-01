@@ -225,7 +225,7 @@
     nav .menu {
         display: flex;
         width: 100%;
-        justify-content: end;
+        justify-content: flex-end;
     }
     #body {
         display: flex;

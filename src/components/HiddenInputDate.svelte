@@ -22,8 +22,11 @@
     }
     input::-webkit-calendar-picker-indicator {
         position: absolute;
-        width: 100%;
-        height: 100%;
+        top: -150%;
+        left: -150%;
+        width: 300%;
+        height: 300%;
+        cursor: pointer;
     }
     input:hover + div > :global(*) {
         opacity: 100%;

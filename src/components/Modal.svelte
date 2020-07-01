@@ -41,7 +41,7 @@
 
 <div class="modal-background" on:click={close}></div>
 
-<modal role="dialog" aria-modal="true" bind:this={modal}>
+<div class="modal" role="dialog" aria-modal="true" bind:this={modal}>
     <div class="header">
         <slot name="header"></slot>
     </div>
@@ -52,7 +52,7 @@
     </div>
 
     <button class="closeButton" on:click={close}>Cerrar</button>
-</modal>
+</div>
 
 <style>
     .modal-background {
@@ -66,7 +66,7 @@
         visibility: visible;
     }
 
-    modal {
+    .modal {
         display: flex;
         flex-direction: column;
         position: absolute;

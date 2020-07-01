@@ -55,6 +55,7 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
+        margin-left: 0.5em;
     }
     .number {
         font-size: 1em;

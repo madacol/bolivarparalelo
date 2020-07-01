@@ -108,7 +108,7 @@
         font-size: 1.2em;
         width: 1.2em;
     }
-    .flag > img{
+    .flag > img {
         width: 100%;
         border-radius: 0.1em;
     }

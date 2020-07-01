@@ -10,9 +10,9 @@ const app = express();
 const dev = process.env.NODE_ENV === 'development';
 app.use(morgan(dev ? 'dev' : 'combined'))
 if (dev) {
-	app.use('/flags', express.static('node_modules/flag-icon-css/flags/4x3'))
-	app.use('/fa-icons', express.static('node_modules/@fortawesome/fontawesome-free/svgs/solid'))
-	app.use(express.static('static'))
+	app.use('/flags', express.static('node_modules/flag-icon-css/flags/4x3'));
+	app.use('/fa-icons', express.static('node_modules/@fortawesome/fontawesome-free/svgs/solid'));
+	app.use(express.static('static'));
 }
 app.use('/api', api);
 app.use(

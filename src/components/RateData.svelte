@@ -18,7 +18,7 @@
 </script>
 
 {#if !showGraph || !isTimeRange || chartData.length <= 1 || showRateCalcWhenGraph}
-    <RateCalculator {rates} {base_currency} {counter_currency} showBuySell={showBuySell} />
+    <RateCalculator {rates} {base_currency} {counter_currency} {showBuySell}/>
     {#if updated_time}
         <div class="update-time">Hace {updated_time}</div>
     {/if}

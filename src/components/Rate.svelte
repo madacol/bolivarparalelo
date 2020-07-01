@@ -104,7 +104,7 @@
     {/if}
     <div class="rate">
         <div class="left-buttons">
-            <i on:click={removeRate} class="fas fa-times"/>
+            <i on:click={removeRate} class="fas fa-times"></i>
         </div>
         <div class="flex-grow">
             {#if data}
@@ -113,7 +113,7 @@
         </div>
         <div class="right-buttons">
             <HiddenInputDate on:change={searchDateHandler} >
-                <i class="fas fa-search"/>
+                <i class="fas fa-search"></i>
             </HiddenInputDate>
         </div>
     </div>
@@ -122,14 +122,14 @@
         in:slide={{ delay: SETTINGS_DELAY, duration: SETTINGS_BUTTON_DELAY }}
         out:slide={{ duration: SETTINGS_BUTTON_DELAY }}
         >
-            <i class="fas fa-cog"/>
+            <i class="fas fa-cog"></i>
         </div>
     {:else}
         <div class="settingsButton" on:click={()=>showForm=false}
         in:slide={{ duration: SETTINGS_BUTTON_DELAY }}
         out:slide={{ delay: SETTINGS_DELAY, duration: SETTINGS_BUTTON_DELAY }}
         >
-            <i class="fas fa-angle-up"/>
+            <i class="fas fa-angle-up"></i>
         </div>
         <div class="settings borderRadiusBottom"
         in:slide={{ delay: SETTINGS_BUTTON_DELAY, duration: SETTINGS_DELAY }}

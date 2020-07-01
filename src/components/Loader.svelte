@@ -32,6 +32,7 @@
         background: rgba(0, 0, 0, 0.3);
         border-radius: 1em;
         z-index: 10;
+        pointer-events: none;
     }
     .lds-ring {
         display: inline-block;

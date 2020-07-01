@@ -3,3 +3,4 @@ node_modules
 /src/node_modules
 
 static/flags
+static/fa-icons

@@ -103,8 +103,8 @@
         <Loader/>
     {/if}
     <div class="rate">
-        <div class="left-buttons">
-            <i on:click={removeRate} class="fas fa-times"></i>
+        <div on:click={removeRate} class="left-buttons">
+            <img src="/fa-icons/times.svg" alt="Borrar">
         </div>
         <div class="flex-grow">
             {#if data}
@@ -113,7 +113,7 @@
         </div>
         <div class="right-buttons">
             <HiddenInputDate on:change={searchDateHandler} >
-                <i class="fas fa-search"></i>
+                <img src="/fa-icons/search.svg" alt="Buscar Fecha">
             </HiddenInputDate>
         </div>
     </div>
@@ -122,14 +122,14 @@
         in:slide={{ delay: SETTINGS_DELAY, duration: SETTINGS_BUTTON_DELAY }}
         out:slide={{ duration: SETTINGS_BUTTON_DELAY }}
         >
-            <i class="fas fa-cog"></i>
+            <img src="/fa-icons/cog.svg" alt="Opciones">
         </div>
     {:else}
         <div class="settingsButton" on:click={()=>showForm=false}
         in:slide={{ duration: SETTINGS_BUTTON_DELAY }}
         out:slide={{ delay: SETTINGS_DELAY, duration: SETTINGS_BUTTON_DELAY }}
         >
-            <i class="fas fa-angle-up"></i>
+            <img src="/fa-icons/angle-up.svg" alt="Cerrar">
         </div>
         <div class="settings borderRadiusBottom"
         in:slide={{ delay: SETTINGS_BUTTON_DELAY, duration: SETTINGS_DELAY }}
@@ -169,18 +169,27 @@
     .right-buttons {
         margin-left: 0.7em;
     }
-    i {
-        font-size: 1.2em;
+    img {
+        /* set color to white */
+        filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(241deg) brightness(103%) contrast(103%);
+        height: 2em;
         padding: 0.3em;
         opacity: 50%;
         cursor: pointer;
+        display: block;
     }
-    .settingsButton > i {
+    img:hover,
+    img:focus {
+        opacity: 100%;
+    }
+    .settingsButton > img {
         font-size: 0.9em;
+        display: inline-block;
     }
     .settingsButton {
         background-color: var(--gray3);
         cursor: pointer;
+        line-height: 0;
     }
     .settingsButton:hover,
     .settingsButton:focus {
@@ -192,9 +201,5 @@
     }
     .settings {
         background-color: var(--gray2)
-    }
-    i:hover,
-    i:focus {
-        opacity: 100%;
     }
 </style>

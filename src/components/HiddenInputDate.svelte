@@ -7,6 +7,7 @@
 
 <style>
     label {
+        display: block;
         position: relative;
     }
     input {

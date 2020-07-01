@@ -7,11 +7,12 @@
   },
   "scripts": {
     "dev": "sapper dev",
-    "build": "cp -R node_modules/flag-icon-css/flags/4x3 static/flags; sapper build",
+    "build": "cp -R node_modules/flag-icon-css/flags/4x3 static/flags; cp -R node_modules/@fortawesome/fontawesome-free/svgs/solid static/fa-icons; sapper build",
     "export": "sapper export --legacy",
     "start": "node __sapper__/build"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.1",
     "chart.js": "^2.9.3",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",

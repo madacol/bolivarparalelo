@@ -100,6 +100,7 @@
      * Tutorial *
      ************/
     let intervalID;
+    let timeoutID;
     if (isTutorial) enableTutorial();
     $: appHandler = isTutorial ? disableTutorial : null;
     $: demoHandler = isTutorial ? disableTutorial : enableTutorial;
@@ -107,10 +108,11 @@
     function enableTutorial() {
         intervalID = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
         isTutorial = true;
-        setTimeout(disableTutorial, 5000)
+        timeoutID = setTimeout(disableTutorial, 5000)
     }
     function disableTutorial() {
         clearInterval(intervalID);
+        clearTimeout(timeoutID);
         $fakeCursor = false;
         isTutorial = false;
     }

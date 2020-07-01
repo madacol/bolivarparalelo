@@ -40,7 +40,7 @@
 
 </script>
 
-<div class="rateCalculator d-flex justify-content-center align-items-end flex-wrap">
+<div class="rateCalculator">
 
     <CurrencyAmount
         reverseAlign={true}
@@ -68,6 +68,10 @@
 
 <style>
     .rateCalculator {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        flex-wrap: wrap;
         font-size: 0.9em;
         margin-bottom: 0.5em;
     }

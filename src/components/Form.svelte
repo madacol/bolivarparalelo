@@ -168,10 +168,10 @@
             </label>
         </div>
         <hr>
-        <div class="d-flex flex-column align-items-center">
+        <div class="show-config">
             <span>Qué mostrar:</span>
             <br>
-            <div class="d-flex justify-content-center">
+            <div>
                 {#each SHOW_CONFIG as {name},i}
                     <RadioButton
                         bind:group={config.showType}
@@ -213,5 +213,14 @@
     }
     .timeRange > label:first-child{
         margin-bottom: 0.5em
+    }
+    .show-config {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .show-config > div {
+        display: flex;
+        justify-content: center;
     }
 </style>

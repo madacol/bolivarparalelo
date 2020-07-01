@@ -38,7 +38,7 @@
 </script>
 
 
-<div class:reverseAlign class="currencyAmount d-flex flex-column flex-wrap" {title}>
+<div class:reverseAlign class="currencyAmount" {title}>
     {#if currency}
         <div class="currency">
             <span class="flag">
@@ -82,7 +82,10 @@
         border-radius: 0.2em;
     }
     .currencyAmount {
+        display: flex;
         align-items: flex-start;
+        flex-direction: column;
+        flex-wrap: wrap;
     }
     .currencyAmount.reverseAlign {
         align-items: flex-end !important;

@@ -102,8 +102,8 @@
     {#if isLoading}
         <Loader/>
     {/if}
-    <div class="rate d-flex justify-content-center align-items-center">
-        <div class="mr-3">
+    <div class="rate">
+        <div class="left-buttons">
             <i on:click={removeRate} class="fas fa-times"/>
         </div>
         <div class="flex-grow">
@@ -111,7 +111,7 @@
                 <RateData {data} {currencies} {params} {config}/>
             {/if}
         </div>
-        <div class="ml-3">
+        <div class="right-buttons">
             <HiddenInputDate on:change={searchDateHandler} >
                 <i class="fas fa-search"/>
             </HiddenInputDate>
@@ -159,6 +159,15 @@
     }
     .rate {
         padding: 0.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .left-buttons {
+        margin-right: 0.7em;
+    }
+    .right-buttons {
+        margin-left: 0.7em;
     }
     i {
         font-size: 1.2em;

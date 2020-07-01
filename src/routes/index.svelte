@@ -156,20 +156,16 @@
 </svelte:head>
 
 <main on:click={appHandler} on:keydown={appHandler}>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <a href="/" class="navbar-brand">Bolívar Paralelo</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav">
-            <li class="nav-item">
+    <nav>
+        <a href="/">Bolívar Paralelo</a>
+        <div class="menu">
+            <div>
                 <span on:click|stopPropagation={demoHandler}>
                     {isTutorial ? "Cancelar demo" : "Demo"}
                 </span>
-            </li>
+            </div>
             <!-- <div class="border"></div> -->
-        </ul>
+        </div>
     </nav>
 
 
@@ -190,10 +186,10 @@
         </div>
     </div>
 
-    <nav class="navbar d-flex justify-content-between">
+    <nav id="footer">
         <div></div>
         {#if bitcoin_rate}
-            <div id="bitcoin" class="navbar-brand">Bitcoin: {getHumanRate(bitcoin_rate.avg)} $</div>
+            <div id="bitcoin">Bitcoin: {getHumanRate(bitcoin_rate.avg)} $</div>
         {/if}
         <div>
             <a href="https://twitter.com/bolivarparalel0">
@@ -209,16 +205,25 @@
 
 <style>
     nav{
+        display: flex;
+        align-items: center;
+        padding: .5rem 1rem;
         background-color: var(--navBackgroundColor);
-        min-height: 60px;
+        height: 60px;
         font-size: calc(13px + 0.3vw);
     }
     nav span,
     nav a {
+        text-decoration: none;
         font-size: 1.2em;
         cursor: pointer;
         white-space: nowrap;
         color: white;
+    }
+    nav .menu {
+        display: flex;
+        width: 100%;
+        justify-content: end;
     }
     #body {
         display: flex;
@@ -231,10 +236,6 @@
     }
     #bitcoin {
         font-size: 1.2em;
-    }
-    #navbarSupportedContent ul li {
-        position: relative;
-        margin: 0 1em;
     }
     #newRate {
         align-self: center;
@@ -259,5 +260,9 @@
     }
     #newRate > button:hover {
         background-color: var(--gray1);
+    }
+    #footer {
+        display: flex;
+        justify-content: space-between;
     }
 </style>

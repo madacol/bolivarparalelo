@@ -24,30 +24,42 @@
     {/if}
 {/if}
 {#if isTimeRange && showGraph && chartData.length > 1 }
-    <div class="d-flex justify-content-between align-items-center mt-2" >
+    <div class="chart" >
         <div class="flex-grow">
             <Chart {chartData}/>
         </div>
-        <div class="d-flex justify-content-center align-items-center flex-column">
-            <div class="chart-labels" style="margin-bottom: 1em">Promedio</div>
-            <div class="chart-average"><strong>{getHumanRate(rates.avg)}</strong></div>
+        <div class="average">
+            <div class="label" style="margin-bottom: 1em">Promedio</div>
+            <div class="number"><strong>{getHumanRate(rates.avg)}</strong></div>
             <div>
-                <div class="chart-labels">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
-                <div class="chart-labels" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>
+                <div class="label">{@html counter_currency.namePlural.replace(' ','<br>')}</div>
+                <div class="label" style="border-top: white 1px solid;">{@html base_currency.name.replace(' ','<br>')}</div>
             </div>
         </div>
     </div>
 {/if}
 
 <style>
-    .chart-average {
-        font-size: 1em;
-    }
-    .chart-labels {
-        font-size: 0.8em;
-    }
     .update-time {
         font-size: 0.7em;
         opacity: 50%;
+    }
+    .chart {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.5em;
+    }
+    .average {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .number {
+        font-size: 1em;
+    }
+    .label {
+        font-size: 0.8em;
     }
 </style>

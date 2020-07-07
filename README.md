@@ -1,7 +1,6 @@
 # BolivarParalelo
 
-* https://bolivartoday.herokuapp.com/
-* http://bolivarparalelo.com **(sin HTTPS por ahora)**
+* https://bolivarparalelo.com
 * https://twitter.com/bolivarparalel0
 
 ## Método para la obtencion del precio
@@ -36,7 +35,7 @@ No uso el estándar financiero en el cuál EUR/USD significa cuántos dólares e
 # Api
 * http://www.bolivarparalelo.com/api/rate/{counter_currency}/{base_currency}
 
-Por ejemplo el precio del **dólar** en **bolívares**, sería **ves/usd**, oséa http://www.bolivarparalelo.com/api/rate/ves/usd
+Por ejemplo el precio del **dólar** en **bolívares**, sería **ves/usd**, oséa https://www.bolivarparalelo.com/api/rate/ves/usd
 ```json
 {
   "counter_currency": "VES",

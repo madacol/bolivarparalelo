@@ -38,11 +38,22 @@ No uso el estándar financiero en el cuál EUR/USD significa cuántos dólares e
 Por ejemplo el precio del **dólar** en **bolívares**, sería **ves/usd**, oséa https://www.bolivarparalelo.com/api/rate/ves/usd
 ```json
 {
-  "counter_currency": "VES",
-  "base_currency": "USD",
-  "avg": "5782.688954173468910683633872456",
-  "buy": "5774.320876448784292435066362588",
-  "sell": "5791.027716925421468711305838651",
-  "unix_time_ms": 1556306484000
+  "counter_currency": {
+    "symbol":"Bs.",
+    "name":"Bolívar",
+    "namePlural":"Bolívares",
+    "flag":"🇻🇪",
+    "code":"ves"
+  },
+  "base_currency": {
+    "symbol":"$",
+    "name":"Dólar(US)",
+    "namePlural":"Dólares(US)",
+    "flag":"🇺🇸",
+    "code":"usd"
+  },
+  "buy": "229356.70923534728",
+  "sell": "217231.78398433473",
+  "unix_time": 1594232452411
 }
 ```

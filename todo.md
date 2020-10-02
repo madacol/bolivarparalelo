@@ -2,8 +2,7 @@
 
 ## MUST DO
 - Fix external preview links - Implement Open Graph <https://ogp.me/>
-- Serverless Function does not handle well a Pool connection https://vercel.com/guides/deploying-next-and-mysql-with-vercel#step-2:-set-up-your-project
-- Move DB to a No-SQL?
+- Move DB closer to vercel's server
 - Fix: Catch failures in fetch, e.g. like when date is in the future or there is no data between those dates
 - Methodology: Link to or Describe how calculations are made
 - Analytics for default and casual rates.
@@ -31,6 +30,7 @@
 - Add mobile gestures to open and close rate settings
 - Improve transitions for opening and closing `Form`
 - New page: table-like to show all rates simultaneously
+- Serverless Function does not handle well a Pool connection https://vercel.com/guides/deploying-next-and-mysql-with-vercel#step-2:-set-up-your-project
 ### Extra pain
 - Add translations
 - Create favicon.ico

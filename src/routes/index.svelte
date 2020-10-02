@@ -32,9 +32,9 @@
     }
 
 
-    /**********************
-     * Get Layout's Rates *
-     **********************/
+    /*************************
+     * Custom layout's rates *
+     *************************/
     import getRateData from '../helpers/getRateData.js'
     import { _1H_in_ms } from '../CONSTANTS.js'
     import { decodeLayout } from '../helpers/layoutEncoding.js'

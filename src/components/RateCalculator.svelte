@@ -1,8 +1,5 @@
 <script>
     import CurrencyAmount from './CurrencyAmount.svelte';
-    import getHumanRate from '../helpers/getHumanRate.js';
-    import { fakeCursor } from '../stores.js';
-
 
     /*********
      * PROPS *
@@ -19,10 +16,16 @@
     const _base_amount = ()=>base_amount; // This is needed so that the next statement does not consider `base_amount` as a dependency
     $: counter_amount = _base_amount() * rates.avg; // only re-run this when `rates.avg` changes
     // Reactive Declarations
-    $: counter_buy_amount = getHumanRate(base_amount * rates.buy);
-    $: counter_sell_amount = getHumanRate(base_amount * rates.sell);
-    $: base_buy_amount = getHumanRate(counter_amount / rates.sell);
-    $: base_sell_amount = getHumanRate(counter_amount / rates.buy);
+    $: counter_amounts = {
+        avg: counter_amount,
+        buy: base_amount * rates.buy,
+        sell: base_amount * rates.sell,
+    }
+    $: base_amounts = {
+        avg: base_amount,
+        buy: counter_amount / rates.sell,
+        sell: counter_amount / rates.buy,
+    }
 
 
     /************
@@ -44,21 +47,16 @@
 
     <CurrencyAmount
         reverseAlign={true}
-        amount={base_amount}
-        buyAmount={base_buy_amount}
-        sellAmount={base_sell_amount}
+        amounts={base_amounts}
         handleAmountChange={handleBaseAmountChange}
         currency={base_currency}
         {showBuySell}
-        fakeCursor={$fakeCursor}
     />
 
     <div class="equal {showBuySell ? 'buy-sell' : ''}">=</div>
 
     <CurrencyAmount
-        amount={counter_amount}
-        buyAmount={counter_buy_amount}
-        sellAmount={counter_sell_amount}
+        amounts={counter_amounts}
         handleAmountChange={handleCounterAmountChange}
         currency={counter_currency}
         {showBuySell}

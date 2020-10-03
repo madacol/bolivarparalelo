@@ -19,11 +19,13 @@
     {#if currency}
         <Currency {currency}/>
     {/if}
-    <Amount
-        {handleAmountChange}
-        {amounts}
-        {showBuySell}
-    />
+    <div class="amount">
+        <Amount
+            {handleAmountChange}
+            {amounts}
+            {showBuySell}
+        />
+    </div>
 </div>
 
 
@@ -39,5 +41,10 @@
     }
     .reverseAlign > :global(.currency) {
         flex-flow: row-reverse;
+    }
+    .amount {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
     }
 </style>

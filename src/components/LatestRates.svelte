@@ -37,11 +37,13 @@
                 class="currencyAmount"
                 on:click={()=>handleAmountChange(1)}
             >
-                <Amount
+                <div class:alignAround={showBuySell} class="amount">
+                    <Amount
                     {amounts}
                     {handleAmountChange}
                     {showBuySell}
-                />
+                    />
+                </div>
                 &nbsp;
                 <Currency
                     {currency}
@@ -86,6 +88,14 @@
     }
     .currencyAmount:hover, .currencyAmount.highlight {
         background-color: var(--gray2);
+    }
+    .amount {
+        display: flex;
+        align-items: center;
+    }
+    .amount.alignAround {
+        width: 100%;
+        justify-content: space-around;
     }
     .settings {
         border-radius: 0 0 1em 1em;

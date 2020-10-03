@@ -67,14 +67,12 @@
     label {
         border: 1px solid var(--gray3);
         border-radius: 0.2em;
-        width: 100%;
         text-align: end;
         cursor: text;
     }
     span {
         height: 1.1em;
         font-size: 0.9em;
-        opacity: 70%;
-        width: 100%;
+        opacity: 80%;
     }
 </style>

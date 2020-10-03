@@ -36,7 +36,7 @@
 
 
 {#if showBuySell}
-    <span>{buyText}</span>
+    <span on:click|stopPropagation>{buyText}</span>
 {/if}
 <label class="amount" {title}>
     <input
@@ -50,7 +50,7 @@
     />
 </label>
 {#if showBuySell}
-    <span>{sellText}</span>
+    <span on:click|stopPropagation>{sellText}</span>
 {/if}
 
 <style>
@@ -76,5 +76,6 @@
         height: 1.1em;
         font-size: 0.9em;
         opacity: 80%;
+        cursor: text;
     }
 </style>

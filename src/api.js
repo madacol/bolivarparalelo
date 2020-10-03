@@ -8,6 +8,35 @@ router.get('/currencies', async (req, res) => {
     res.send(rows)
 })
 
+router.get('/latest_rates', async (req, res) => {
+    const { rows } = await db.query('\
+        select\
+            currency_id,\
+            sell,\
+            buy,\
+            created_at\
+        from lobit_prices\
+        join (\
+            select\
+                currency_id,\
+                max(id) as id\
+            from lobit_prices\
+            group by currency_id\
+        ) latest\
+        using (id, currency_id)'
+    )
+
+    const result = rows.map( ({currency_id, sell, buy, created_at}) => {
+        return {
+            currency_id,
+            buy: Number(buy),
+            sell: Number(sell),
+            unix_time: created_at.getTime()
+        }
+    })
+
+    res.send(result)
+})
 async function getlastestRate(currency_code) {
     const { rows } = await db.query(
         'SELECT symbol, name, "namePlural", flag, code, buy, sell, lobit_prices.created_at AS date FROM lobit_prices\

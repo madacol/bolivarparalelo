@@ -1,0 +1,8 @@
+{
+    "autoSnippet.snippets": [
+        {
+            "pattern": "**/*.svelte",
+            "snippet": "sveltets"
+        }
+    ]
+}

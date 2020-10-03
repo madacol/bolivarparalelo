@@ -1,0 +1,18 @@
+{
+	"sveltets": {
+		"scope": "svelte",
+		"prefix": "sveltets",
+		"body": [
+			"<script lang=\"ts\">",
+			"    $1",
+			"</script>",
+			"",
+			"$2",
+			"",
+			"<style>",
+			"    $3",
+			"</style>"
+		],
+		"description": "Initial svelte template"
+	}
+}

@@ -20,15 +20,20 @@
     }
 
 
-    /****************
-     * Bitcoin rate *
-     ****************/
-    async function getBitcoinRate() {
-        const response = await this.fetch('/api/rate/usd/btc');
-        const bitcoin_rate = await response.json();
-        bitcoin_rate.avg = (bitcoin_rate.buy + bitcoin_rate.sell) / 2
-
-        return bitcoin_rate;
+    /************************
+     * Latest bitcoin rates *
+     ************************/
+    async function getLatestBitcoinRates() {
+        const response = await this.fetch('/api/latest_rates');
+        const latest_bitcoin_rates = await response.json();
+        const BITCOIN_RATE = {
+            currency_id: 0,
+            buy: 1,
+            sell: 1
+        }
+        // This is needed to add bitcoin as an option in the `LatestRates` component
+        latest_bitcoin_rates.push(BITCOIN_RATE)
+        return latest_bitcoin_rates;
     }
 
 
@@ -58,11 +63,11 @@
     export async function preload(page, {layouts, langs}) {
         const layout = layouts.query || layouts.cookie;
         const persistLayout = !layouts.query;
-        const getBitcoinRatePromise = getBitcoinRate.call(this)
+        const getLatestBitcoinRatesPromise = getLatestBitcoinRates.call(this)
         const getCurrenciesPromise = getCurrencies.call(this)
         const getRatesPromise = getRates.call(this, layout)
         return {
-            bitcoin_rate: await getBitcoinRatePromise,
+            latest_bitcoin_rates: await getLatestBitcoinRatesPromise,
             currencies: await getCurrenciesPromise,
             ratesLayout: await getRatesPromise,
             isTutorial: !layout,
@@ -79,22 +84,29 @@
     import { fakeCursor, lang } from '../stores';
     import { FAKE_CURSOR_BLINK_DELAY } from '../CONSTANTS.js';
     import { encodeLayout } from '../helpers/layoutEncoding.js'
-
+    import LatestRates from '../components/LatestRates.svelte';
 
 
     /*****************
      * Initial Props *
      *****************/
-    export let bitcoin_rate;
+    export let latest_bitcoin_rates;
     export let currencies;
     export let ratesLayout;
     export let isTutorial;
     export let _lang;
     export let persistLayout;
 
-
     if (_lang) $lang = _lang;
 
+    /****************
+     * Latest rates *
+     ****************/
+    // Calculate `avg` and inject currencies
+    latest_bitcoin_rates.forEach(rate => {
+        rate.avg = (rate.buy + rate.sell) / 2
+        rate.currency = currencies.find( ({id})=>id===rate.currency_id )
+    });
 
     /************
      * Tutorial *
@@ -150,6 +162,16 @@
         ratesLayout = [...ratesLayout, JSON.parse(NEW_RATE_JSON)];
     }
 
+    /****************
+     * USD/BTC rate *
+     ****************/
+    let usd_btc_rate;
+    {
+        const usd_currency = currencies.find(({code}) => code === "usd")
+        usd_btc_rate = latest_bitcoin_rates.find(({currency_id})=>currency_id === usd_currency.id)
+    }
+
+
 </script>
 
 
@@ -172,6 +194,7 @@
 
 
     <div id="body">
+        <LatestRates {latest_bitcoin_rates} />
         {#each ratesLayout as rateLayout}
             {#if rateLayout}
                 <Rate
@@ -190,8 +213,8 @@
 
     <nav id="footer">
         <div></div>
-        {#if bitcoin_rate}
-            <div id="bitcoin">Bitcoin: {getHumanRate(bitcoin_rate.avg)} $</div>
+        {#if usd_btc_rate}
+            <div id="bitcoin">Bitcoin: {getHumanRate(usd_btc_rate.avg)} $</div>
         {/if}
         <div>
             <a href="https://twitter.com/bolivarparalel0">

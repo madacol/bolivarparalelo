@@ -10,12 +10,10 @@
     export let showBuySell: boolean = false;
     export let currency = null;
 
-    $: title = `compra: ${amounts.buy}\n    venta: ${amounts.sell}`
-
 </script>
 
 
-<div class:reverseAlign class="currencyAmount" {title}>
+<div class:reverseAlign class="currencyAmount">
     {#if currency}
         <Currency {currency}/>
     {/if}

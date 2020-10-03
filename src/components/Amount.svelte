@@ -13,6 +13,8 @@
     $: buyText = getHumanRate(amounts.buy);
     $: sellText = getHumanRate(amounts.sell);
 
+    $: title = `compra: ${buyText}\n    venta: ${sellText}`
+
     // $: attr_name = (amounts.avg === 1) ? "name" : "namePlural"
 
     //Handlers
@@ -36,7 +38,7 @@
 {#if showBuySell}
     <span>{buyText}</span>
 {/if}
-<label class="amount">
+<label class="amount" {title}>
     <input
         type="text"
         class:fakeCursor={$fakeCursor}

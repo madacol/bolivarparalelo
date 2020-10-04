@@ -43,7 +43,7 @@
         type="text"
         class:fakeCursor={$fakeCursor}
         on:click|stopPropagation
-        on:focus={e=>e.target.select()}
+        on:focus={e=>e.currentTarget.select()}
         on:keyup={handleKeyUp}
         value={avgText}
         size={avgText.length || 1}

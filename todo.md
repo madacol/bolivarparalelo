@@ -29,7 +29,6 @@
 - Export data
 - Add mobile gestures to open and close rate settings
 - Improve transitions for opening and closing `Form`
-- New page: table-like to show all rates simultaneously
 - Serverless Function does not handle well a Pool connection https://vercel.com/guides/deploying-next-and-mysql-with-vercel#step-2:-set-up-your-project
 ### Extra pain
 - Add translations
@@ -37,8 +36,6 @@
 - Branding
 
 ## hard
-- Implement Redis or cache for hot data <- maybe not, seems to cost as much as a DB
-- Implement typescript
 ### Extra pain
 - Sustitute moment.js and Chart.js with (Pancake | OWID)?
 - Improve UI to choose currencies (Maybe flags around a circle with selected flag in the middle https://stackoverflow.com/questions/12813573/position-icons-into-circle)
@@ -71,3 +68,8 @@
 - Flags fallback rendering (using css?) https://github.com/lipis/flag-icon-css
 - Loader: Show rate is loading
 - Move back to NodeJS
+- New page: table-like to show all rates simultaneously
+- Implement typescript (implemented partially)
+
+# Cancelled
+- Implement Redis or cache for hot data <- maybe not, seems to cost as much as a DB

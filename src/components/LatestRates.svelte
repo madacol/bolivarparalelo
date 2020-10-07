@@ -2,12 +2,14 @@
     import Amount from "./Amount.svelte";
     import Currency from "./Currency.svelte";
     import CheckboxToggle from "./CheckboxToggle.svelte";
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
 
+    export let latestRatesConfig: any;
     export let latest_bitcoin_rates: any[];    // price of 1 BTC in every currency
 
-    let base_rate = latest_bitcoin_rates.find( ({currency: {code}})=>code==="usd" );
+    let base_rate = latest_bitcoin_rates.find( ({currency: {code}})=>code===latestRatesConfig.base_currency_code );
     let amount = 1;
-    let showBuySell = false;
 
     let rates: ArrayLike<{amounts: {avg: number, buy: number, sell: number}, currency: any, handleAmountChange: (newAmount: number)=>void}>;
     $: rates = latest_bitcoin_rates.map(rate => ({
@@ -23,7 +25,9 @@
     function handleAmountChange_Builder(rate) {
         return function (newAmount: number) {
             base_rate = rate;
+            latestRatesConfig.base_currency_code = rate.currency.code;
             amount = newAmount;
+            dispatch('change');
         }
     }
 
@@ -37,11 +41,11 @@
                 class="currencyAmount"
                 on:click={()=>handleAmountChange(1)}
             >
-                <div class:alignAround={showBuySell} class="amount">
+                <div class:alignAround={latestRatesConfig.showBuySell} class="amount">
                     <Amount
                     {amounts}
                     {handleAmountChange}
-                    {showBuySell}
+                    showBuySell={latestRatesConfig.showBuySell}
                     />
                 </div>
                 &nbsp;
@@ -53,8 +57,9 @@
     </div>
     <div class="settings">
         <CheckboxToggle
-        bind:checked={showBuySell}
+        bind:checked={latestRatesConfig.showBuySell}
         label={"Tasas de compra y venta:"}
+        on:change
         />
     </div>
 </main>

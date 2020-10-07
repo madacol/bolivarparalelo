@@ -44,17 +44,18 @@
     import { _1H_in_ms } from '../CONSTANTS.js'
     import { decodeLayout } from '../helpers/layoutEncoding.js'
     import getHumanRate from '../helpers/getHumanRate.js';
-    function getRates(layoutRaw) {
-        const layout = decodeLayout(layoutRaw);
-        return Promise.all(
-            layout.map(
-                async rateLayout => {
-                    const {params: {counter_currency_code, base_currency_code, start, end}} = rateLayout;
+    function getRatesLayout(layoutString) {
+        const {latestRatesConfig, ratesLayoutMeta} = decodeLayout(layoutString);
+        return {
+            latestRatesConfig,
+            ratesLayoutPromise: Promise.all(
+                ratesLayoutMeta.map( async rateLayoutMeta => {
+                    const {params: {counter_currency_code, base_currency_code, start, end}} = rateLayoutMeta;
                     const data = await getRateData.call(this, counter_currency_code, base_currency_code, start, end);
-                    return {...rateLayout, data};
-                }
+                    return {...rateLayoutMeta, data};
+                })
             )
-        )
+        }
     }
 
     /**
@@ -65,11 +66,12 @@
         const persistLayout = !layouts.query;
         const getLatestBitcoinRatesPromise = getLatestBitcoinRates.call(this)
         const getCurrenciesPromise = getCurrencies.call(this)
-        const getRatesPromise = getRates.call(this, layout)
+        const {latestRatesConfig, ratesLayoutPromise} = getRatesLayout.call(this, layout)
         return {
             latest_bitcoin_rates: await getLatestBitcoinRatesPromise,
             currencies: await getCurrenciesPromise,
-            ratesLayout: await getRatesPromise,
+            latestRatesConfig,
+            ratesLayout: await ratesLayoutPromise,
             isTutorial: !layout,
             _lang: langs[0],
             persistLayout,
@@ -92,6 +94,7 @@
      *****************/
     export let latest_bitcoin_rates;
     export let currencies;
+    export let latestRatesConfig;
     export let ratesLayout;
     export let isTutorial;
     export let _lang;
@@ -136,12 +139,19 @@
     $: saveLayout = persistLayout ? saveLayoutToCookie : saveLayoutToUrl;
     onMount(async ()=>{
         const Cookie = (await import('js-cookie')).default;
+        function getLayoutString() {
+            const layout = {
+                latestRatesConfig,
+                ratesLayoutMeta: ratesLayout
+            };
+            return encodeLayout(layout);
+        }
         saveLayoutToCookie = async () => {
-            const layoutString = encodeLayout(ratesLayout);
+            const layoutString = getLayoutString();
             Cookie.set('layout', layoutString, { expires: 365, sameSite: 'Strict' });
         }
         saveLayoutToUrl = async () => {
-            const layoutString = encodeLayout(ratesLayout);
+            const layoutString = getLayoutString();
             const url = window.location.pathname + '?layout=' + layoutString;
             history.pushState(null, '', url);
         }
@@ -216,7 +226,11 @@
 
 
     <div id="body">
-        <LatestRates {latest_bitcoin_rates} />
+        <LatestRates
+            bind:latestRatesConfig
+            {latest_bitcoin_rates}
+            on:change={saveLayout}
+        />
         {#each ratesLayout as rateLayout}
             {#if rateLayout}
                 <Rate

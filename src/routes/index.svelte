@@ -115,7 +115,6 @@
     let timeoutID;
     if (isTutorial) enableTutorial();
     $: appHandler = isTutorial ? disableTutorial : null;
-    $: demoHandler = isTutorial ? disableTutorial : enableTutorial;
     // Functions
     function enableTutorial() {
         intervalID = setInterval(()=>{ $fakeCursor = !$fakeCursor }, FAKE_CURSOR_BLINK_DELAY);
@@ -162,13 +161,36 @@
         ratesLayout = [...ratesLayout, JSON.parse(NEW_RATE_JSON)];
     }
 
-    /****************
-     * USD/BTC rate *
-     ****************/
-    let usd_btc_rate;
+    /**********************
+     * Get specific rates *
+     **********************/
+    let usd_btc_avg_rate,
+        ves_usd_avg_rate,
+        ves_eur_avg_rate,
+        ves_cop_avg_rate,
+        ves_brl_avg_rate;
     {
-        const usd_currency = currencies.find(({code}) => code === "usd")
-        usd_btc_rate = latest_bitcoin_rates.find(({currency_id})=>currency_id === usd_currency.id)
+        // Get currencies rates in bitcoin
+        let usd_btc_rate,
+            ves_btc_rate,
+            eur_btc_rate,
+            cop_btc_rate,
+            brl_btc_rate;
+        latest_bitcoin_rates.forEach( rate => {
+            switch (rate.currency.code) {
+                case "usd": usd_btc_rate = rate; break;
+                case "ves": ves_btc_rate = rate; break;
+                case "eur": eur_btc_rate = rate; break;
+                case "cop": cop_btc_rate = rate; break;
+                case "brl": brl_btc_rate = rate; break;
+                default: break;
+            }
+        })
+        usd_btc_avg_rate = getHumanRate(usd_btc_rate.avg)
+        ves_usd_avg_rate = getHumanRate(ves_btc_rate.avg / usd_btc_rate.avg)
+        ves_eur_avg_rate = getHumanRate(ves_btc_rate.avg / eur_btc_rate.avg)
+        ves_cop_avg_rate = getHumanRate(ves_btc_rate.avg / cop_btc_rate.avg)
+        ves_brl_avg_rate = getHumanRate(ves_btc_rate.avg / brl_btc_rate.avg)
     }
 
 
@@ -180,15 +202,15 @@
 </svelte:head>
 
 <main on:click={appHandler} on:keydown={appHandler}>
-    <nav>
+    <nav id="header">
         <a href="/">Bolívar Paralelo</a>
         <div class="menu">
-            <div>
-                <span on:click|stopPropagation={demoHandler}>
-                    {isTutorial ? "Cancelar demo" : "Demo"}
-                </span>
-            </div>
-            <!-- <div class="border"></div> -->
+            <a href="https://twitter.com/bolivarparalel0">
+                <img alt="twitter icon" src="/icons/Twitter_Social_Icon_Circle_White.png" width="40" height="40">
+            </a>
+            <a href="https://github.com/madacol/bolivarparalelo">
+                <img alt="github icon" src="/icons/GitHub-Mark-Light-64px.png" width="40" height="40">
+            </a>
         </div>
     </nav>
 
@@ -212,17 +234,12 @@
     </div>
 
     <nav id="footer">
-        <div></div>
-        {#if usd_btc_rate}
-            <div id="bitcoin">Bitcoin: {getHumanRate(usd_btc_rate.avg)} $</div>
-        {/if}
         <div>
-            <a href="https://twitter.com/bolivarparalel0">
-                <img alt="twitter icon" src="/icons/Twitter_Social_Icon_Circle_White.png" width="40" height="40">
-            </a>
-            <a href="https://github.com/madacol/bolivarparalelo">
-                <img alt="github icon" src="/icons/GitHub-Mark-Light-64px.png" width="40" height="40">
-            </a>
+            <span title="VES / USD">{ves_usd_avg_rate}&nbsp;Bs <u>Dolar</u></span>
+            <span title="VES / EUR">{ves_eur_avg_rate}&nbsp;Bs <u>Euro</u></span>
+            <span title="USD / BTC">{usd_btc_avg_rate}&nbsp;$ <u>Bitcoin</u></span>
+            <span title="VES / COP">{ves_cop_avg_rate}&nbsp;Bs <u>Peso</u></span>
+            <span title="VES / BRL">{ves_brl_avg_rate}&nbsp;Bs <u>Real</u></span>
         </div>
     </nav>
 </main>
@@ -237,18 +254,20 @@
         height: 60px;
         font-size: calc(13px + 0.3vw);
     }
-    nav span,
-    nav a {
+    #header > a {
         text-decoration: none;
         font-size: 1.2em;
         cursor: pointer;
         white-space: nowrap;
         color: white;
     }
-    nav .menu {
+    #header .menu {
         display: flex;
         width: 100%;
         justify-content: flex-end;
+    }
+    #header .menu > a{
+        margin-left: 10px;
     }
     #body {
         display: flex;
@@ -259,9 +278,6 @@
         line-height: 1.15;
         padding: 1em;
         font-size: calc(11px + 0.7vw);
-    }
-    #bitcoin {
-        font-size: 1.2em;
     }
     #newRate {
         align-self: center;
@@ -289,6 +305,22 @@
     }
     #footer {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
+        width: 100%;
+        padding: 0;
+    }
+    #footer > div {
+        display: flex;
+        overflow: auto;
+        justify-content: safe center;
+        height: 100%;
+        padding: 0.5em 0;
+    }
+    #footer > div > span {
+        height: 100%;
+        padding: 0 1em;
+        width: min-content;
+        height: min-content;
+        text-align: center;
     }
 </style>

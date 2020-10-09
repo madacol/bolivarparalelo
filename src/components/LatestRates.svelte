@@ -41,6 +41,11 @@
                 class="currencyAmount"
                 on:click={()=>handleAmountChange(1)}
             >
+                <Currency
+                    {currency}
+                    showName={!latestRatesConfig.showBuySell}
+                />
+                &nbsp;
                 <div class:alignAround={latestRatesConfig.showBuySell} class="amount">
                     <Amount
                     {amounts}
@@ -48,10 +53,6 @@
                     showBuySell={latestRatesConfig.showBuySell}
                     />
                 </div>
-                &nbsp;
-                <Currency
-                    {currency}
-                />
             </div>
         {/each}
     </div>
@@ -83,7 +84,7 @@
     }
     .currencyAmount {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         padding: 0.5em 1em;
         margin: 0.4em;

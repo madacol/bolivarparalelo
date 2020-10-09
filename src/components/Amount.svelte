@@ -38,7 +38,7 @@
 {#if showBuySell}
     <span on:click|stopPropagation>{buyText}</span>
 {/if}
-<label class="amount" {title}>
+<label {title}>
     <input
         type="text"
         class:fakeCursor={$fakeCursor}
@@ -71,6 +71,7 @@
         border-radius: 0.2em;
         text-align: end;
         cursor: text;
+        margin: 0 0.6em;
     }
     span {
         height: 1.1em;

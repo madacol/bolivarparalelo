@@ -1,11 +1,14 @@
 <script lang="ts">
-    export let currency: { code: string; symbol: string; };
+    export let currency: { code: string; symbol: string; name: string; };
+    export let showName: boolean = false;
 
     let country_code: string;
     $: country_code = currency.code.substring(0,2);
 </script>
 
 <div class="currency">
+    <span class="code">{currency.code.toUpperCase()}</span>
+    &nbsp;
     <span class="flag">
         {#if currency.code === "btc"}
             <strong>{currency.symbol.toUpperCase()}</strong>
@@ -13,8 +16,10 @@
             <img src={`/flags/${country_code}.svg`} alt={`${currency.code}`}>
         {/if}
     </span>
-    &nbsp;
-    <span class="code">{currency.code.toUpperCase()}</span>
+    {#if showName}
+        &nbsp;
+        <span class="code">{currency.name}</span>
+    {/if}
 </div>
 
 <style>

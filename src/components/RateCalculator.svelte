@@ -74,7 +74,7 @@
         margin-bottom: 0.5em;
     }
     .equal {
-        margin: 0 1em;
+        margin: 0 0.5em;
         margin-bottom: 0.5em
     }
     .equal.buy-sell {

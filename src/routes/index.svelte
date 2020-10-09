@@ -263,10 +263,12 @@
     nav{
         display: flex;
         align-items: center;
-        padding: .5rem 1rem;
         background-color: var(--navBackgroundColor);
         height: 60px;
         font-size: calc(13px + 0.3vw);
+    }
+    #header {
+        padding: .5rem 1rem;
     }
     #header > a {
         text-decoration: none;
@@ -321,14 +323,12 @@
         display: flex;
         justify-content: center;
         width: 100%;
-        padding: 0;
     }
     #footer > div {
         display: flex;
         overflow: auto;
-        justify-content: safe center;
         height: 100%;
-        padding: 0.5em 0;
+        align-items: center;
     }
     #footer > div > span {
         height: 100%;

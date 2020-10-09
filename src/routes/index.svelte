@@ -249,10 +249,10 @@
 
     <nav id="footer">
         <div>
-            <span title="VES / USD">{ves_usd_avg_rate}&nbsp;Bs <u>Dolar</u></span>
+            <span title="VES / USD">{ves_usd_avg_rate}&nbsp;Bs <u>Dólar</u></span>
             <span title="VES / EUR">{ves_eur_avg_rate}&nbsp;Bs <u>Euro</u></span>
             <span title="USD / BTC">{usd_btc_avg_rate}&nbsp;$ <u>Bitcoin</u></span>
-            <span title="VES / COP">{ves_cop_avg_rate}&nbsp;Bs <u>Peso</u></span>
+            <span title="VES / COP">{ves_cop_avg_rate}&nbsp;Bs <u>Peso COP</u></span>
             <span title="VES / BRL">{ves_brl_avg_rate}&nbsp;Bs <u>Real</u></span>
         </div>
     </nav>

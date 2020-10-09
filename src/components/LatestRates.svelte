@@ -22,7 +22,7 @@
         handleAmountChange: handleAmountChange_Builder(rate)
     }))
 
-    function handleAmountChange_Builder(rate) {
+    function handleAmountChange_Builder(rate: { currency: { code: any; }; }) {
         return function (newAmount: number) {
             base_rate = rate;
             latestRatesConfig.base_currency_code = rate.currency.code;

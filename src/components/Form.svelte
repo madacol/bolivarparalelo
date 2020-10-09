@@ -1,5 +1,4 @@
 <script context="module">
-	import { onMount } from 'svelte';
     import { _1H_in_ms, _1W_in_ms } from '../CONSTANTS.js'
     import parseLocalDate from '../helpers/parseLocalDate.js'
 
@@ -78,7 +77,7 @@
     import CheckboxToggle from './CheckboxToggle.svelte'
     import RadioButton from './RadioButton.svelte'
     import { SHOW_CONFIG } from '../CONSTANTS.js'
-    import { createEventDispatcher, tick } from 'svelte';
+    import { createEventDispatcher } from 'svelte';
     import Flag from './Flag.svelte';
     const dispatch = createEventDispatcher();
 

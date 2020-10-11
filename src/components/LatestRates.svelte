@@ -10,6 +10,7 @@
 
     let base_rate = latest_bitcoin_rates.find( ({currency: {code}})=>code===latestRatesConfig.base_currency_code );
     let amount = 1;
+    $: showBuySell = latestRatesConfig.showBuySell;
 
     let rates: ArrayLike<{amounts: {avg: number, buy: number, sell: number}, currency: any, handleAmountChange: (newAmount: number)=>void}>;
     $: rates = latest_bitcoin_rates.map(rate => ({
@@ -38,19 +39,21 @@
         {#each rates as {currency, amounts, handleAmountChange}}
             <div
                 class:highlight={currency===base_rate.currency}
+                class:reverseOrder={showBuySell}
                 class="currencyAmount"
                 on:click={()=>handleAmountChange(1)}
             >
                 <Currency
                     {currency}
-                    showName={!latestRatesConfig.showBuySell}
+                    showName={!showBuySell}
+                    reverseOrder={!showBuySell}
                 />
                 &nbsp;
-                <div class:alignAround={latestRatesConfig.showBuySell} class="amount">
+                <div class:alignAround={showBuySell} class="amount">
                     <Amount
-                    {amounts}
-                    {handleAmountChange}
-                    showBuySell={latestRatesConfig.showBuySell}
+                        {amounts}
+                        {handleAmountChange}
+                        {showBuySell}
                     />
                 </div>
             </div>
@@ -58,9 +61,9 @@
     </div>
     <div class="settings">
         <CheckboxToggle
-        bind:checked={latestRatesConfig.showBuySell}
-        label={"Tasas de compra y venta:"}
-        on:change
+            bind:checked={latestRatesConfig.showBuySell}
+            label={"Tasas de compra y venta:"}
+            on:change
         />
     </div>
 </main>
@@ -91,6 +94,9 @@
         border-radius: 1em;
         background-color: var(--gray1);
         cursor: pointer;
+    }
+    .currencyAmount.reverseOrder {
+        flex-flow: row-reverse;
     }
     .currencyAmount:hover, .currencyAmount.highlight {
         background-color: var(--gray2);

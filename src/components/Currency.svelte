@@ -1,14 +1,17 @@
 <script lang="ts">
     export let currency: { code: string; symbol: string; name: string; };
     export let showName: boolean = false;
+    export let reverseOrder: boolean = false;
 
     let country_code: string;
     $: country_code = currency.code.substring(0,2);
 </script>
 
-<div class="currency">
-    <span class="code">{currency.code.toUpperCase()}</span>
-    &nbsp;
+<div class="currency" class:reverseOrder>
+    {#if showName}
+        <span class="code">{currency.name}</span>
+        &nbsp;
+    {/if}
     <span class="flag">
         {#if currency.code === "btc"}
             <strong>{currency.symbol.toUpperCase()}</strong>
@@ -16,10 +19,8 @@
             <img src={`/flags/${country_code}.svg`} alt={`${currency.code}`}>
         {/if}
     </span>
-    {#if showName}
-        &nbsp;
-        <span class="code">{currency.name}</span>
-    {/if}
+    &nbsp;
+    <span class="code">{currency.code.toUpperCase()}</span>
 </div>
 
 <style>
@@ -27,6 +28,9 @@
         display: flex;
         align-items: center;
         margin-bottom: 0.2em;
+    }
+    .currency.reverseOrder {
+        flex-flow: row-reverse;
     }
     .code {
         opacity: 70%;

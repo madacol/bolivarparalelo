@@ -5,7 +5,7 @@
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
-    export let latestRatesConfig: any;
+    export let latestRatesConfig: { base_currency_code: string; showBuySell: boolean; };
     export let latest_bitcoin_rates: any[];    // price of 1 BTC in every currency
 
     let base_rate = latest_bitcoin_rates.find( ({currency: {code}})=>code===latestRatesConfig.base_currency_code );

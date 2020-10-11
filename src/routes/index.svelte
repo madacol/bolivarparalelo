@@ -61,7 +61,7 @@
     /**
      * Preload props
      */
-    export async function preload(page, {layouts, langs}) {
+    export async function preload(_page, {layouts, langs}) {
         const layout = layouts.query || layouts.cookie;
         const persistLayout = !layouts.query;
         const getLatestBitcoinRatesPromise = getLatestBitcoinRates.call(this)

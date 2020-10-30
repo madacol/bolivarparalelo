@@ -9,21 +9,21 @@ router.get('/currencies', async (req, res) => {
 })
 
 router.get('/latest_rates', async (req, res) => {
-    const { rows } = await db.query('\
-        select\
-            currency_id,\
-            sell,\
-            buy,\
-            created_at\
-        from lobit_prices\
-        join (\
-            select\
-                currency_id,\
-                max(id) as id\
-            from lobit_prices\
-            group by currency_id\
-        ) latest\
-        using (id, currency_id)'
+    const { rows } = await db.query(
+        `select
+            currency_id,
+            sell,
+            buy,
+            created_at
+        from lobit_prices
+        join (
+            select
+                currency_id,
+                max(id) as id
+            from lobit_prices
+            group by currency_id
+        ) latest
+        using (id, currency_id)`
     )
 
     const result = rows.map( ({currency_id, sell, buy, created_at}) => {
@@ -39,11 +39,11 @@ router.get('/latest_rates', async (req, res) => {
 })
 async function getlastestRate(currency_code) {
     const { rows } = await db.query(
-        'SELECT symbol, name, "namePlural", flag, code, buy, sell, lobit_prices.created_at AS date FROM lobit_prices\
-            JOIN currencies ON lobit_prices.currency_id = currencies.id\
-            WHERE code = $1\
-            ORDER BY lobit_prices.created_at DESC\
-            LIMIT 1',
+        `SELECT symbol, name, "namePlural", flag, code, buy, sell, lobit_prices.created_at AS date FROM lobit_prices
+            JOIN currencies ON lobit_prices.currency_id = currencies.id
+            WHERE code = $1
+            ORDER BY lobit_prices.created_at DESC
+            LIMIT 1`,
         [currency_code]
     );
     if (rows.length === 0) return null;
@@ -97,12 +97,12 @@ async function getTimeRangeRates(currency_code, start, end) {
 
     // Get rates
     const { rows: rates } = await db.query(
-        'SELECT buy, sell, created_at AS date FROM lobit_prices\
-            WHERE currency_id = $1\
-                AND (created_at, created_at)\
-                    OVERLAPS ($2, $3)\
-            ORDER BY created_at DESC\
-            LIMIT 10000',
+        `SELECT buy, sell, created_at AS date FROM lobit_prices
+            WHERE currency_id = $1
+                AND (created_at, created_at)
+                    OVERLAPS ($2, $3)
+            ORDER BY created_at DESC
+            LIMIT 10000`,
         [id, start, end]
     );
     if (rates.length === 0) return null;

@@ -4,18 +4,20 @@ import commonjs from '@rollup/plugin-commonjs';
 import svelte from 'rollup-plugin-svelte';
 import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
+import sveltePreprocess from 'svelte-preprocess';
+import typescript from '@rollup/plugin-typescript';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
-import autoPreprocess from 'svelte-preprocess';
-import typescript from '@rollup/plugin-typescript';
 
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 
-const onwarn = (warning, onwarn) => (warning.code === 'CIRCULAR_DEPENDENCY' && /[/\\]@sapper[/\\]/.test(warning.message)) || onwarn(warning);
-
-const preprocess = autoPreprocess();
+const onwarn = (warning, onwarn) =>
+	(warning.code === 'MISSING_EXPORT' && /'preload'/.test(warning.message)) ||
+	(warning.code === 'CIRCULAR_DEPENDENCY' && /[/\\]@sapper[/\\]/.test(warning.message)) ||
+	(warning.code === 'THIS_IS_UNDEFINED') ||
+	onwarn(warning);
 
 export default {
 	client: {
@@ -27,9 +29,9 @@ export default {
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
 			svelte({
-				preprocess,
 				dev,
 				hydratable: true,
+				preprocess: sveltePreprocess(),
 				emitCss: true
 			}),
 			resolve({
@@ -74,8 +76,9 @@ export default {
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
 			svelte({
-				preprocess,
 				generate: 'ssr',
+				hydratable: true,
+				preprocess: sveltePreprocess(),
 				dev
 			}),
 			resolve({
@@ -84,16 +87,14 @@ export default {
 			commonjs(),
 			typescript({ sourceMap: dev }),
 		],
-		external: Object.keys(pkg.dependencies).concat(
-			require('module').builtinModules || Object.keys(process.binding('natives'))
-		),
+		external: Object.keys(pkg.dependencies).concat(require('module').builtinModules),
 
 		preserveEntrySignatures: 'strict',
 		onwarn,
 	},
 
 	serviceworker: {
-		input: config.serviceworker.input(),
+		input: config.serviceworker.input().replace(/\.js$/, '.ts'),
 		output: config.serviceworker.output(),
 		plugins: [
 			resolve(),
@@ -102,6 +103,7 @@ export default {
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
 			commonjs(),
+			typescript({ sourceMap: dev }),
 			!dev && terser()
 		],
 

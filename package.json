@@ -9,7 +9,8 @@
     "dev": "sapper dev",
     "build": "cp -R node_modules/flag-icon-css/flags/4x3 static/flags; cp -R node_modules/@fortawesome/fontawesome-free/svgs/solid static/fa-icons; sapper build",
     "export": "sapper export --legacy",
-    "start": "node __sapper__/build"
+    "start": "node __sapper__/build",
+    "validate": "svelte-check --ignore src/node_modules/@sapper"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.0",
@@ -42,6 +43,7 @@
     "svelte": "^3.29.0",
     "svelte-check": "^1.0.54",
     "svelte-preprocess": "^4.3.2",
+    "tslib": "^2.0.1",
     "typescript": "^4.0.3"
   }
 }

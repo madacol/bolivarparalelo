@@ -8,6 +8,7 @@
     export let amounts: {avg: number, buy: number, sell: number};
     // Optional Props
     export let showBuySell: boolean = false;
+    export let showLabels: boolean = false;
 
     $: avgText = getHumanRate(amounts.avg);
     $: buyText = getHumanRate(amounts.buy);
@@ -36,7 +37,12 @@
 
 
 {#if showBuySell}
-    <span on:click|stopPropagation>{buyText}</span>
+    <div class="buysell">
+        {#if showLabels}
+            <span class="label">compra</span>
+        {/if}
+        <span class="amount" on:click|stopPropagation>{buyText}</span>
+    </div>
 {/if}
 <label {title}>
     <input
@@ -50,7 +56,12 @@
     />
 </label>
 {#if showBuySell}
-    <span on:click|stopPropagation>{sellText}</span>
+    <div class="buysell">
+        {#if showLabels}
+            <span class="label">venta</span>
+        {/if}
+        <span class="amount" on:click|stopPropagation>{sellText}</span>
+    </div>
 {/if}
 
 <style>
@@ -73,10 +84,24 @@
         cursor: text;
         margin: 0 0.6em;
     }
-    span {
-        height: 1.1em;
+    .buysell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         font-size: 0.9em;
-        opacity: 80%;
+    }
+    .buysell > .label {
+        /* border-bottom: var(--gray5) solid 1px; */
+        /* padding-bottom: 0.4em; */
+        font-size: 0.9em;
+        opacity: 60%;
+        margin-bottom: 0.5em;
+    }
+    .buysell > .amount {
+        height: 1.1em;
         cursor: text;
+    }
+    .buysell > .label + .amount {
+        font-weight: bold;
     }
 </style>

@@ -54,6 +54,7 @@
                         {amounts}
                         {handleAmountChange}
                         {showBuySell}
+                        showLabels={true}
                     />
                 </div>
             </div>

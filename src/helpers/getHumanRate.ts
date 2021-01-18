@@ -6,9 +6,10 @@ import { lang } from '../stores';
  * @param {Number} number
  */
 const getHumanRate = (number: number) => {
-    if (number < 10000)
-        return number.toLocaleString( get(lang), {maximumSignificantDigits: 4} );
-    return number.toLocaleString( get(lang), {maximumFractionDigits: 0} );
+    const options = (number < 10000)
+        ? {maximumSignificantDigits: 4}
+        : {maximumFractionDigits: 0};
+    return number.toLocaleString( get(lang), options );
 }
 
 export default getHumanRate;

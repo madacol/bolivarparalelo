@@ -13,16 +13,15 @@
     $: showBuySell = latestRatesConfig.showBuySell;
 
     let rates: ArrayLike<{amounts: {avg: number, buy: number, sell: number}, currency: any, handleAmountChange: (newAmount: number)=>void}>;
-    $: rates = latest_bitcoin_rates.map(rate => {
-        const buy = rate.buy * amount / base_rate.sell;
-        const sell = rate.sell * amount / base_rate.buy;
-        const avg = (buy + sell) / 2;
-        return ({
-            amounts: { avg, buy, sell },
-            currency: rate.currency,
-            handleAmountChange: handleAmountChange_Builder(rate)
-        })
-    })
+    $: rates = latest_bitcoin_rates.map(rate => ({
+        amounts: {
+            avg: rate.avg * amount / base_rate.avg,
+            buy: rate.buy * amount / base_rate.sell,
+            sell: rate.sell * amount / base_rate.buy,
+        },
+        currency: rate.currency,
+        handleAmountChange: handleAmountChange_Builder(rate)
+    }))
 
     function handleAmountChange_Builder(rate: { currency: { code: any; }; }) {
         return function (newAmount: number) {

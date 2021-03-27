@@ -1,4 +1,5 @@
 <script context="module">
+    let Form;
     /*************
      * Constants *
      *************/
@@ -21,9 +22,8 @@
      * Dynamic import on client-side *
      *********************************/
     import { onMount } from 'svelte';
-    let Form;
     onMount(async () => {
-        Form = (await import('./Form.svelte')).default;
+        if (!Form) Form = (await import('./Form.svelte')).default;
     });
 
 

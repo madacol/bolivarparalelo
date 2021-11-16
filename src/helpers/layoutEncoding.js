@@ -21,7 +21,7 @@ const asciiToB64 = (typeof btoa === 'function') ? btoa : string => Buffer.from(s
  * {
  *   latestRatesConfig: { base_currency_code: "usd", showBuySell: false, hide: false }
  *   ratesLayoutMeta: [
- *      {params: {counter_currency_code: "ves", base_currency_code: "usd", isTimeRange: false, start: undefined, end: undefined}, config: {showType: 0, showBuySell: true}},
+ *      {params: {counter_currency_code: "ved", base_currency_code: "usd", isTimeRange: false, start: undefined, end: undefined}, config: {showType: 0, showBuySell: true}},
  *      {params: {counter_currency_code: "cop", base_currency_code: "btc", isTimeRange: false, start: undefined, end: undefined}, config: {showType: 0, showBuySell: true}},
  *      {params: {counter_currency_code: "usd", base_currency_code: "btc", isTimeRange: true, start: 1591407769315, end: 1592012569315}, config: {showType: 0, showBuySell: false}},
  *      {
@@ -50,9 +50,9 @@ export function decodeLayout(layoutString) {
         return {
             latestRatesConfig: { base_currency_code: "usd", showBuySell: false, hide: false },
             ratesLayoutMeta: [
-                {params: {counter_currency_code: "ves", base_currency_code: "usd", isTimeRange: false}, config: {showType: 0, showBuySell: true}},
-                {params: {counter_currency_code: "ves", base_currency_code: "eur", isTimeRange: false}, config: {showType: 0, showBuySell: false}},
-                {params: {counter_currency_code: "ves", base_currency_code: "usd", isTimeRange: true, start, end}, config: {showType: 0, showBuySell: false}},
+                {params: {counter_currency_code: "ved", base_currency_code: "usd", isTimeRange: false}, config: {showType: 0, showBuySell: true}},
+                {params: {counter_currency_code: "ved", base_currency_code: "eur", isTimeRange: false}, config: {showType: 0, showBuySell: false}},
+                {params: {counter_currency_code: "ved", base_currency_code: "usd", isTimeRange: true, start, end}, config: {showType: 0, showBuySell: false}},
             ]
         }
     }

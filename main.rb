@@ -60,7 +60,7 @@ def getMainData(request)
   currency_code = country.nil? ? 'btc' : country.currency_code
 
   p "Getting data"
-    ves_btc_rates        = Currency.find_by(code:'ves').LobitPrices.last POINTS_TO_SHOW_IN_GRAPH
+    ved_btc_rates        = Currency.find_by(code:'ved').LobitPrices.last POINTS_TO_SHOW_IN_GRAPH
     usd_btc_rates        = Currency.find_by(code:'usd').LobitPrices.last POINTS_TO_SHOW_IN_GRAPH
     secondary_currency   = Currency.find_by(code: currency_code.downcase)
     if secondary_currency.nil?
@@ -73,16 +73,16 @@ def getMainData(request)
     end
   p 'Done!'
 
-  ves_btc_current_rate    = ves_btc_rates.last
-  ves_btc_avg_price       = getBuySellAvg ves_btc_current_rate
+  ved_btc_current_rate    = ved_btc_rates.last
+  ved_btc_avg_price       = getBuySellAvg ved_btc_current_rate
 
   usd_btc_current_rate    = usd_btc_rates.last
   usd_btc_avg_price       = getBuySellAvg usd_btc_current_rate
 
-  ves_secondary_avg_price = ves_btc_avg_price / secondary_btc_avg_price
-  ves_usd_avg_price       = ves_btc_avg_price / usd_btc_avg_price
+  ved_secondary_avg_price = ved_btc_avg_price / secondary_btc_avg_price
+  ved_usd_avg_price       = ved_btc_avg_price / usd_btc_avg_price
 
-  time_since_last_update = Time.now - ves_btc_current_rate.created_at
+  time_since_last_update = Time.now - ved_btc_current_rate.created_at
   time_string = getHumanTime(time_since_last_update)
 
   usd_btc_rates_hourstamped = {}
@@ -91,15 +91,15 @@ def getMainData(request)
     usd_btc_rates_hourstamped[ hourstamp ] = getBuySellAvg rate
   end
 
-  chart_data = ves_btc_rates.collect do |rate|
-    ves_btc_avg = getBuySellAvg rate
+  chart_data = ved_btc_rates.collect do |rate|
+    ved_btc_avg = getBuySellAvg rate
     hourstamp = rate.created_at.strftime("%D %H")
     usd_btc_rate = usd_btc_rates_hourstamped[ hourstamp ]
     next if usd_btc_rate.nil?
-    ves_usd_avg = ves_btc_avg / usd_btc_rate
+    ved_usd_avg = ved_btc_avg / usd_btc_rate
     {
       x: rate.created_at.to_i*1000,   # unix miliseconds
-      y: ves_usd_avg.round(2),
+      y: ved_usd_avg.round(2),
     }
   end.compact
 
@@ -108,12 +108,12 @@ def getMainData(request)
       primary: {
         numerator: "Bs",
         denominator: "Dólar",
-        rates: { avg: ves_usd_avg_price },
+        rates: { avg: ved_usd_avg_price },
       },
       secondary: {
         numerator: "Bs",
         denominator: secondary_code.upcase,
-        rates: { avg: ves_secondary_avg_price },
+        rates: { avg: ved_secondary_avg_price },
       },
       bitcoin: {
         rates: { avg: usd_btc_avg_price },

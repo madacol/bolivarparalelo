@@ -34,7 +34,7 @@ def localbitcoins_ad_list_url(currency_code, buy_or_sell_str) "https://localbitc
 
 KEYWORDS_TRANSLATIONS =
 {
-  "ves" =>
+  "ved" =>
   {
     "baneco"          => "banesco",
     "bbva"            => "provincial",
@@ -73,7 +73,7 @@ PAYMENT_METHODS_WHITELIST =
 
 KEYWORDS_WHITELIST =
 {
-  "ves" =>
+  "ved" =>
   [
     "banesco",
     "provincial",

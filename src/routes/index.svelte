@@ -175,21 +175,21 @@
      * Get specific rates *
      **********************/
     let usd_btc_avg_rate,
-        ves_usd_avg_rate,
-        ves_eur_avg_rate,
-        ves_cop_avg_rate,
-        ves_brl_avg_rate;
+        ved_usd_avg_rate,
+        ved_eur_avg_rate,
+        ved_cop_avg_rate,
+        ved_brl_avg_rate;
     {
         // Get currencies rates in bitcoin
         let usd_btc_rate,
-            ves_btc_rate,
+            ved_btc_rate,
             eur_btc_rate,
             cop_btc_rate,
             brl_btc_rate;
         latest_bitcoin_rates.forEach( rate => {
             switch (rate.currency.code) {
                 case "usd": usd_btc_rate = rate; break;
-                case "ves": ves_btc_rate = rate; break;
+                case "ved": ved_btc_rate = rate; break;
                 case "eur": eur_btc_rate = rate; break;
                 case "cop": cop_btc_rate = rate; break;
                 case "brl": brl_btc_rate = rate; break;
@@ -197,10 +197,10 @@
             }
         })
         usd_btc_avg_rate = getHumanRate(usd_btc_rate.avg)
-        ves_usd_avg_rate = getHumanRate(ves_btc_rate.avg / usd_btc_rate.avg)
-        ves_eur_avg_rate = getHumanRate(ves_btc_rate.avg / eur_btc_rate.avg)
-        ves_cop_avg_rate = getHumanRate(ves_btc_rate.avg / cop_btc_rate.avg)
-        ves_brl_avg_rate = getHumanRate(ves_btc_rate.avg / brl_btc_rate.avg)
+        ved_usd_avg_rate = getHumanRate(ved_btc_rate.avg / usd_btc_rate.avg)
+        ved_eur_avg_rate = getHumanRate(ved_btc_rate.avg / eur_btc_rate.avg)
+        ved_cop_avg_rate = getHumanRate(ved_btc_rate.avg / cop_btc_rate.avg)
+        ved_brl_avg_rate = getHumanRate(ved_btc_rate.avg / brl_btc_rate.avg)
     }
 
 
@@ -249,11 +249,11 @@
 
     <nav id="footer">
         <div>
-            <span title="VES / USD">{ves_usd_avg_rate}&nbsp;Bs <u>Dólar</u></span>
-            <span title="VES / EUR">{ves_eur_avg_rate}&nbsp;Bs <u>Euro</u></span>
+            <span title="VED / USD">{ved_usd_avg_rate}&nbsp;Bs <u>Dólar</u></span>
+            <span title="VED / EUR">{ved_eur_avg_rate}&nbsp;Bs <u>Euro</u></span>
             <span title="USD / BTC">{usd_btc_avg_rate}&nbsp;$ <u>Bitcoin</u></span>
-            <span title="VES / COP">{ves_cop_avg_rate}&nbsp;Bs <u>Peso COP</u></span>
-            <span title="VES / BRL">{ves_brl_avg_rate}&nbsp;Bs <u>Real</u></span>
+            <span title="VED / COP">{ved_cop_avg_rate}&nbsp;Bs <u>Peso COP</u></span>
+            <span title="VED / BRL">{ved_brl_avg_rate}&nbsp;Bs <u>Real</u></span>
         </div>
     </nav>
 </main>

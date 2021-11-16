@@ -4,7 +4,7 @@ require 'twitter'
 
 DRY_RUN = ARGV.include?('--dry-run')
 CURRENCY_FLAGS = {
-  "ves" => "🇻🇪",
+  "ved" => "🇻🇪",
   "usd" => "🇺🇸",
   "eur" => "🇪🇺",
   "cop" => "🇨🇴",
@@ -67,5 +67,5 @@ def tweet(message)
 end
 
 if __FILE__ == $0     # Code inside this "if" will not be executed when used as a library (required from another script or irb)
-  tweet generateTweet 'ves'
+  tweet generateTweet 'ved'
 end

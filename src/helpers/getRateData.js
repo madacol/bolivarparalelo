@@ -45,8 +45,8 @@ function getHumanTime(miliseconds) {
  * 
  * If `start_unix_time` and `end_unix_time` are passed too, this function returns a list of rates between the time range specified.
  * 
- * @param {String} counter_code - currency code, e.g. `ves`,`usd`, `btc`
- * @param {String} base_code - currency code, e.g. `ves`,`usd`, `btc`
+ * @param {String} counter_code - currency code, e.g. `ved`,`usd`, `btc`
+ * @param {String} base_code - currency code, e.g. `ved`,`usd`, `btc`
  * @param {Number} start_unix_time - (Optional) initial unix time
  * @param {Number} end_unix_time - (Optional) final unix time
  */

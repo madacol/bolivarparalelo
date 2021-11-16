@@ -4,7 +4,7 @@ import db from './db';
 
 
 router.get('/currencies', async (req, res) => {
-    const { rows } = await db.query('SELECT * FROM currencies')
+    const { rows } = await db.query('SELECT * FROM currencies WHERE is_enabled = TRUE')
     res.send(rows)
 })
 
@@ -19,8 +19,10 @@ router.get('/latest_rates', async (req, res) => {
         join (
             select
                 currency_id,
-                max(id) as id
+                max(lobit_prices.id) as id
             from lobit_prices
+            join currencies ON currency_id = currencies.id
+            WHERE currencies.is_enabled = TRUE
             group by currency_id
         ) latest
         using (id, currency_id)`
